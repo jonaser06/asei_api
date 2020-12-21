@@ -34,7 +34,7 @@ class Authtimeout extends REST_Controller
         $headers = $this->input->request_headers();
         if (array_key_exists('Authorization', $headers) && !empty($headers['Authorization'])) {
             $decodedToken = AUTHORIZATION::validateTimestamp($headers['Authorization']);
-
+            
             if ($decodedToken != false) {
                 $this->set_response($decodedToken, REST_Controller::HTTP_OK);
                 return;

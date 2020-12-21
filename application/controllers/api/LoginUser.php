@@ -68,7 +68,7 @@ class LoginUser extends MY_Controller {
 	public function login() {
         $_POST = $this->security->xss_clean($_POST);
 		$email = $_POST['email'];
-		$pass = $_POST['password'];
+		$pass =  $_POST['password'];
 
         if(empty($email) || empty($pass)) {
             return $this->output_json(400 ,'Debe completar todos los campos');
