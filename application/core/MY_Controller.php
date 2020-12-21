@@ -18,7 +18,7 @@ class MY_Controller extends CI_Controller
     public function output_json ( int $code, string $message, ? array $data = NULL ) : CI_Output
     {
         $status = ($code >= 200 && $code < 400 ) ? TRUE :FALSE ;
-        $this->data = $this->body_data($status, $message, $data);
+        $this->data = $this->body_data($status, $message, $data, $code);
 
         return $this->output
                 ->set_content_type('application/json')
@@ -27,11 +27,13 @@ class MY_Controller extends CI_Controller
                 
     }
    
-    private function body_data( bool $status, string $message, $data ):array
+    private function body_data( bool $status, string $message, $data, $code ):array
     {
         $this->data = [
-            'status'      => $status,
-            'message' => $message 
+            'status'  => $status,
+            'code'    => $code,
+            'message' => $message, 
+            'data'    => []
         ];
         if($data !== NULL): 
             $this->data['data'] = $data;
