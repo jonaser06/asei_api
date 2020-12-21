@@ -33,7 +33,6 @@ class MY_Controller extends CI_Controller
             'status'  => $status,
             'code'    => $code,
             'message' => $message, 
-            'data'    => []
         ];
         if($data !== NULL): 
             $this->data['data'] = $data;
