@@ -56,4 +56,14 @@ class MY_Controller extends CI_Controller
     public function generateId():int {
         return (int)time();
     }
+    public function authentication() {
+        $headers = $this->input->request_headers();
+        if (array_key_exists('Authorization', $headers) && !empty($headers['Authorization'])) {
+            $decodedToken = AUTHORIZATION::validateTimestamp($headers['Authorization']);
+            if ($decodedToken == false ) {
+                return $this->output_json(401,'unnAuthorized');
+
+            }
+        }
+    }
 }

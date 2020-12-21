@@ -2,11 +2,11 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-// require APPPATH . '/libraries/REST_Controller.php';
+require APPPATH . '/libraries/REST_Controller.php';
 
 
 
-class Authtimeout extends REST_Controller
+class Authtimeout extends MY_Controller
 {
     /**
      * URL: http://localhost/api_asei/authtimeout/token
@@ -36,8 +36,7 @@ class Authtimeout extends REST_Controller
             $decodedToken = AUTHORIZATION::validateTimestamp($headers['Authorization']);
 
             if ($decodedToken != false) {
-                $this->set_response($decodedToken, REST_Controller::HTTP_OK);
-                return;
+                
             }
         }
 

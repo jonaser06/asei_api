@@ -25,16 +25,17 @@ class LoginUser extends MY_Controller {
 	public function register()
 	{
         $_POST = $this->security->xss_clean($_POST);
-        $response = $this->UserModel->getOne(['EMAIL' => $this->input->post('email', TRUE)]);
-            if( $this->input->post('nombres', TRUE) == '' ||
+        
+        if( $this->input->post('nombres', TRUE) == '' ||
             $this->input->post('ap_pat', TRUE)== '' ||
             $this->input->post('telefono', TRUE)== '' ||
             $this->input->post('email', TRUE)== '' ||
             $this->input->post('password', TRUE)== '' ||
             $this->input->post('perfil', TRUE)==''):
-                return $this->output_json(400,'complete los campos');
-             endif;
-
+        return $this->output_json(400,'complete los campos');
+        endif;
+    
+        $response = $this->UserModel->getOne(['EMAIL' => $this->input->post('email', TRUE)]);
         if($response):
             return $this->output_json(400,'El correo ya esta registrado , pruebe con otro');
         endif;
@@ -55,8 +56,9 @@ class LoginUser extends MY_Controller {
             'ID_PE' =>(int)$perfil['ID_PE'], 
             'ID_UB' => 1,
         ];
+         
         $this->UserModel->insert_user($insert_data);
-        $userDB = $this->UserModel->getOne(['ID_US' =>$insert_data['ID_US']]);
+        $userDB = $this->UserModel->getOne(['ID_US' => $insert_data['ID_US']]);
         $this->data = [
             'ID' => $userDB['ID_US']
         ];

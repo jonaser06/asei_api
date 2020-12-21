@@ -8,7 +8,7 @@ class User_Model extends CI_Model
      * User Registration
      * @param: {array} User Data
      */
-    public function insert_user(array $data) {
+    public function insert_user(array $data = []) {
         $this->db->insert($this->table, $data);
         return $this->db->insert_id();
     }

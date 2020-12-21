@@ -11,7 +11,7 @@ $route['register'] = 'api/LoginUser/register';
 
 #PERFILES
 
-$route['perfiles/all'] = 'api/Perfiles';
+$route['api/perfiles'] = 'api/Perfiles';
 
 
 

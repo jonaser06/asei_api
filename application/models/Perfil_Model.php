@@ -8,7 +8,7 @@ class Perfil_Model extends CI_Model
      * Perfil Registration
      * @param: {array} perfil Data
      */
-    public function insert(array $data) {
+    public function insert(array $data = []) {
         $this->db->insert($this->table, $data);
         return $this->db->insert_id();
     }
