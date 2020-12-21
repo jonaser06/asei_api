@@ -6,8 +6,8 @@ $route['default_controller'] = 'welcome';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 #API LOGIN USER
-$route['login'] = 'api/LoginUser/login';
-$route['register'] = 'api/LoginUser/register';
+$route['login']['POST'] = 'api/LoginUser/login';
+$route['register'] ['POST'] = 'api/LoginUser/register';
 
 #PERFILES
 
