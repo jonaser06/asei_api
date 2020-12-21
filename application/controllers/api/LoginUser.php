@@ -82,7 +82,7 @@ class LoginUser extends MY_Controller {
                 $this->data = [
                     'detalle' => "Email o password incorrectos"
                 ];
-                return $this->output_json(404 , 'No se encontro usuario',$this->data);
+                return $this->output_json(200 , 'No se encontro usuario',$this->data);
             } 
             
             $token_data['id'] = $userDB['ID_US'];
