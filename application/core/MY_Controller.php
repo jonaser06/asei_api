@@ -19,7 +19,7 @@ class MY_Controller extends CI_Controller
     {
         $status = ($code >= 200 && $code < 400 ) ? TRUE :FALSE ;
         $this->data = $this->body_data($status, $message, $data);
-        
+
         return $this->output
                 ->set_content_type('application/json')
                 ->set_status_header($code)
@@ -31,6 +31,7 @@ class MY_Controller extends CI_Controller
     {
         $this->data = [
             'status'      => $status,
+            'test'      => 'Hola Mundo',
             'message' => $message 
         ];
         if($data !== NULL): 
