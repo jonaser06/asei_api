@@ -71,7 +71,7 @@ class LoginUser extends MY_Controller {
         if(empty($email) || empty($pass)) {
             return $this->output_json(400 ,'Debe completar todos los campos');
         }
-        $userDB = $this->UserModel->login($email, $pass);
+        // $userDB = $this->UserModel->login($email, $pass);
         if (empty($userDB))
             {
                 $this->data = [
