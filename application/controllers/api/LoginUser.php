@@ -67,11 +67,14 @@ class LoginUser extends MY_Controller {
 	}
 	public function login() {
         $_POST = $this->security->xss_clean($_POST);
+        if(!array_key_exists('email',$_POST) && !array_key_exists('email',$_POST)) {
+            return $this->output_json(400 ,'email y password necesarios');
+        }
 		$email = $_POST['email'];
-		$pass =  $_POST['password'];
-
+        $pass =  $_POST['password'];
+       
         if(empty($email) || empty($pass)) {
-            return $this->output_json(400 ,'Debe completar todos los campos');
+            return $this->output_json(400 ,'debe enviar datos en los campos email y pasword');
         }
         $userDB = $this->UserModel->login($email, $pass);
         if (empty($userDB))
