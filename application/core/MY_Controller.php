@@ -15,12 +15,7 @@ class MY_Controller extends CI_Controller
      * @param $code :código http respuesta
      * @param $resp : cuerpo de respuesta
      */
-    public function output_json 
-    (
-        int $code,
-        string $message,
-        ?array $data = NULL
-    ) : CI_Output
+    public function output_json ( int $code, string $message, ? array $data = NULL ) : CI_Output
     {
         $status = ($code >= 200 && $code < 400 ) ? TRUE :FALSE ;
         $this->data = $this->body_data($status, $message, $data);
@@ -32,14 +27,10 @@ class MY_Controller extends CI_Controller
                 
     }
    
-    private function body_data(
-        bool $status,
-        string $message,
-        $data  
-    ):array
+    private function body_data( bool $status, string $message, $data ):array
     {
         $this->data = [
-            'ok'      => $status,
+            'status'      => $status,
             'message' => $message 
         ];
         if($data !== NULL): 

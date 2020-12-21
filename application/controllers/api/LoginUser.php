@@ -6,8 +6,8 @@ class LoginUser extends MY_Controller {
 	public function __construct()
     {
 		parent::__construct();
-		$this->load->model('user_model', 'UserModel');
-		$this->load->model('perfil_model', 'PerfilModel');
+		$this->load->model('User_Model', 'UserModel');
+		$this->load->model('Perfil_Model', 'PerfilModel');
     }
 	
 	/**
