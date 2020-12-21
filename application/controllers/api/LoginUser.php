@@ -25,16 +25,17 @@ class LoginUser extends MY_Controller {
 	public function register()
 	{
         $_POST = $this->security->xss_clean($_POST);
-        $response = $this->UserModel->getOne(['EMAIL' => $this->input->post('email', TRUE)]);
-            if( $this->input->post('nombres', TRUE) == '' ||
+        
+        if( $this->input->post('nombres', TRUE) == '' ||
             $this->input->post('ap_pat', TRUE)== '' ||
             $this->input->post('telefono', TRUE)== '' ||
             $this->input->post('email', TRUE)== '' ||
             $this->input->post('password', TRUE)== '' ||
             $this->input->post('perfil', TRUE)==''):
-                return $this->output_json(400,'complete los campos');
-             endif;
-
+        return $this->output_json(400,'complete los campos');
+        endif;
+    
+        $response = $this->UserModel->getOne(['EMAIL' => $this->input->post('email', TRUE)]);
         if($response):
             return $this->output_json(400,'El correo ya esta registrado , pruebe con otro');
         endif;
@@ -55,8 +56,9 @@ class LoginUser extends MY_Controller {
             'ID_PE' =>(int)$perfil['ID_PE'], 
             'ID_UB' => 1,
         ];
+         
         $this->UserModel->insert_user($insert_data);
-        $userDB = $this->UserModel->getOne(['ID_US' =>$insert_data['ID_US']]);
+        $userDB = $this->UserModel->getOne(['ID_US' => $insert_data['ID_US']]);
         $this->data = [
             'ID' => $userDB['ID_US']
         ];
@@ -65,11 +67,14 @@ class LoginUser extends MY_Controller {
 	}
 	public function login() {
         $_POST = $this->security->xss_clean($_POST);
+        if(!array_key_exists('email',$_POST) && !array_key_exists('email',$_POST)) {
+            return $this->output_json(400 ,'email y password necesarios');
+        }
 		$email = $_POST['email'];
-		$pass = $_POST['password'];
-
+        $pass =  $_POST['password'];
+       
         if(empty($email) || empty($pass)) {
-            return $this->output_json(400 ,'Debe completar todos los campos');
+            return $this->output_json(400 ,'debe enviar datos en los campos email y pasword');
         }
         $userDB = $this->UserModel->login($email, $pass);
         if (empty($userDB))
