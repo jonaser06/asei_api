@@ -31,7 +31,6 @@ class MY_Controller extends CI_Controller
     {
         $this->data = [
             'status'      => $status,
-            'test'      => 'Hola Mundo',
             'message' => $message 
         ];
         if($data !== NULL): 
