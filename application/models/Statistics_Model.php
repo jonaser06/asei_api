@@ -14,5 +14,16 @@ class Statistics_Model extends CI_Model implements iModule
     //     $this->db->insert($this->table, $data);
     //     return $this->db->insert_id();
     // }
-   
+    public function get(){
+
+    }
+    public function set(){
+
+    }
+    public function del(){
+
+    }
+    public function upd(){
+
+    }
 }
