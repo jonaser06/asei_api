@@ -8,7 +8,7 @@ class Statistics extends MY_Controller implements iModule {
 	public function __construct()
     {
 		parent::__construct();
-		$this->load->model('statistics_model', 'statistics');
+		$this->load->model('Statistics_Model', 'statistics');
     }
 
     /**
