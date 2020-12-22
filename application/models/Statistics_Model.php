@@ -1,6 +1,8 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Statistics_Model extends CI_Model
+require_once APPPATH . '/Interfaces/' . 'module_interface.php';
+class Statistics_Model extends CI_Model implements iModule
 {
     protected $table = 'statistics';
 
@@ -8,9 +10,20 @@ class Statistics_Model extends CI_Model
      * Statistics_Model
      * @param: {array} perfil Data
      */
-    public function insert(array $data = []) {
-        $this->db->insert($this->table, $data);
-        return $this->db->insert_id();
+    // public function insert(array $data = []) {
+    //     $this->db->insert($this->table, $data);
+    //     return $this->db->insert_id();
+    // }
+    public function get(){
+
     }
- 
+    public function set(){
+
+    }
+    public function del(){
+
+    }
+    public function upd(){
+
+    }
 }

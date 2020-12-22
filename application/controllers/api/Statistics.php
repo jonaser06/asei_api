@@ -1,9 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-require_once APPPATH . '/Interfaces/' . 'module_interface.php';
-
-class Statistics extends MY_Controller implements iModule {
+class Statistics extends MY_Controller {
 
 	public function __construct()
     {
@@ -29,16 +27,4 @@ class Statistics extends MY_Controller implements iModule {
         echo 'hola mundo';
     }
 
-    public function get(){
-
-    }
-    public function set(){
-
-    }
-    public function del(){
-
-    }
-    public function upd(){
-
-    }
 }
