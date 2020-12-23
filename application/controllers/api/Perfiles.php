@@ -19,13 +19,12 @@ class Perfiles extends MY_Controller {
                 $perfiles = $this->PerfilModel->get();
                 return $perfiles 
                 ? $this->output_json(200,'perfiles',$perfiles)
-                : $this->output_json(400,'no existen resultados');
+                : $this->output_json(200,'no existen resultados');
             }
         }
 
         $this->output_json(401,'No tiene permisos para acceder');
            
-        
 	}
 	
 }

@@ -60,7 +60,7 @@ class LoginUser extends MY_Controller {
         $this->UserModel->insert_user($insert_data);
         $userDB = $this->UserModel->getOne(['ID_US' => $insert_data['ID_US']]);
         $this->data = [
-            'ID' => $userDB['ID_US']
+            'id' => $userDB['ID_US']
         ];
         $this->output_json(201,'Regístro exitoso',$this->data);
         
@@ -68,7 +68,7 @@ class LoginUser extends MY_Controller {
 	public function login() {
         $_POST = $this->security->xss_clean($_POST);
         if(!array_key_exists('email',$_POST) || !array_key_exists('email',$_POST)) {
-            return $this->output_json(400 ,'email y password necesarios');
+            return $this->output_json( 400 ,'email y password necesarios');
         }
 		$email = $_POST['email'];
         $pass =  $_POST['password'];

@@ -13,7 +13,9 @@ $route['register'] ['POST'] = 'api/LoginUser/register';
 
 $route['api/perfiles'] = 'api/Perfiles';
 
+#UPLOAD
 
+$route['upload'] = 'Upload';
 
 
 
