@@ -9,6 +9,18 @@ $route['translate_uri_dashes'] = FALSE;
 $route['login']['POST'] = 'api/LoginUser/login';
 $route['register'] ['POST'] = 'api/LoginUser/register';
 
+#Statistics
+
+##chart
+$route['newchart']['POST']  = 'api/Statistics/newchart';
+$route['editchart']['POST'] = 'api/Statistics/editchart';
+$route['deletechart']['POST'] = 'api/Statistics/deletechart';
+
+##bulletin
+$route['newbulletin']['POST']  = 'api/Statistics/newbulletin';
+$route['editbulletin']['POST']  = 'api/Statistics/editbulletin';
+$route['deletebulletin']['POST']  = 'api/Statistics/deletebulletin';
+
 #PERFILES
 
 $route['api/perfiles'] = 'api/Perfiles';
