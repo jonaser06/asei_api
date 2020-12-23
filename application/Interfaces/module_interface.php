@@ -1,10 +1,10 @@
 <?php
 
 interface iModule {
-    public function get();
-    public function set();
-    public function del();
-    public function upd();
+    public function getdata( $data = '', $table = '');
+    public function setdata( $data = '', $table = '');
+    public function deldata( $data = '', $table = '');
+    public function upddata( $data = '', $where = '', $table = '');
 }
 
 ?>
