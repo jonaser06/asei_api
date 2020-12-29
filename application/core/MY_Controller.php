@@ -75,8 +75,10 @@ class MY_Controller extends CI_Controller
         header('location: ' . $url);
         exit;
     }
-    public function generateId():int {
-        return (int)time();
+    public function generateId() :int {
+        $id     = uniqid('' ,TRUE);
+        $uniqId = explode('.',$id);
+        return (int)($uniqId[1]);
     }
     public function authentication() {
         $headers = $this->input->request_headers();

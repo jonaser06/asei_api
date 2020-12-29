@@ -25,7 +25,9 @@ $route['deletebulletin']['POST']  = 'api/Statistics/deletebulletin';
 
 $route['api/perfiles'] = 'api/Perfiles';
 
+#UPLOAD
 
+$route['upload'] = 'Upload';
 
 
 

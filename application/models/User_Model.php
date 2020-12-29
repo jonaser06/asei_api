@@ -13,6 +13,7 @@ class User_Model extends CI_Model
         return $this->db->insert_id();
     }
 
+   
     /**
      * User Login
      * ----------------------------------
