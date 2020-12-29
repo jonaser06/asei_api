@@ -66,6 +66,7 @@ class LoginUser extends MY_Controller {
         
 	}
 	public function login() {
+        header('Access-Control-Allow-Origin: *');
         $_POST = $this->security->xss_clean($_POST);
         if(!array_key_exists('email',$_POST) || !array_key_exists('email',$_POST)) {
             return $this->output_json( 400 ,'email y password necesarios');
