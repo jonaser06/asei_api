@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
+$routes->options('(:any)', 'LoginUser::options'); //one options method for all routes.
 
 $route['default_controller'] = 'welcome';
 $route['404_override'] = '';
