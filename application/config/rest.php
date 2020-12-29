@@ -533,7 +533,7 @@ $config['rest_language'] = 'spanish';
 | will access it through a browser
 |
 */
-$config['check_cors'] = TRUE;
+$config['check_cors'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
@@ -577,7 +577,7 @@ $config['allowed_cors_methods'] = [
 | source domain
 |
 */
-$config['allow_any_cors_domain'] = TRUE;
+$config['allow_any_cors_domain'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
