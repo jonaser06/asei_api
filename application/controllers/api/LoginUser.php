@@ -8,9 +8,9 @@ class LoginUser extends MY_Controller {
 		parent::__construct();
 		$this->load->model('User_Model', 'UserModel');
         $this->load->model('Perfil_Model', 'PerfilModel');
-
-        header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
-        header("Access-Control-Allow-Headers: Content-Type, Content-Length, Accept-Encoding");
+        
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
     }
 	
 	/**
