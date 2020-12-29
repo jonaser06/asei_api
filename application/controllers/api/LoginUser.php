@@ -1,5 +1,4 @@
 <?php
-header('Access-Control-Allow-Origin: *');
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class LoginUser extends MY_Controller {
