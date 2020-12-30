@@ -8,7 +8,7 @@ require  'vendor/autoload.php';
 
 $app = new \Slim\App();
 
-$app->get('/', function (Request $request, Response $response, $args) {
+$app->post('/', function (Request $request, Response $response, $args) {
     
     $response->getBody()->write("Hello consola");
     return $response;
