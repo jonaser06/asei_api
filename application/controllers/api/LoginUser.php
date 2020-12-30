@@ -95,7 +95,7 @@ class LoginUser extends MY_Controller {
             $token_data['rol'] = $userDB['TIPO'];
             $token_data['time'] = time();
 
-            $user_token = AUTHORIZATION::generateToken($token_data);
+            $user_token = '';
             $this->data = [
                 'user_id' => $userDB['ID_US'],
                 'nombres' => trim($userDB['NOMBRES']),
