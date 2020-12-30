@@ -50,11 +50,11 @@ class MY_Controller extends CI_Controller
         $status = ($code >= 200 && $code < 400 ) ? TRUE :FALSE ;
         $this->data = $this->body_data($status, $message, $data, $code);
 
-        // return $this->output
-        //         ->set_content_type('application/json')
-        //         ->set_status_header($code)
-        //         ->set_output(json_encode($this->data));
-        echo json_encode($this->data);
+        return $this->output
+                ->set_content_type('application/json')
+                ->set_status_header($code)
+                ->set_output(json_encode($this->data));
+                
     }
    
     private function body_data( bool $status, string $message, $data, $code ):array
