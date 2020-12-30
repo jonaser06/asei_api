@@ -12,9 +12,9 @@ $app->post('/', function (Request $request, Response $response, $args) {
     
     $test = [
         'status'=> true,
-        "message" => 'hola mundo';
-    ]
-    return $test;
+        "message" => 'hola mundo'
+    ];
+    return json_encode($test);
 });
 
 $app->run();
