@@ -8,6 +8,7 @@ $route['translate_uri_dashes'] = FALSE;
 $route['login']['POST'] = 'api/LoginUser/login';
 $route['register'] ['POST'] = 'api/LoginUser/register';
 
+$route['test']  = 'api/Statistics/test';
 #Statistics
 
 ##chart

@@ -9,6 +9,11 @@ class Statistics extends MY_Controller {
 		$this->load->model('Statistics_Model', 'statistics');
     }
 
+    public function test(){
+        echo json_encode(["status"=>true, "message"=>'hola mundo']);
+        exit;
+    }
+
     /**
      * New Chart
      * --------------------------
