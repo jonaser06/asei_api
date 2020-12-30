@@ -10,8 +10,11 @@ $app = new \Slim\App();
 
 $app->post('/', function (Request $request, Response $response, $args) {
     
-    $response->getBody()->write("Hello consola");
-    return $response;
+    $test = [
+        'status'=> true,
+        "message" => 'hola mundo';
+    ]
+    return $test;
 });
 
 $app->run();
