@@ -10,8 +10,8 @@ class Statistics extends MY_Controller {
     }
 
     public function test(){
-        echo json_encode(["status"=>true, "message"=>'hola mundo']);
-        exit;
+        // echo json_encode(["status"=>true, "message"=>'hola mundo']);
+        return $this->output_json(200,'The title is necessary');
     }
 
     /**
