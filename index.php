@@ -75,6 +75,7 @@ switch (ENVIRONMENT)
 		ini_set('display_errors', 1);
 	break;
 
+<<<<<<< HEAD
 	case 'testing':
 	case 'production':
 		ini_set('display_errors', 0);
@@ -87,6 +88,16 @@ switch (ENVIRONMENT)
 			error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_USER_NOTICE);
 		}
 	break;
+=======
+$app->post('/', function (Request $request, Response $response, $args) {
+    
+    $test = [
+        'status'=> true,
+        "message" => 'hola mundo'
+    ];
+    return json_encode($test);
+});
+>>>>>>> 91943153b021ad582728d650765b50b595c53640
 
 	default:
 		header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
