@@ -36,5 +36,23 @@ class User_Model extends CI_Model
             ? $this->db->get($this->table)->result_array()
             : $this->db->get_where($this->table, $conditions)->row_array();
     }
+
+    public function getALL()
+    {
+        $this->db->select('ID_US, NOMBRES,APELLIDO_PATERNO,APELLIDO_MATERNO,EMAIL,p.TIPO');
+        $this->db->from('usuarios as us');
+        $this->db->join('perfiles as p', 'p.ID_PE = us.ID_PE');
+        $user = $this->db->get()->result_array();
+        return $user ? $user : FALSE;
+    }
+    public function get($id)
+    {
+        $this->db->select('ID_US, NOMBRES,APELLIDO_PATERNO,APELLIDO_MATERNO,EMAIL,TELEFONO,p.TIPO');
+        $this->db->from('usuarios as us');
+        $this->db->join('perfiles as p', 'p.ID_PE = us.ID_PE');
+        $this->db->where(['ID_US' => (int) $id]);
+        $user = $this->db->get()->row_array();
+        return $user ? $user : FALSE;
+    }
  
 }

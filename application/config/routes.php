@@ -8,6 +8,16 @@ $route['translate_uri_dashes'] = FALSE;
 $route['login']['POST'] = 'api/LoginUser/login';
 $route['register'] ['POST'] = 'api/LoginUser/register';
 
+#Users
+$route['users'] ['GET'] = 'api/User/getAll';
+$route['user/(:num)'] ['GET'] = function ($id) {
+    
+   
+    return 'api/User/get/'.$id;
+};
+
+
+
 $route['test']  = 'api/Statistics/test';
 #Statistics
 
