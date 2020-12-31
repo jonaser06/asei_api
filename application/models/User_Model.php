@@ -37,13 +37,14 @@ class User_Model extends CI_Model
             : $this->db->get_where($this->table, $conditions)->row_array();
     }
 
-    public function getALL()
+    public function getALL(int $limit = 1, int $offset = 0 )
     {
         $this->db->select('ID_US, NOMBRES,APELLIDO_PATERNO,APELLIDO_MATERNO,EMAIL,p.TIPO');
         $this->db->from('usuarios as us');
         $this->db->join('perfiles as p', 'p.ID_PE = us.ID_PE');
-        $user = $this->db->get()->result_array();
-        return $user ? $user : FALSE;
+        $users = $this->db->get()->result_array();
+        $this->db->limit($limit, $offset);
+        return $users ? $users : FALSE;
     }
     public function get($id)
     {

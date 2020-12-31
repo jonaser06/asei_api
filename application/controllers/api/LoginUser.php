@@ -75,7 +75,7 @@ class LoginUser extends MY_Controller {
         $pass =  $_POST['password'];
        
         if(empty($email) || empty($pass)) {
-            return $this->output_json(400 ,'debe enviar datos en los campos email y pasword');
+            return $this->output_json(200 ,'debe enviar datos en los campos email y pasword');
         }
         $userDB = $this->UserModel->login($email, $pass);
         if (empty($userDB))
@@ -83,7 +83,7 @@ class LoginUser extends MY_Controller {
                 $this->data = [
                     'detalle' => "Email o password incorrectos"
                 ];
-                return $this->output_json(200 , 'No se encontro usuario',$this->data);
+                return $this->output_json(404 , 'No se encontro usuario',$this->data);
             } 
             
             $token_data['id'] = $userDB['ID_US'];
