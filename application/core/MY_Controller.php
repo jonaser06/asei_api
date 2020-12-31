@@ -43,16 +43,22 @@ class MY_Controller extends CI_Controller
     
     /**
      * @param $code :código http respuesta
+     * @param $state : optional state
      * @param $resp : cuerpo de respuesta
      */
-    public function output_json ( int $code, string $message, $data = [] ) : CI_Output
+    public function output_json ( int $code, string $message, $data = [] ,bool $state = NULL) : CI_Output
     {
-        $status = ($code >= 200 && $code < 400 ) ? TRUE :FALSE ;
+        
+        if(!isset($state)) {
+            $status = ($code >= 200 && $code < 400 ) ? TRUE :FALSE ;
+        }else {
+            $status = $state;
+        }
         $this->data = $this->body_data($status, $message, $data, $code);
 
         return $this->output
                 ->set_content_type('application/json')
-                ->set_status_header(200)
+                ->set_status_header($code)
                 ->set_output(json_encode($this->data));
                 
     }

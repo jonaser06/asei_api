@@ -55,5 +55,6 @@ class User_Model extends CI_Model
         $user = $this->db->get()->row_array();
         return $user ? $user : FALSE;
     }
+   
  
 }

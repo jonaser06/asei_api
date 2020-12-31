@@ -8,6 +8,7 @@ class LoginUser extends MY_Controller {
 		parent::__construct();
 		$this->load->model('User_Model', 'UserModel');
         $this->load->model('Perfil_Model', 'PerfilModel');
+        $this->load->model('Privileges_Model', 'PrivilegesModel');
     }
 	
 	/**
@@ -75,7 +76,7 @@ class LoginUser extends MY_Controller {
         $pass =  $_POST['password'];
        
         if(empty($email) || empty($pass)) {
-            return $this->output_json(200 ,'debe enviar datos en los campos email y pasword');
+            return $this->output_json(200 ,'debe enviar datos en los campos email y password');
         }
         $userDB = $this->UserModel->login($email, $pass);
         if (empty($userDB))
@@ -83,7 +84,7 @@ class LoginUser extends MY_Controller {
                 $this->data = [
                     'detalle' => "Email o password incorrectos"
                 ];
-                return $this->output_json(404 , 'No se encontro usuario',$this->data);
+                return $this->output_json(200 , 'No se encontro usuario',$this->data , false);
             } 
             
             $token_data['id'] = $userDB['ID_US'];
@@ -95,11 +96,14 @@ class LoginUser extends MY_Controller {
             $token_data['time'] = time();
 
             $user_token = AUTHORIZATION::generateToken($token_data);
+
+            $privileges = $this->PrivilegesModel->get($userDB['ID_PE']);
             $this->data = [
                 'user_id' => $userDB['ID_US'],
                 'nombres' => trim($userDB['NOMBRES']),
                 'apellidos' => trim($userDB['APELLIDO_PATERNO']).' '.trim($userDB['APELLIDO_MATERNO']),
                 'rol' => $userDB['TIPO'],
+                'permisos' => $privileges,
                 'token' => $user_token,
             ];
 
