@@ -52,7 +52,7 @@ class MY_Controller extends CI_Controller
 
         return $this->output
                 ->set_content_type('application/json')
-                ->set_status_header($code)
+                ->set_status_header(200)
                 ->set_output(json_encode($this->data));
                 
     }
@@ -64,7 +64,7 @@ class MY_Controller extends CI_Controller
             'code'    => $code,
             'message' => $message, 
         ];
-        if($data !== NULL): 
+        if(count($data) !== 0 ): 
             $this->data['data'] = $data;
         endif;
         return $this->data;
