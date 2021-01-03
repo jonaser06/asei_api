@@ -14,14 +14,16 @@ class Statistics_Model extends CI_Model implements iModule
     //     $this->db->insert($this->table, $data);
     //     return $this->db->insert_id();
     // }
-    public function getdata( $data = '' , $table = ''){
-        if(empty($data)){
-            return false;
-        }
-        echo 'lleno';
-        exit;
-
-        // $this->db->insert($this->table, $data);
+    public function getdata( $select = '' , $table = '', $where = [], $o = '', $limit = 1){
+        if(empty($select)) return false;
+        $this->db->select($select);
+        $this->db->from($table);
+        $this->db->where($where);
+        $this->db->order_by($o, 'DESC');
+        $this->db->limit($limit);
+        $query = $this->db->get()->result_array();
+        if ($query) return $query;
+        return false;
 
     }
     public function setdata( $data = '' , $table = ''){

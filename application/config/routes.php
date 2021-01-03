@@ -22,9 +22,10 @@ $route['test']  = 'api/Statistics/test';
 #Statistics
 
 ##chart
-$route['newchart']  = 'api/Statistics/newchart';
-$route['editchart'] = 'api/Statistics/editchart';
-$route['deletechart'] = 'api/Statistics/deletechart';
+$route['newchart']      = 'api/Statistics/newchart';
+$route['editchart']     = 'api/Statistics/editchart';
+$route['deletechart']   = 'api/Statistics/deletechart';
+$route['getchart']['GET']      = 'api/Statistics/getchart';
 
 ##bulletin
 $route['newbulletin']  = 'api/Statistics/newbulletin';
