@@ -198,4 +198,13 @@ class Statistics extends MY_Controller {
         if( !$this->statistics->deldata( $data , 'bulletin' ) ) return $this->output_json(200,'an error occurred while delete the data');
         return $this->output_json(200,'query successfully');
     }
+
+    public function getbulletin(){
+        $select = '*';
+        $table = 'bulletin';
+        #an error occurred 
+        $this->data = $this->statistics->getdata($select, $table, [], 'id', 6);
+        if( !$this->data ) return $this->output_json(200,'an error occurred while get the dataa');
+        return $this->output_json(200,'query successfully', $this->data);
+    }
 }
