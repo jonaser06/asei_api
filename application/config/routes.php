@@ -36,6 +36,7 @@ $route['getbulletin']['GET'] = 'api/Statistics/getbulletin';
 #PERFILES
 
 $route['api/perfiles'] = 'api/Perfiles';
+$route['perfiles']['GET'] = 'api/Privileges';
 
 #UPLOAD
 
