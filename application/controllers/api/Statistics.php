@@ -102,7 +102,7 @@ class Statistics extends MY_Controller {
             'description' => $this->input->post('description'),
             'month'       => $this->input->post('month'),
             'year'        => $this->input->post('year'),
-            'file'        => '',//$target_file,
+            'file'        => '',//$target_file, 
             'image'       => $target_img,
         ];
 
