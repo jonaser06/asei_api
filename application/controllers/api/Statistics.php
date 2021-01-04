@@ -37,7 +37,7 @@ class Statistics extends MY_Controller {
         // if ( !isset($_FILES['file']) )             return $this->output_json(400,'The file is necessary');
         if ( !isset($_FILES['image']) )            return $this->output_json(400,'The image is necessary');
         if ( !$_FILES['image']['tmp_name'] )       return $this->output_json(400,'I dont select any image');
-        if ( !$_FILES['file']['tmp_name'] )        return $this->output_json(400,'I dont select any file');
+        // if ( !$_FILES['file']['tmp_name'] )        return $this->output_json(400,'I dont select any file');
 
         #save img
         $path = IMG;
@@ -80,7 +80,7 @@ class Statistics extends MY_Controller {
         // if ( !isset($_FILES['file']) )             return $this->output_json(400,'The file is necessary');
         if ( !isset($_FILES['image']) )            return $this->output_json(400,'The image is necessary');
         if ( !$_FILES['image']['tmp_name'] )       return $this->output_json(400,'I dont select any image');
-        if ( !$_FILES['file']['tmp_name'] )        return $this->output_json(400,'I dont select any file');
+        // if ( !$_FILES['file']['tmp_name'] )        return $this->output_json(400,'I dont select any file');
 
         #save img
         $path = IMG;
