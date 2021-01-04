@@ -6,7 +6,7 @@ class Privileges extends MY_Controller {
 	public function __construct()
     {
         parent::__construct();
-		$this->load->model('privileges_model', 'PrivilegesModel');
+		$this->load->model('Privileges_Model', 'PrivilegesModel');
     }
 	
 	public function index() {
