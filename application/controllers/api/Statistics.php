@@ -34,7 +34,7 @@ class Statistics extends MY_Controller {
         if ( !$this->input->post('description') )  return $this->output_json(400,'The description is necessary');
         if ( !$this->input->post('month') )        return $this->output_json(400,'The month is necessary');
         if ( !$this->input->post('year') )         return $this->output_json(400,'The year is necessary');
-        if ( !isset($_FILES['file']) )             return $this->output_json(400,'The file is necessary');
+        // if ( !isset($_FILES['file']) )             return $this->output_json(400,'The file is necessary');
         if ( !isset($_FILES['image']) )            return $this->output_json(400,'The image is necessary');
         if ( !$_FILES['image']['tmp_name'] )       return $this->output_json(400,'I dont select any image');
         if ( !$_FILES['file']['tmp_name'] )        return $this->output_json(400,'I dont select any file');
@@ -47,18 +47,18 @@ class Statistics extends MY_Controller {
         $target_img = UPLOAD . IMG . $img_name;
 
         #save file
-        $path = PDF;
+        /* $path = PDF;
         $file = $_FILES['file']['tmp_name'];
         $file_name = $this->clearName(explode('.',$_FILES['file']['name'])[0]).'.pdf';
         $this->fileUpload($file, $file_name, $path);
-        $target_file = UPLOAD . PDF . $file_name;
+        $target_file = UPLOAD . PDF . $file_name; */
 
         $this->data[0] = [
             'title'       => $this->input->post('title'),
             'description' => $this->input->post('description'),
             'month'       => $this->input->post('month'),
             'year'        => $this->input->post('year'),
-            'file'        => $target_file,
+            'file'        => '',//$target_file,
             'image'       => $target_img,
         ];
 
