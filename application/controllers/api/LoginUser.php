@@ -76,7 +76,7 @@ class LoginUser extends MY_Controller {
         $pass =  $_POST['password'];
        
         if(empty($email) || empty($pass)) {
-            return $this->output_json(200 ,'debe enviar datos en los campos email y password',false);
+            return $this->output_json(200 ,'debe enviar datos en los campos email y password',[],false);
         }
         $userDB = $this->UserModel->login($email, $pass);
         if (empty($userDB))
