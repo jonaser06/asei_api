@@ -122,6 +122,15 @@ class Statistics extends MY_Controller {
         return $this->output_json(200,'query successfully');
     }
 
+    public function getchart(){
+        $select = '*';
+        $table = 'statistics';
+        #an error occurred 
+        $this->data = $this->statistics->getdata($select, $table, [], 'id', 6);
+        if( !$this->data ) return $this->output_json(200,'an error occurred while get the dataa');
+        return $this->output_json(200,'query successfully', $this->data);
+    }
+
     public function newbulletin(){
         #validating input data
         if ( !$this->input->post('id') )           return $this->output_json(400,'The id is necessary');
@@ -188,5 +197,14 @@ class Statistics extends MY_Controller {
         #an error occurred 
         if( !$this->statistics->deldata( $data , 'bulletin' ) ) return $this->output_json(200,'an error occurred while delete the data');
         return $this->output_json(200,'query successfully');
+    }
+
+    public function getbulletin(){
+        $select = '*';
+        $table = 'bulletin';
+        #an error occurred 
+        $this->data = $this->statistics->getdata($select, $table, [], 'id', 6);
+        if( !$this->data ) return $this->output_json(200,'an error occurred while get the dataa');
+        return $this->output_json(200,'query successfully', $this->data);
     }
 }
