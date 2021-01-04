@@ -102,7 +102,7 @@ class LoginUser extends MY_Controller {
                 'user_id' => $userDB['ID_US'],
                 'nombres' => trim($userDB['NOMBRES']),
                 'apellidos' => trim($userDB['APELLIDO_PATERNO']).' '.trim($userDB['APELLIDO_MATERNO']),
-                'rol' => $userDB['TIPO'],
+                'rol' => strtolower ($userDB['TIPO']),
                 'permisos' => $privileges,
                 'token' => $user_token,
             ];
