@@ -25,6 +25,4 @@ class Privileges_Model extends CI_Model
         $privileges = $this->db->get()->result_array();
         return $privileges ? $privileges : FALSE;
     }
-   
- 
 }

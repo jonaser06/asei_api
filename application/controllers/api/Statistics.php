@@ -207,4 +207,66 @@ class Statistics extends MY_Controller {
         if( !$this->data ) return $this->output_json(200,'an error occurred while get the dataa');
         return $this->output_json(200,'query successfully', $this->data);
     }
+    public function newIndicador(){
+        #validating input data
+        if ( !$this->input->post('title') )        return $this->output_json(400,'The title is necessary');
+        if ( !$this->input->post('descripcion') )  return $this->output_json(400,'The description is necessary');
+        if ( !$this->input->post('percentaje') )   return $this->output_json(400,'The percentaje is necessary');
+        if ( !$this->input->post('type') )         return $this->output_json(400,'The type is necessary');
+
+
+        $this->data = [
+            'title'             => $this->input->post('title'),
+            'description'       => $this->input->post('description'),
+            'percentaje'        => $this->input->post('percentaje'),
+            'type'              => $this->input->post('type'),
+        ];
+
+        #an error occurred 
+        if( !$this->statistics->setdata( $this->data, 'indicadores' ) ) return $this->output_json(200,'an error occurred while inserting the data');
+
+        return $this->output_json(200,'query successfully', $this->data);
+    }
+
+    public function editIndicador(){
+        #validating input data
+        if ( !$this->input->post('title') )        return $this->output_json(400,'The title is necessary');
+        if ( !$this->input->post('descripcion') )  return $this->output_json(400,'The description is necessary');
+        if ( !$this->input->post('percentaje') )   return $this->output_json(400,'The percentaje is necessary');
+        if ( !$this->input->post('type') )         return $this->output_json(400,'The type is necessary');
+
+    
+
+        $where = ['id' => $this->input->post('id')];
+        $this->data = [
+            'title'             => $this->input->post('title'),
+            'description'       => $this->input->post('description'),
+            'percentaje'        => $this->input->post('percentaje'),
+            'type'              => $this->input->post('type'),
+        ];
+
+        #an error occurred 
+        if( !$this->statistics->upddata( $this->data , $where, 'indicadores' ) ) return $this->output_json(200,'an error occurred while updating the data');
+
+        return $this->output_json(200,'query successfully', $this->data);
+    }
+
+    public function deleteIndicador(){
+        #validating input data
+        if ( !$this->input->post('id') )           return $this->output_json(400,'The id is necessary');
+        $data = ['id' => $this->input->post('id')];
+
+        #an error occurred 
+        if( !$this->statistics->deldata( $data , 'indicadores' ) ) return $this->output_json(200,'an error occurred while delete the data');
+        return $this->output_json(200,'query successfully');
+    }
+
+    public function getIndicador(){
+        $select = '*';
+        $table = 'indicadores';
+        #an error occurred 
+        $this->data = $this->statistics->getdata($select, $table, [], 'id', 4);
+        if( !$this->data ) return $this->output_json(200,'an error occurred while get the dataa');
+        return $this->output_json(200,'query successfully', $this->data);
+    }
 }
