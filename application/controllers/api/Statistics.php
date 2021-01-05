@@ -210,14 +210,14 @@ class Statistics extends MY_Controller {
         #validating input data
         if ( !$this->input->post('title') )        return $this->output_json(400,'The title is necessary');
         if ( !$this->input->post('description') )  return $this->output_json(400,'The description is necessary');
-        if ( !$this->input->post('percentaje') )   return $this->output_json(400,'The percentaje is necessary');
+        if ( !$this->input->post('percentaje') )   return $this->output_json(400,'The percentage is necessary');
         if ( !$this->input->post('type') )         return $this->output_json(400,'The type is necessary');
 
 
         $this->data = [
             'title'             => $this->input->post('title'),
             'description'       => $this->input->post('description'),
-            'percentaje'        => (int)$this->input->post('percentaje'),
+            'percentage'        => (int)$this->input->post('percentage'),
             'type'              => $this->input->post('type'),
         ];
 
@@ -231,7 +231,7 @@ class Statistics extends MY_Controller {
         #validating input data
         if ( !$this->input->post('title') )        return $this->output_json(400,'The title is necessary');
         if ( !$this->input->post('descripcion') )  return $this->output_json(400,'The description is necessary');
-        if ( !$this->input->post('percentaje') )   return $this->output_json(400,'The percentaje is necessary');
+        if ( !$this->input->post('percentage') )   return $this->output_json(400,'The percentage is necessary');
         if ( !$this->input->post('type') )         return $this->output_json(400,'The type is necessary');
 
     
@@ -240,7 +240,7 @@ class Statistics extends MY_Controller {
         $this->data = [
             'title'             => $this->input->post('title'),
             'description'       => $this->input->post('description'),
-            'percentaje'        => $this->input->post('percentaje'),
+            'percentage'        => $this->input->post('percentage'),
             'type'              => $this->input->post('type'),
         ];
 
