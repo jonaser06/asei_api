@@ -210,7 +210,7 @@ class Statistics extends MY_Controller {
         #validating input data
         if ( !$this->input->post('title') )        return $this->output_json(400,'The title is necessary');
         if ( !$this->input->post('description') )  return $this->output_json(400,'The description is necessary');
-        if ( !$this->input->post('percentaje') )   return $this->output_json(400,'The percentage is necessary');
+        if ( !$this->input->post('percentage') )   return $this->output_json(400,'The percentage is necessary');
         if ( !$this->input->post('type') )         return $this->output_json(400,'The type is necessary');
 
 
