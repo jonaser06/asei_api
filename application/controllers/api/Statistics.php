@@ -217,7 +217,7 @@ class Statistics extends MY_Controller {
         $this->data = [
             'title'             => $this->input->post('title'),
             'description'       => $this->input->post('description'),
-            'percentaje'        => $this->input->post('percentaje'),
+            'percentaje'        => (int)$this->input->post('percentaje'),
             'type'              => $this->input->post('type'),
         ];
 
