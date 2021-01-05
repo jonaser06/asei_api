@@ -228,14 +228,15 @@ class Statistics extends MY_Controller {
     }
 
     public function editIndicador(){
+
         #validating input data
         if ( !$this->input->post('title') )        return $this->output_json(400,'The title is necessary');
-        if ( !$this->input->post('descripcion') )  return $this->output_json(400,'The description is necessary');
+        if ( !$this->input->post('description') )  return $this->output_json(400,'The description is necessary');
         if ( !$this->input->post('percentage') )   return $this->output_json(400,'The percentage is necessary');
         if ( !$this->input->post('type') )         return $this->output_json(400,'The type is necessary');
 
     
-
+        
         $where = ['id' => $this->input->post('id')];
         $this->data = [
             'title'             => $this->input->post('title'),

@@ -34,8 +34,8 @@ $route['deletebulletin']  = 'api/Statistics/deletebulletin';
 $route['getbulletin']['GET'] = 'api/Statistics/getbulletin';
 ##indicadores
 $route['newIndicador']['POST']  = 'api/Statistics/newIndicador';
-$route['editIndicador']['PUT']  = 'api/Statistics/editIndicador';
-$route['deleteIndicador'] ['DELETE'] = 'api/Statistics/deleteIndicador';
+$route['editIndicador']  = 'api/Statistics/editIndicador';
+$route['deleteIndicador'] = 'api/Statistics/deleteIndicador';
 $route['getIndicador']['GET'] = 'api/Statistics/getIndicador';
 
 #PERFILES
