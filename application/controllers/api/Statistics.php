@@ -209,7 +209,7 @@ class Statistics extends MY_Controller {
     public function newIndicador(){
         #validating input data
         if ( !$this->input->post('title') )        return $this->output_json(400,'The title is necessary');
-        if ( !$this->input->post('descripcion') )  return $this->output_json(400,'The description is necessary');
+        if ( !$this->input->post('description') )  return $this->output_json(400,'The description is necessary');
         if ( !$this->input->post('percentaje') )   return $this->output_json(400,'The percentaje is necessary');
         if ( !$this->input->post('type') )         return $this->output_json(400,'The type is necessary');
 
