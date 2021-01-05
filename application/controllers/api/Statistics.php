@@ -133,7 +133,6 @@ class Statistics extends MY_Controller {
 
     public function newbulletin(){
         #validating input data
-        if ( !$this->input->post('id') )           return $this->output_json(400,'The id is necessary');
         if ( !$this->input->post('title') )        return $this->output_json(400,'The title is necessary');
         if ( !$this->input->post('month') )        return $this->output_json(400,'The month is necessary');
         if ( !$this->input->post('year') )         return $this->output_json(400,'The year is necessary');
