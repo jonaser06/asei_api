@@ -218,7 +218,7 @@ class Statistics extends MY_Controller {
             'title'             => $this->input->post('title'),
             'description'       => $this->input->post('description'),
             'percentage'        => (int)$this->input->post('percentage'),
-            'type'              => $this->input->post('type'),
+            'type'              => strtolower($this->input->post('type')),
         ];
 
         #an error occurred 
@@ -242,7 +242,7 @@ class Statistics extends MY_Controller {
             'title'             => $this->input->post('title'),
             'description'       => $this->input->post('description'),
             'percentage'        => $this->input->post('percentage'),
-            'type'              => $this->input->post('type'),
+            'type'              => strtolower($this->input->post('type')),
         ];
 
         #an error occurred 
