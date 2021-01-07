@@ -98,14 +98,14 @@ class LoginUser extends MY_Controller {
             $user_token = AUTHORIZATION::generateToken($token_data);
 
             $privileges = $this->PrivilegesModel->get($userDB['ID_PE']);
-            $privileges = $this->converter_bool($privileges);
+            $privileges_convert = $this->converter_bool($privileges);
 
             $this->data = [
                 'user_id' => $userDB['ID_US'],
                 'nombres' => trim($userDB['NOMBRES']),
                 'apellidos' => trim($userDB['APELLIDO_PATERNO']).' '.trim($userDB['APELLIDO_MATERNO']),
                 'rol' => strtolower ($userDB['TIPO']),
-                'permisos' => $privileges,
+                'permisos' => $privileges_convert,
                 'token' => $user_token,
             ];
 
