@@ -96,4 +96,14 @@ class MY_Controller extends CI_Controller
             }
         }
     }
+    /**
+     * @param {array} array que contiene elementos a convertir en booleanos
+     */
+    public function converter_bool(array $convert = [] ) : array
+    {
+        $array_convert = array_map(function ($e){
+            return  $e == '1' ? true : ( $e == '0' ? false : $e);
+        },$convert);
+        return $array_convert ;
+    }
 }

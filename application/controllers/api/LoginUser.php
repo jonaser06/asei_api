@@ -5,7 +5,7 @@ class LoginUser extends MY_Controller {
 
 	public function __construct()
     {
-        parent::__construct();
+		parent::__construct();
 		$this->load->model('User_Model', 'UserModel');
         $this->load->model('Perfil_Model', 'PerfilModel');
         $this->load->model('Privileges_Model', 'PrivilegesModel');
@@ -24,30 +24,10 @@ class LoginUser extends MY_Controller {
      */
 	
 	public function register()
-	{   
-        $email = $this->input->post('email', TRUE);
-        
-
-        $response = $this->UserModel->getOne(['EMAIL' =>$email ]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
+	{
         $_POST = $this->security->xss_clean($_POST);
         
-        if( $this->input->post('nombres',TRUE) == '' ||
+        if( $this->input->post('nombres', TRUE) == '' ||
             $this->input->post('ap_pat', TRUE)== '' ||
             $this->input->post('telefono', TRUE)== '' ||
             $this->input->post('email', TRUE)== '' ||
@@ -56,19 +36,12 @@ class LoginUser extends MY_Controller {
         return $this->output_json(400,'complete los campos');
         endif;
     
-      
-        
-
-
-        
+        $response = $this->UserModel->getOne(['EMAIL' => $this->input->post('email', TRUE)]);
         if($response):
             return $this->output_json(400,'El correo ya esta registrado , pruebe con otro');
         endif;
 
         $perfil = $this->PerfilModel->get(['TIPO' => $this->input->post('perfil', TRUE)]);
-
-
-
         if(!$perfil):
             return $this->output_json(400,'no existe el perfil , pruebe con otro');
         endif;
@@ -86,10 +59,7 @@ class LoginUser extends MY_Controller {
         ];
          
         $this->UserModel->insert_user($insert_data);
-
         $userDB = $this->UserModel->getOne(['ID_US' => $insert_data['ID_US']]);
-
-
         $this->data = [
             'id' => $userDB['ID_US']
         ];
@@ -128,6 +98,8 @@ class LoginUser extends MY_Controller {
             $user_token = AUTHORIZATION::generateToken($token_data);
 
             $privileges = $this->PrivilegesModel->get($userDB['ID_PE']);
+            $privileges = $this->converter_bool($privileges);
+
             $this->data = [
                 'user_id' => $userDB['ID_US'],
                 'nombres' => trim($userDB['NOMBRES']),
@@ -138,6 +110,7 @@ class LoginUser extends MY_Controller {
             ];
 
             $this->output_json(200 , 'login success',$this->data);
-	}
+    }
+   
 	
 }
