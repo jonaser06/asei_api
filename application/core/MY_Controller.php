@@ -101,8 +101,10 @@ class MY_Controller extends CI_Controller
      */
     public function converter_bool(array $convert = [] ) : array
     {
-        $array_convert = array_map(function ($e){
-            return  $e == '1' ? true : ( $e == '0' ? false : $e);
+        $array_convert = array_map(function ($module){
+            return array_map(function ($e){
+                return  $e == '1' ? true : ( $e == '0' ? false : $e);
+            },$module);
         },$convert);
         return $array_convert ;
     }
