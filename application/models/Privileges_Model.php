@@ -8,7 +8,7 @@ class Privileges_Model extends CI_Model
    
     public function get($id)
     {
-        $this->db->select('mod.nombre as modulo , CREAR as crear , ACTUALIZAR as actualizar , ELIMINAR as eliminar , VISUALIZAR as visualizar');
+        $this->db->select('mod.nombre as modulo , mod.path , mod.icon , CREAR as crear , ACTUALIZAR as actualizar , ELIMINAR as eliminar , VISUALIZAR as visualizar');
         $this->db->from(' modulos_perfiles  as mod_p');
         $this->db->join('perfiles as p', 'p.ID_PE = mod_p.ID_PE');
         $this->db->join('modulos as mod', 'mod.ID_MO = mod_p.ID_MO');
@@ -18,7 +18,7 @@ class Privileges_Model extends CI_Model
     }
     public function getAll()
     {
-        $this->db->select('p.TIPO as perfil, mod.nombre as modulo , CREAR as crear , ACTUALIZAR as actualizar , ELIMINAR as eliminar , VISUALIZAR as visualizar');
+        $this->db->select('p.TIPO as perfil, mod.nombre as modulo , mod.path , mod.icon , CREAR as crear , ACTUALIZAR as actualizar , ELIMINAR as eliminar , VISUALIZAR as visualizar');
         $this->db->from(' modulos_perfiles  as mod_p');
         $this->db->join('perfiles as p', 'p.ID_PE = mod_p.ID_PE');
         $this->db->join('modulos as mod', 'mod.ID_MO = mod_p.ID_MO');
