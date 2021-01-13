@@ -6,7 +6,7 @@ class Upload extends MY_Controller {
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('File_model','FileModel');
+        $this->load->model('File_Model','FileModel');
         $this->load->helper(['form', 'url']);
     }
 
