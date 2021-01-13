@@ -13,7 +13,7 @@ class MY_Controller extends CI_Controller
     {
         parent::__construct();
         $this->load->database();
-        $this->load->model('File_model','FileModel');
+        $this->load->model('File_Model','FileModel');
 
     }
 
