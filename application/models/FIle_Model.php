@@ -14,26 +14,51 @@ class File_model extends CI_Model
         $uploads = $this->db->insert_batch($this->table, $uploadData);
         return $uploads ? TRUE : FALSE;
     }
-
     public function insert_relation (array $data_relation = [] , $table_relation ):bool {
         $uploads = $this->db->insert_batch( $table_relation , $data_relation);
         return $uploads ? TRUE : FALSE;
     }
-    
     public function get(
         ?array $conditions = NULL
     ) {
-        $this->db->select('ID_MULTI,TIPO,FILENAME,FECHA_CREATED');
-        $this->db->from($this->table);
+        $this->db->select('*');
         $result = $conditions 
-            ? $this->db->get_where($conditions)->row_array()
-            : $this->db->order_by('FECHA_CREATED'.'desc')
-                        ->get()->result_array();
-        return empty($result) ? $result : FALSE;
+            ? $this->db->get_where($this->table ,$conditions)->row_array()
+            : $this->db->get($this->table)->result_array();
+        return !empty($result) ? $result : FALSE;
     }
-    
     public function get_entidad (string $table , array $conditions = []) {
         return $this->db->get_where($table, $conditions)->row_array();
+    }
+
+    public function getOne( 
+        string $id_name,
+        string $table,
+        ?array $conditions)
+    {
+        $this->db->select('*');
+        $this->db->from($table);
+        $this->db->join('multimedia as m', 'm.ID_MULTI ='.$table.'.ID_MULTI');
+        $this->db->where($conditions);
+        $files = $this->db->get()->result_array();
+        return $files ? $files : FALSE;
+    }
+    public function getAll()
+    {
+        $this->db->select('p.TIPO as perfil, mod.nombre as modulo , mod.path , mod.icon , CREAR as crear , ACTUALIZAR as actualizar , ELIMINAR as eliminar , VISUALIZAR as visualizar');
+        $this->db->from(' modulos_perfiles  as mod_p');
+        $this->db->join('perfiles as p', 'p.ID_PE = mod_p.ID_PE');
+        $this->db->join('modulos as mod', 'mod.ID_MO = mod_p.ID_MO');
+        $privileges = $this->db->get()->result_array();
+        return $privileges ? $privileges : FALSE;
+    }
+    public function update (array $set , array $where )
+    {
+        if( empty($set) ) return false;
+        $this->db->set($set);
+        $this->db->where($where);
+        return  $this->db->update($this->table) ? true : false;
+        
     }
  
 }

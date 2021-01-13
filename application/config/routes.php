@@ -44,9 +44,26 @@ $route['api/perfiles'] = 'api/Perfiles';
 
 $route['perfiles']['GET'] = 'api/Privileges';
 
+
+
 #UPLOAD
 
-$route['upload'] = 'Upload';
+$route['upload']['POST']= 'Upload';
+$route['user/(:num)/files']['GET'] = 'Upload/get/$1';
+$route['files']['GET']= 'Upload/getAll';
+$route['user/(:num)/file/(:num)']['DELETE']= 'Upload/delete/$1/$2';
+$route['file/(:num)/update']['POST']= 'Upload/edit/$1';
+
+#notes
+
+$route['notes/new']['POST'] = 'api/Notes/insert';
+$route['notes/(:num)']['GET'] = 'api/Notes/getById/$1';
+$route['notes/(:any)']['GET'] = 'api/Notes/get/$1';
+$route['notes/(:num)/delete']['DELETE'] = 'api/Notes/delete/$1';
+
+#sections
+$route['sections']['GET'] = 'api/Notes/get_sections';
+
 
 
 

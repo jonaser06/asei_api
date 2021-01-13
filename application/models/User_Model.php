@@ -4,15 +4,16 @@ class User_Model extends CI_Model
 {
     protected $table = 'usuarios';
 
-    
     /**
      * User Registration
-     * @param: {array} User Data para insertar al DB
+     * @param: {array} User Data
      */
     public function insert_user(array $data = []) {
         $this->db->insert($this->table, $data);
         return $this->db->insert_id();
     }
+
+   
     /**
      * User Login
      * ----------------------------------
@@ -27,7 +28,7 @@ class User_Model extends CI_Model
         $this->db->where(['EMAIL' => $correo , 'CLAVE' => md5($password)]);
         $user = $this->db->get()->row_array();
         return $user ? $user : FALSE;
-    } 
+    }
     public function getOne(
         ?array $conditions = NULL
     ) {
@@ -54,7 +55,6 @@ class User_Model extends CI_Model
         $user = $this->db->get()->row_array();
         return $user ? $user : FALSE;
     }
-   
    
  
 }
