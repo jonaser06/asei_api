@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class File_Model extends CI_Model
+class Files_Model extends CI_Model
 {
     protected $table = 'multimedia';
 
