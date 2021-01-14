@@ -45,6 +45,14 @@ class Notes_Model extends CI_Model
         $note = $this->db->insert($this->table, $data);
         return $note ?$note : false ;
     }
+    public function update (array $set , array $where )
+    {
+        if( empty($set) ) return false;
+        $this->db->set($set);
+        $this->db->where($where);
+        return  $this->db->update($this->table) ? true : false;
+        
+    }
     public function delete( int $id ) 
     {
         $result  = $this->db->delete($this->table, [ 'ID_NO' => $id ] );

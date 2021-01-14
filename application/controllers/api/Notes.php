@@ -31,8 +31,9 @@ class Notes extends MY_Controller {
            if( ! $this->input->post('titulo') )        return $this->output_json(400 , 'Debe enviar el título');
            if( ! $this->input->post('resumen') )       return $this->output_json(400 , 'Debe enviar el resumen');
            if( ! $this->input->post('texto') )         return $this->output_json(400 , 'Debe enviar el texto');
-           if( ! $this->input->post('fecha_inicio') )  return $this->output_json(400 , 'Debe enviar el fecha_inicio');
-           if( ! $this->input->post('fecha_fin') )     return $this->output_json(400 , 'Debe enviar el fecha_fin');
+           if( ! $this->input->post('fecha_inicio') )  return $this->output_json(400 , 'Debe enviar la fecha_inicio');
+           if( ! $this->input->post('fecha_fin') )     return $this->output_json(400 , 'Debe enviar la fecha_fin');
+           if( ! $this->input->post('seccion') )     return $this->output_json(400 , 'Debe enviar la sección');
            if ( empty($_FILES['files']['name']) )      return $this->output_json(400 , 'no select any file');    
 
            $inputs = $this->input->post(NULL, TRUE);
@@ -76,7 +77,7 @@ class Notes extends MY_Controller {
         $offset   = $params['page']  ? $for_page * ($params['page'] - 1) : 0;
 
         $notes = $this->NotesModel->getAll($for_page ,$offset ,['notas.ID_SEC' => (int) $section['ID_SEC']] );
-        if ( !$notes )  return $this->output_json(200 , "not exists notes for in section : $categorie");
+        if ( !$notes )  return $this->output_json(200 , "not exists notes for in section : $categorie" ,[] ,false );
         $notes['page'] = $params['page'] ? (int) $params['page'] : 1 ;
 
         for( $i = 0; $i < count( $notes['notes'] ) ; $i ++ ): 
@@ -86,8 +87,37 @@ class Notes extends MY_Controller {
         
         $this->output_json( 200 , 'find notes for this section !' , $notes );
     }
-    public function update ()
+    public function update (int $id)
     {
+        $note = $this->NotesModel->get((int) $id);
+        if(!$note) return $this->output_json( 200 , 'id is incorrect , not exist note ' , [] , false );
+
+        if( ! $this->input->post('titulo') )        return $this->output_json(400 , 'Debe enviar el título');
+        if( ! $this->input->post('resumen') )       return $this->output_json(400 , 'Debe enviar el resumen');
+        if( ! $this->input->post('texto') )         return $this->output_json(400 , 'Debe enviar el texto');
+        if( ! $this->input->post('fecha_inicio') )  return $this->output_json(400 , 'Debe enviar la fecha_inicio');
+        if( ! $this->input->post('fecha_fin') )     return $this->output_json(400 , 'Debe enviar la fecha_fin');
+        if( ! $this->input->post('seccion') )       return $this->output_json(400 , 'Debe enviar la seccion');
+        if ( empty($_FILES['file']['name']) )      return $this->output_json(400 , 'no select any file');    
+
+        $inputs = $this->input->post(NULL, TRUE);
+        $section = $this->NotesModel->get_section( [ 'nombre' => $this->input->post('seccion') ]);
+        if( !$section ) return $this->output_json(200 , 'Not exists this section for note' , [] , false );
+        $set = [
+         'titulo'       => $inputs['titulo'],
+         'resumen'      => $inputs['resumen'],
+         'texto'        => $inputs['texto'],
+         'fecha_inicio' => $inputs['fecha_inicio'],
+         'fecha_fin'    => $inputs['fecha_fin'],
+         'ID_SEC'       => (int)$section['ID_SEC'],
+        ]; 
+        $noteUpdate = $this->NotesModel->update( $set , ['ID_NO' => $id] );
+        if( !$noteUpdate ) return $this->output_json( 400 , 'Error not update note!');
+        $note_imgs = $this->FileModel->getOne('ID_NO','multimedia_notas',['ID_NO' => $id]);
+        $img = $note_imgs[0];
+        $this->editFile( $_FILES ,$img['ID_MULTI']);
+        return $this->output_json( 200 , 'note update !');
+
 
     }
     public function delete( int $id )

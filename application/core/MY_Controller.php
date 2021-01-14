@@ -224,14 +224,12 @@ class MY_Controller extends CI_Controller
         return true;
 
     } 
-    public function editFile ( int $id_file )
+    public function editFile (array $files , int $id_file )
     {
-        if ( empty($_FILES['file']['name']) )  return $this->output_json(400 , 'no select any file');
         $file = $this->FileModel->get(['ID_MULTI' => $id_file]);
-        if ( !$file) return $this->output_json(200 , 'not exist register' , [] , false );
-        
+        if ( !$file) return false;
         $path    =  DIR_U . $file['RUTA'];
-        if( !file_exists($path) ) return $this->output_json(200 , 'not exist archive in this server' , [] , false );
+        if( !file_exists($path) ) return false;
         unlink($path);
 
         $this->configImg();
@@ -243,7 +241,6 @@ class MY_Controller extends CI_Controller
             'RUTA'       => 'uploads/notes/'.$fileData['file_name']
         ];
         $result = $this->FileModel->update( $set , ['ID_MULTI' => $id_file ]);
-        if( $result ) $this->output_json( 400 , 'no se pudo actualizar');
-        return $this->output_json(200 , 'update file'  );
+        return $result;
     }
 }

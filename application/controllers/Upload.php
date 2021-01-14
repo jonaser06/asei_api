@@ -178,7 +178,7 @@ class Upload extends MY_Controller {
             'RUTA'       => 'uploads/'.$fileData['file_name']
         ];
         $result = $this->FileModel->update( $set , ['ID_MULTI' => $id_file ]);
-        if( $result ) $this->output_json( 400 , 'no se pudo actualizar');
+        if( !$result ) return $this->output_json( 400 , 'no se pudo actualizar');
         return $this->output_json(200 , 'update file'  );
 
     }
