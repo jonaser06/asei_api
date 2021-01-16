@@ -22,7 +22,6 @@ class Notes extends MY_Controller {
         }
     }
     public function get_sections() {
-        return $this->output_json( 400 , 'no exist any section !' ); 
         $sections = $this->NotesModel->get_section();
         return $sections ? $this->output_json( 200 , 'sections find !' ,$sections ) 
                          : $this->output_json( 200 , 'no exist any section !' ,[] ,false); 
