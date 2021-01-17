@@ -76,7 +76,9 @@ class Notes extends MY_Controller {
         $for_page = $params['limit'] ? (int) $params['limit'] : 4 ;
         $offset   = $params['page']  ? $for_page * ($params['page'] - 1) : 0;
 
-        $notes = $this->NotesModel->getAll($for_page ,$offset ,['notas.ID_SEC' => (int) $section['ID_SEC']] );
+        $last = $this->input->get('last' , TRUE ) == 'true' ? TRUE :FALSE;
+
+        $notes = $this->NotesModel->getAll($for_page ,$offset ,['notas.ID_SEC' => (int) $section['ID_SEC']] , $last );
         if ( !$notes )  return $this->output_json(200 , "not exists notes for in section : $categorie" ,[] ,false );
     
         for( $i = 0; $i < count( $notes['notes'] ) ; $i ++ ): 

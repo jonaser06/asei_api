@@ -25,11 +25,16 @@ class Notes_Model extends CI_Model
         return $note ? $note : FALSE;
     }
     
-    public function getAll( int $limit = 1, int $offset = 0, array $conditions = [])
+    public function getAll( int $limit = 1, int $offset = 0, array $conditions = [] , bool $lasted = FALSE )
     {
-        $this->db->select('notas.ID_NO  , titulo ,resumen , texto , fecha_inicio , fecha_fin ,sec.nombre as seccion');
+        $this->db->select('notas.ID_NO  , titulo ,resumen , texto , fecha_inicio , fecha_fin ,sec.nombre as seccion , FECHA_PUBLISHED as fecha_publicacion');
         $this->db->join('secciones as sec' , 'notas.ID_SEC = sec.ID_SEC');
         $this->db->where( $conditions );
+        if($lasted) {
+            $this->db->where( 'fecha_inicio >= (CURDATE() - INTERVAL 30 DAY)');
+        }
+        $this->db->order_by('fecha_publicacion', 'DESC');
+
         $countAll = $this->db->count_all_results('notas', FALSE);
         $this->db->limit($limit, $offset);
         $notes = $this->db->get()->result_array();
