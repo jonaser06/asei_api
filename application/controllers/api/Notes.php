@@ -10,7 +10,47 @@ class Notes extends MY_Controller {
         $this->load->model('Files_Model','FileModel');
 
     }
+    public function search( $categorie )
+    {
+        $notes_quanty = 4;
+
+        $section = $this->NotesModel->get_section( [ 'nombre' => $categorie ]);
+        if ( !$section ) return $this->output_json(200 , 'Not exists this section' , [] , false );
+        
+        $params     = $this->input->get(['page', 'limit', 'search'], TRUE);
+        if ( !$params['search'] ) return $this->output_json(400 , 'Debe enviar una nota a buscar');
+        $search   = explode(' ', $params['search']);
+        
+        $for_page   = $params['limit'] ? (int) $params['limit'] : $notes_quanty;
+        $offset     = $params['page']  ? $for_page * ($params['page'] - 1) : 0;
+        
+        $conditions = ['notas.ID_SEC' => (int) $section['ID_SEC']];
+
+        $notes = $this->NotesModel->getAll( $for_page ,$offset ,$conditions ,false ,$search );
+        if ( !$notes )  return $this->output_json(200 , "not exists results" ,[] ,false );
     
+        for( $i = 0; $i < count( $notes['notes'] ) ; $i ++ ): 
+            $note_imgs = $this->FileModel->getOne('ID_NO','multimedia_notas',['ID_NO' => $notes['notes'][$i]['ID_NO']]);
+            $notes['notes'][$i]['imagenes'] = $note_imgs ? $note_imgs : 'no images found';
+        endfor;
+
+        $page           = $params['page'] ? (int) $params['page'] : 1 ;
+        $notes['page']  = $page;
+        $pages          = ($notes['countAll'] % $for_page ) ?   (int)($notes['countAll'] / $for_page) + 1 : (int)$notes['countAll'] / $for_page  ; 
+        $notes['pages'] = $pages;
+        $section        = $notes['notes'][0]['seccion'];
+
+        if($page > 1) {
+            $prev = $page - 1  ;
+            $notes['prev'] = "/$section?page=$prev&limit=$for_page";
+        } 
+        if( $page < $pages ) {
+            $next = $page + 1 ;
+            $notes['next'] = "/$section?page=$next&limit=$for_page";
+        }
+       
+        $this->output_json( 200 , 'find notes for this section !' , $notes );
+    } 
     private function filterEmpty ( array $inputs = [] ) 
     {
 
@@ -69,16 +109,18 @@ class Notes extends MY_Controller {
     }
     public function get( $categorie )
     {
+        $notes_quanty = 4;
+
         $section = $this->NotesModel->get_section( [ 'nombre' => $categorie ]);
         if ( !$section ) return $this->output_json(200 , 'Not exists this section' , [] , false );
         
-        $params   = $this->input->get([ 'page', 'limit'], TRUE);
-        $for_page = $params['limit'] ? (int) $params['limit'] : 4 ;
-        $offset   = $params['page']  ? $for_page * ($params['page'] - 1) : 0;
+        $params     = $this->input->get(['page', 'limit', 'last', 'search'], TRUE);
+        $for_page   = $params['limit'] ? (int) $params['limit'] : $notes_quanty;
+        $offset     = $params['page']  ? $for_page * ($params['page'] - 1) : 0;
+        $last       = $params['last'] == 'true' ? true :false;
+        $conditions = ['notas.ID_SEC' => (int) $section['ID_SEC']];
 
-        $last = $this->input->get('last' , TRUE ) == 'true' ? TRUE :FALSE;
-
-        $notes = $this->NotesModel->getAll($for_page ,$offset ,['notas.ID_SEC' => (int) $section['ID_SEC']] , $last );
+        $notes = $this->NotesModel->getAll( $for_page ,$offset ,$conditions , $last );
         if ( !$notes )  return $this->output_json(200 , "not exists notes for in section : $categorie" ,[] ,false );
     
         for( $i = 0; $i < count( $notes['notes'] ) ; $i ++ ): 
@@ -102,8 +144,7 @@ class Notes extends MY_Controller {
         }
        
         $this->output_json( 200 , 'find notes for this section !' , $notes );
-    }
-    
+    } 
     public function update (int $id)
     {
         $note = $this->NotesModel->get((int) $id);

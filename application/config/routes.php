@@ -62,6 +62,9 @@ $route['notes/(:any)']['GET'] = 'api/Notes/get/$1';
 $route['notes/(:num)/update']['POST']= 'api/Notes/update/$1';
 $route['notes/(:num)/delete']['DELETE'] = 'api/Notes/delete/$1';
 
+#search Notes
+$route['notes/search/(:any)']['GET'] = 'api/Notes/search/$1';
+
 #sections
 $route['sections']['GET'] = 'api/Notes/get_sections';
 
