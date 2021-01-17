@@ -40,13 +40,14 @@ class Notes extends MY_Controller {
         $notes['pages'] = $pages;
         $section        = $notes['notes'][0]['seccion'];
 
+        $busqueda  = $params['search'] ;
         if($page > 1) {
             $prev = $page - 1  ;
-            $notes['prev'] = "/$section?page=$prev&limit=$for_page";
+            $notes['prev'] = "/$section?page=$prev&limit=$for_page&search=$busqueda";
         } 
         if( $page < $pages ) {
             $next = $page + 1 ;
-            $notes['next'] = "/$section?page=$next&limit=$for_page";
+            $notes['next'] = "/$section?page=$next&limit=$for_page&search=$busqueda";
         }
        
         $this->output_json( 200 , 'find notes for this section !' , $notes );
