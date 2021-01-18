@@ -72,9 +72,15 @@ class Notes extends MY_Controller {
            if( ! $this->input->post('titulo') )        return $this->output_json(400 , 'Debe enviar el título');
            if( ! $this->input->post('resumen') )       return $this->output_json(400 , 'Debe enviar el resumen');
            if( ! $this->input->post('texto') )         return $this->output_json(400 , 'Debe enviar el texto');
-           if( ! $this->input->post('fecha_inicio') )  return $this->output_json(400 , 'Debe enviar la fecha_inicio');
-           if( ! $this->input->post('fecha_fin') )     return $this->output_json(400 , 'Debe enviar la fecha_fin');
            if( ! $this->input->post('seccion') )     return $this->output_json(400 , 'Debe enviar la sección');
+           if($this->input->post('seccion') == 'noticias') {
+            if( ! $this->input->post('fecha_publicacion') )  return $this->output_json(400 , 'Debe enviar la fecha publicacion');
+           }else {
+               if( ! $this->input->post('fecha_inicio') )  return $this->output_json(400 , 'Debe enviar la fecha de inicio');
+               if( ! $this->input->post('fecha_fin') )     return $this->output_json(400 , 'Debe enviar la fecha de final de la nota');
+               if( ! $this->input->post('hora_inicio') )   return $this->output_json(400 , 'Debe enviar la hora de inicio');
+               if( ! $this->input->post('hora_fin') )      return $this->output_json(400 , 'Debe enviar la hora de finalización');
+           }
            if ( empty($_FILES['files']['name']) )      return $this->output_json(400 , 'no select any file');    
 
            $inputs = $this->input->post(NULL, TRUE);
@@ -86,10 +92,21 @@ class Notes extends MY_Controller {
             'titulo'       => $inputs['titulo'],
             'resumen'      => $inputs['resumen'],
             'texto'        => $inputs['texto'],
-            'fecha_inicio' => $inputs['fecha_inicio'],
-            'fecha_fin'    => $inputs['fecha_fin'],
             'ID_SEC'       => (int)$section['ID_SEC'],
            ];
+
+           if( $section['nombre'] == 'noticias') {
+               $data['fecha_inicio']    = $inputs['fecha_publicacion'];
+               $data['fecha_fin']       = $inputs['fecha_publicacion'];
+               $data['hora_inicio']     = '00:00';
+               $data['hora_fin']        = '00:00';
+               $data['FECHA_PUBLISHED'] = $inputs['fecha_publicacion'];
+           }else {
+               $data['fecha_inicio']    = $inputs['fecha_inicio'];
+               $data['fecha_fin']       = $inputs['fecha_fin'];
+               $data['hora_inicio']     = $inputs['hora_inicio'];
+               $data['hora_fin']        = $inputs['hora_fin'];
+           }
 
            $note = $this->NotesModel->insert($data);
            if( !$note ) return $this->output_json(400 , 'no se pudo insertar la nota ');
