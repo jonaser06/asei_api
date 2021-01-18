@@ -97,6 +97,7 @@ class Notes extends MY_Controller {
            if( !$section ) return $this->output_json(200 , 'Not exists this section for note' , [] , false );
 
            $text  = $this->saveFormat($inputs['texto']);
+
            $data = [
             'ID_NO'        => $this->generateId(),
             'titulo'       => $inputs['titulo'],
@@ -112,10 +113,13 @@ class Notes extends MY_Controller {
                $data['hora_fin']        = '00:00';
                $data['FECHA_PUBLISHED'] = $inputs['fecha_publicacion'];
            }else {
+               date_default_timezone_set("America/Lima");        
                $data['fecha_inicio']    = $inputs['fecha_inicio'];
                $data['fecha_fin']       = $inputs['fecha_fin'];
                $data['hora_inicio']     = $inputs['hora_inicio'];
                $data['hora_fin']        = $inputs['hora_fin'];
+               $data['FECHA_PUBLISHED'] = date("Y-m-d");
+
            }
 
            $note = $this->NotesModel->insert($data);
