@@ -1,4 +1,7 @@
 <?php
+
+use phpDocumentor\Reflection\Types\String_;
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Notes extends MY_Controller {
@@ -54,13 +57,19 @@ class Notes extends MY_Controller {
     } 
     private function filterEmpty ( array $inputs = [] ) 
     {
-
         foreach( $inputs as  $input => $value ){
             $white_list = ['titulo' , 'resumen' , 'texto' , 'fecha_inicio' , 'fecha_fin', 'seccion'];
             
-            if( $value =='' ) return $this->output_json(400 , 'El campo '.$input. ' no debe estar vacio');
-            
+            if( $value =='' ) return $this->output_json(400 , 'El campo '.$input. ' no debe estar vacio'); 
         }
+    }
+    private function saveFormat(string $text = '' )  
+    {   
+        $parrafos = explode("\n",$text);
+        $parrafosFormat = array_map(function($parrafo){
+            return '<p class="italic-paragraph">'.$parrafo.'</p>';
+        },$parrafos);
+        return implode(' ',$parrafosFormat);
     }
     public function get_sections() {
         $sections = $this->NotesModel->get_section();
@@ -72,7 +81,7 @@ class Notes extends MY_Controller {
            if( ! $this->input->post('titulo') )        return $this->output_json(400 , 'Debe enviar el título');
            if( ! $this->input->post('resumen') )       return $this->output_json(400 , 'Debe enviar el resumen');
            if( ! $this->input->post('texto') )         return $this->output_json(400 , 'Debe enviar el texto');
-           if( ! $this->input->post('seccion') )     return $this->output_json(400 , 'Debe enviar la sección');
+           if( ! $this->input->post('seccion') )       return $this->output_json(400 , 'Debe enviar la sección');
            if($this->input->post('seccion') == 'noticias') {
             if( ! $this->input->post('fecha_publicacion') )  return $this->output_json(400 , 'Debe enviar la fecha publicacion');
            }else {
@@ -87,11 +96,12 @@ class Notes extends MY_Controller {
            $section = $this->NotesModel->get_section( [ 'nombre' => $this->input->post('seccion') ]);
            if( !$section ) return $this->output_json(200 , 'Not exists this section for note' , [] , false );
 
+           $text  = $this->saveFormat($inputs['texto']);
            $data = [
             'ID_NO'        => $this->generateId(),
             'titulo'       => $inputs['titulo'],
             'resumen'      => $inputs['resumen'],
-            'texto'        => $inputs['texto'],
+            'texto'        => $text,
             'ID_SEC'       => (int)$section['ID_SEC'],
            ];
 
@@ -171,22 +181,43 @@ class Notes extends MY_Controller {
         if( ! $this->input->post('titulo') )        return $this->output_json(400 , 'Debe enviar el título');
         if( ! $this->input->post('resumen') )       return $this->output_json(400 , 'Debe enviar el resumen');
         if( ! $this->input->post('texto') )         return $this->output_json(400 , 'Debe enviar el texto');
-        if( ! $this->input->post('fecha_inicio') )  return $this->output_json(400 , 'Debe enviar la fecha_inicio');
-        if( ! $this->input->post('fecha_fin') )     return $this->output_json(400 , 'Debe enviar la fecha_fin');
         if( ! $this->input->post('seccion') )       return $this->output_json(400 , 'Debe enviar la seccion');
+        if($this->input->post('seccion') == 'noticias') {
+            if( ! $this->input->post('fecha_publicacion') )  return $this->output_json(400 , 'Debe enviar la fecha publicacion');
+           }else {
+               if( ! $this->input->post('fecha_inicio') )  return $this->output_json(400 , 'Debe enviar la fecha de inicio');
+               if( ! $this->input->post('fecha_fin') )     return $this->output_json(400 , 'Debe enviar la fecha de final de la nota');
+               if( ! $this->input->post('hora_inicio') )   return $this->output_json(400 , 'Debe enviar la hora de inicio');
+               if( ! $this->input->post('hora_fin') )      return $this->output_json(400 , 'Debe enviar la hora de finalización');
+           }
         if ( empty($_FILES['file']['name']) )      return $this->output_json(400 , 'no select any file');    
 
         $inputs = $this->input->post(NULL, TRUE);
         $section = $this->NotesModel->get_section( [ 'nombre' => $this->input->post('seccion') ]);
         if( !$section ) return $this->output_json(200 , 'Not exists this section for note' , [] , false );
+
+        $text  = $this->saveFormat($inputs['texto']);
         $set = [
-         'titulo'       => $inputs['titulo'],
-         'resumen'      => $inputs['resumen'],
-         'texto'        => $inputs['texto'],
-         'fecha_inicio' => $inputs['fecha_inicio'],
-         'fecha_fin'    => $inputs['fecha_fin'],
-         'ID_SEC'       => (int)$section['ID_SEC'],
-        ]; 
+            'titulo'       => $inputs['titulo'],
+            'resumen'      => $inputs['resumen'],
+            'texto'        => $text,
+            'ID_SEC'       => (int)$section['ID_SEC'],
+        ];
+
+           if( $section['nombre'] == 'noticias') {
+               $set['fecha_inicio']    = $inputs['fecha_publicacion'];
+               $set['fecha_fin']       = $inputs['fecha_publicacion'];
+               $set['hora_inicio']     = '00:00';
+               $set['hora_fin']        = '00:00';
+               $set['FECHA_PUBLISHED'] = $inputs['fecha_publicacion'];
+           }else {
+               $set['fecha_inicio']    = $inputs['fecha_inicio'];
+               $set['fecha_fin']       = $inputs['fecha_fin'];
+               $set['hora_inicio']     = $inputs['hora_inicio'];
+               $set['hora_fin']        = $inputs['hora_fin'];
+           }
+       
+
         $noteUpdate = $this->NotesModel->update( $set , ['ID_NO' => $id] );
         if( !$noteUpdate ) return $this->output_json( 400 , 'Error not update note!');
         $note_imgs = $this->FileModel->getOne('ID_NO','multimedia_notas',['ID_NO' => $id]);
