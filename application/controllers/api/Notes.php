@@ -132,7 +132,7 @@ class Notes extends MY_Controller {
         $note = $this->NotesModel->get((int) $id);
         if(!$note) return $this->output_json( 200 , 'id is incorrect , not exist note ' , [] , false );
         $note_imgs = $this->FileModel->getOne('ID_NO','multimedia_notas',['ID_NO' => $id]);
-        if( !empty($note) ) $note['files'] = $note_imgs;
+        if( !empty($note) ) $note['imagenes'] = $note_imgs;
         $this->output_json( 200 ,'find note!' , $note );
     }
     public function get( $categorie )

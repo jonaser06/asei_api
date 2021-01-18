@@ -17,7 +17,7 @@ class Notes_Model extends CI_Model
 
     public function get( int $id_nota)
     {
-        $this->db->select('notas.ID_NO  , titulo ,resumen , texto , fecha_inicio , fecha_fin ,sec.nombre as seccion ,FECHA_PUBLISHED as fecha_publicacion');
+        $this->db->select('notas.ID_NO , titulo ,resumen , texto , fecha_inicio , fecha_fin ,sec.nombre as seccion ,hora_inicio ,hora_fin,FECHA_PUBLISHED as fecha_publicacion');
         $this->db->from('notas');
         $this->db->join('secciones as sec' , 'notas.ID_SEC = sec.ID_SEC');
         $this->db->where(['notas.ID_NO ' =>(int) $id_nota]);
