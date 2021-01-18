@@ -60,7 +60,8 @@ $route['notes/new']['POST'] = 'api/Notes/insert';
 $route['notes/(:num)']['GET'] = 'api/Notes/getById/$1';
 $route['notes/(:any)']['GET'] = 'api/Notes/get/$1';
 $route['notes/(:num)/update']['POST']= 'api/Notes/update/$1';
-$route['notes/(:num)/delete']['DELETE'] = 'api/Notes/delete/$1';
+// $route['notes/(:num)/delete']['DELETE'] = 'api/Notes/delete/$1';
+$route['notes/(:num)/delete']['GET'] = 'api/Notes/delete/$1';
 
 #search Notes
 $route['notes/search/(:any)']['GET'] = 'api/Notes/search/$1';
