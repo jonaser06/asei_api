@@ -118,9 +118,9 @@ class MY_Controller extends CI_Controller
 
         #congiguramos el upload para cada  file
         $config['allowed_types']  = 'gif|jpg|png';
-        $config['max_size']       = 100;
-        $config['max_width']      = 1024;
-        $config['max_height']     = 768;
+        $config['max_size']       = 10000;
+        $config['max_width']      = 10240;
+        $config['max_height']     = 7680;
         $config['upload_path']    = $uploadPath;
         $this->load->library('upload', $config);
         $this->upload->initialize($config);
