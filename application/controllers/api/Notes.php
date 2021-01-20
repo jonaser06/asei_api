@@ -21,7 +21,7 @@ class Notes extends MY_Controller {
         if ( !$section ) return $this->output_json(200 , 'Not exists this section' , [] , false );
         
         $params     = $this->input->get(['page', 'limit', 'search'], TRUE);
-        $search   = ! $params['search'] ? null : explode(' ', $params['search']) ;
+        $search   = ! $params['search'] ? [] : explode(' ', $params['search']) ;
         
         $for_page   = $params['limit'] ? (int) $params['limit'] : $notes_quanty;
         $offset     = $params['page']  ? $for_page * ($params['page'] - 1) : 0;
