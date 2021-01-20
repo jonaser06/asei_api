@@ -25,16 +25,18 @@ class Notes_Model extends CI_Model
         return $note ? $note : FALSE;
     }
     
-    public function getAll( int $limit = 1, int $offset = 0, array $conditions = [] , bool $lasted = FALSE , array $params = [] )
+    public function getAll( int $limit = 1, int $offset = 0, array $conditions = [] , bool $lasted = FALSE , $params  )
     {
         ((int)$conditions['notas.ID_SEC'] == 1 )
         ? $this->db->select('notas.ID_NO  , titulo ,resumen , texto ,sec.nombre as seccion , FECHA_PUBLISHED as fecha_publicacion')
         : $this->db->select('notas.ID_NO  , titulo ,resumen , texto , fecha_inicio , fecha_fin ,sec.nombre as seccion ,  hora_inicio , hora_fin , FECHA_PUBLISHED as fecha_publicacion ');
 
         $this->db->join('secciones as sec' , 'notas.ID_SEC = sec.ID_SEC');
-        array_map(function ($param) {
-            $this->db->like('notas.titulo', $param, 'both');
-        }, $params);
+        if($params) {
+            array_map(function ($param) {
+                $this->db->like('notas.titulo', $param, 'both');
+            }, $params);
+        }
         
         $this->db->where( $conditions );
 
