@@ -32,8 +32,14 @@ class Notes extends MY_Controller {
         if ( !$notes )  return $this->output_json(200 , "not exists results" ,[] ,false );
     
         for( $i = 0; $i < count( $notes['notes'] ) ; $i ++ ): 
+
+            $time = explode(' ',$notes['notes'][$i]['fecha_publicacion']);
+            $notes['notes'][$i]['fecha_publicacion'] = $time[0];
+            $notes['notes'][$i]['hora_publicacion']  = $time[1];
+
             $note_imgs = $this->FileModel->getOne('ID_NO','multimedia_notas',['ID_NO' => $notes['notes'][$i]['ID_NO']]);
             $notes['notes'][$i]['imagenes'] = $note_imgs ? $note_imgs : 'no images found';
+            
         endfor;
 
         $page           = $params['page'] ? (int) $params['page'] : 1 ;
@@ -70,26 +76,42 @@ class Notes extends MY_Controller {
         },$parrafos);
         return implode(' ',$parrafosFormat);
     }
+    private function noteSend(array $note = []):array
+    {
+        if($note['seccion'] == 'noticias') {
+            unset($note['fecha_inicio']);
+            unset($note['fecha_fin']);
+            unset($note['hora_inicio']);
+            unset($note['hora_fin']);
+        }
+        $time = explode(' ',$note['fecha_publicacion']);
+        $note['fecha_publicacion'] = $time[0];
+        $note['hora_publicacion']  = $time[1];
+        return $note;
+    }
     public function get_sections() {
         $sections = $this->NotesModel->get_section();
         return $sections ? $this->output_json( 200 , 'sections find !' ,$sections ) 
                          : $this->output_json( 200 , 'no exist any section !' ,[] ,false); 
     }
+
     public function insert()
     {
            if( ! $this->input->post('titulo') )        return $this->output_json(400 , 'Debe enviar el título');
            if( ! $this->input->post('resumen') )       return $this->output_json(400 , 'Debe enviar el resumen');
            if( ! $this->input->post('texto') )         return $this->output_json(400 , 'Debe enviar el texto');
            if( ! $this->input->post('seccion') )       return $this->output_json(400 , 'Debe enviar la sección');
-           if($this->input->post('seccion') == 'noticias') {
-            if( ! $this->input->post('fecha_publicacion') )  return $this->output_json(400 , 'Debe enviar la fecha publicacion');
-           }else {
+           if($this->input->post('seccion') !== 'noticias') {
                if( ! $this->input->post('fecha_inicio') )  return $this->output_json(400 , 'Debe enviar la fecha de inicio');
                if( ! $this->input->post('fecha_fin') )     return $this->output_json(400 , 'Debe enviar la fecha de final de la nota');
                if( ! $this->input->post('hora_inicio') )   return $this->output_json(400 , 'Debe enviar la hora de inicio');
                if( ! $this->input->post('hora_fin') )      return $this->output_json(400 , 'Debe enviar la hora de finalización');
            }
+           if( ! $this->input->post('fecha_publicacion') )  return $this->output_json(400 , 'Debe enviar la fecha publicacion');
+           if( ! $this->input->post('hora_publicacion') )  return $this->output_json(400 , 'Debe enviar la hora de publicación');
+
            if ( empty($_FILES['files']['name']) )      return $this->output_json(400 , 'no select any file');    
+           if ( $_FILES['files']['size'][0] > 2000000 ) return $this->output_json(400 , 'La imagen debe ser menor a 2MB' );    
 
            $inputs = $this->input->post(NULL, TRUE);
            $section = $this->NotesModel->get_section( [ 'nombre' => $this->input->post('seccion') ]);
@@ -110,15 +132,14 @@ class Notes extends MY_Controller {
                $data['fecha_fin']       = $inputs['fecha_publicacion'];
                $data['hora_inicio']     = '00:00';
                $data['hora_fin']        = '00:00';
-               $data['FECHA_PUBLISHED'] = $inputs['fecha_publicacion'];
+               $data['FECHA_PUBLISHED'] = $inputs['fecha_publicacion'].' '.$inputs['hora_publicacion'];
            }else {
                date_default_timezone_set("America/Lima");        
                $data['fecha_inicio']    = $inputs['fecha_inicio'];
                $data['fecha_fin']       = $inputs['fecha_fin'];
                $data['hora_inicio']     = $inputs['hora_inicio'];
                $data['hora_fin']        = $inputs['hora_fin'];
-               $data['FECHA_PUBLISHED'] = date("Y-m-d");
-
+               $data['FECHA_PUBLISHED'] = $inputs['fecha_publicacion'].' '.$inputs['hora_publicacion'];
            }
 
            $note = $this->NotesModel->insert($data);
@@ -126,14 +147,18 @@ class Notes extends MY_Controller {
            $multi = $this->create_files('multimedia_notas','ID_NO', (int)$data['ID_NO'] , $_FILES );
 
            $note  = $this->NotesModel->get( (int)$data['ID_NO']);
-           $note_imgs = $this->FileModel->getOne('ID_NO','multimedia_notas',['ID_NO' => (int) $note['ID_NO']]);
-           if( !empty($note) ) $note['files'] = $note_imgs;
-           return $this->output_json(200 , 'note insert', $note);
+           $note  = $this->noteSend($note);
+            $note_imgs = $this->FileModel->getOne('ID_NO','multimedia_notas',['ID_NO' => (int) $note['ID_NO']]);
+            if( !empty($note) ) $note['files'] = $note_imgs;
+            return $this->output_json(200 , 'note insert', $note);
     }
     public function getById( int $id )
     {
         $note = $this->NotesModel->get((int) $id);
         if(!$note) return $this->output_json( 200 , 'id is incorrect , not exist note ' , [] , false );
+
+        $note = $this->noteSend($note);
+
         $note_imgs = $this->FileModel->getOne('ID_NO','multimedia_notas',['ID_NO' => $id]);
         if( !empty($note) ) $note['imagenes'] = $note_imgs;
         $this->output_json( 200 ,'find note!' , $note );
@@ -153,10 +178,16 @@ class Notes extends MY_Controller {
 
         $notes = $this->NotesModel->getAll( $for_page ,$offset ,$conditions , $last );
         if ( !$notes )  return $this->output_json(200 , "not exists notes for in section : $categorie" ,[] ,false );
-    
+        
         for( $i = 0; $i < count( $notes['notes'] ) ; $i ++ ): 
+
+            $time = explode(' ',$notes['notes'][$i]['fecha_publicacion']);
+            $notes['notes'][$i]['fecha_publicacion'] = $time[0];
+            $notes['notes'][$i]['hora_publicacion']  = $time[1];
+
             $note_imgs = $this->FileModel->getOne('ID_NO','multimedia_notas',['ID_NO' => $notes['notes'][$i]['ID_NO']]);
             $notes['notes'][$i]['imagenes'] = $note_imgs ? $note_imgs : 'no images found';
+
         endfor;
 
         $page           = $params['page'] ? (int) $params['page'] : 1 ;
@@ -185,15 +216,18 @@ class Notes extends MY_Controller {
         if( ! $this->input->post('resumen') )       return $this->output_json(400 , 'Debe enviar el resumen');
         if( ! $this->input->post('texto') )         return $this->output_json(400 , 'Debe enviar el texto');
         if( ! $this->input->post('seccion') )       return $this->output_json(400 , 'Debe enviar la seccion');
-        if($this->input->post('seccion') == 'noticias') {
-            if( ! $this->input->post('fecha_publicacion') )  return $this->output_json(400 , 'Debe enviar la fecha publicacion');
-           }else {
+        if($this->input->post('seccion') !== 'noticias') {
                if( ! $this->input->post('fecha_inicio') )  return $this->output_json(400 , 'Debe enviar la fecha de inicio');
                if( ! $this->input->post('fecha_fin') )     return $this->output_json(400 , 'Debe enviar la fecha de final de la nota');
                if( ! $this->input->post('hora_inicio') )   return $this->output_json(400 , 'Debe enviar la hora de inicio');
                if( ! $this->input->post('hora_fin') )      return $this->output_json(400 , 'Debe enviar la hora de finalización');
-           }
+        }
+        if( ! $this->input->post('fecha_publicacion') )  return $this->output_json(400 , 'Debe enviar la fecha publicacion');
+        if( ! $this->input->post('hora_publicacion') )  return $this->output_json(400 , 'Debe enviar la hora de publicación');
+
         if ( empty($_FILES['file']['name']) )      return $this->output_json(400 , 'no select any file');    
+        if ( $_FILES['file']['size'] > 2000000 ) return $this->output_json(400 , 'La imagen debe ser menor a 2MB' );    
+
 
         $inputs = $this->input->post(NULL, TRUE);
         $section = $this->NotesModel->get_section( [ 'nombre' => $this->input->post('seccion') ]);
@@ -212,12 +246,13 @@ class Notes extends MY_Controller {
                $set['fecha_fin']       = $inputs['fecha_publicacion'];
                $set['hora_inicio']     = '00:00';
                $set['hora_fin']        = '00:00';
-               $set['FECHA_PUBLISHED'] = $inputs['fecha_publicacion'];
+               $set['FECHA_PUBLISHED'] = $inputs['fecha_publicacion'].' '.$inputs['hora_publicacion'];
            }else {
                $set['fecha_inicio']    = $inputs['fecha_inicio'];
                $set['fecha_fin']       = $inputs['fecha_fin'];
                $set['hora_inicio']     = $inputs['hora_inicio'];
                $set['hora_fin']        = $inputs['hora_fin'];
+               $set['FECHA_PUBLISHED'] = $inputs['fecha_publicacion'].' '.$inputs['hora_publicacion'];
            }
        
 
