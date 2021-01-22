@@ -40,10 +40,11 @@ class Notes_Model extends CI_Model
         
         $this->db->where( $conditions );
 
-        if($lasted) {
-            $this->db->where( 'fecha_inicio >= (CURDATE() - INTERVAL 30 DAY)');
-        }
-        $this->db->order_by('fecha_publicacion', 'DESC');
+        $lasted
+         ? $this->db->where( 'FECHA_PUBLISHED >= (CURDATE() - INTERVAL 30 DAY)')
+         : $this->db->where( 'FECHA_PUBLISHED <  (CURDATE() - INTERVAL 30 DAY)');
+
+        $this->db->order_by('FECHA_PUBLISHED', 'DESC');
 
         $countAll = $this->db->count_all_results('notas', FALSE);
         $this->db->limit($limit, $offset);
