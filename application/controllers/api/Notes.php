@@ -165,7 +165,7 @@ class Notes extends MY_Controller {
     }
     public function get( $categorie )
     {
-        $notes_quanty = 4;
+        $notes_quanty = 3;
 
         $section = $this->NotesModel->get_section( [ 'nombre' => $categorie ]);
         if ( !$section ) return $this->output_json(200 , 'Not exists this section' , [] , false );
