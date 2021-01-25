@@ -41,10 +41,7 @@ class Notes_Model extends CI_Model
         $this->db->where( $conditions );
 
         if($lasted) {
-            $this->db->where( 'FECHA_PUBLISHED >= (CURDATE() - INTERVAL 15 DAY)');
-        }else {
-            $this->db->where( 'FECHA_PUBLISHED < (CURDATE() - INTERVAL  15 DAY)');
-
+            $this->db->where( 'FECHA_PUBLISHED >= (CURDATE() - INTERVAL 30 DAY)');
         }
         $this->db->order_by('FECHA_PUBLISHED', 'DESC');
 
