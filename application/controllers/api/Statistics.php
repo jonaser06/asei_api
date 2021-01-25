@@ -123,7 +123,7 @@ class Statistics extends MY_Controller {
     }
 
     public function getchart(){
-        $notes_quanty = 3;
+        $notes_quanty = 10;
         $page = $this->input->get('page');
         $limit = $this->input->get('limit');
 
@@ -211,7 +211,7 @@ class Statistics extends MY_Controller {
     }
 
     public function getbulletin(){
-        $notes_quanty = 3;
+        $notes_quanty = 10;
         $page = $this->input->get('page');
         $limit = $this->input->get('limit');
 
@@ -287,7 +287,7 @@ class Statistics extends MY_Controller {
     }
 
     public function getIndicador(){
-        $notes_quanty = 3;
+        $notes_quanty = 10;
         $page = $this->input->get('page');
         $limit = $this->input->get('limit');
 
