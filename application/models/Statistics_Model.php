@@ -14,7 +14,7 @@ class Statistics_Model extends CI_Model implements iModule
     //     $this->db->insert($this->table, $data);
     //     return $this->db->insert_id();
     // }
-    public function getdata( $select = '' , $table = '', $where = [], $o = '', $limit = 1){
+    public function getdata( $select = '' , $table = '', $where = [], $o = '', $limit = null){
         if(empty($select)) return false;
         $this->db->select($select);
         $this->db->from($table);
