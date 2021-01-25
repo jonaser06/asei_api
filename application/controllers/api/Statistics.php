@@ -202,7 +202,7 @@ class Statistics extends MY_Controller {
         $select = '*';
         $table = 'bulletin';
         #an error occurred 
-        $this->data = $this->statistics->getdata($select, $table, [], 'id', 6);
+        $this->data = $this->statistics->getdata($select, $table, [], 'id');
         if( !$this->data ) return $this->output_json(400,'an error occurred while get the data');
         return $this->output_json(200,'query successfully', $this->data);
     }
