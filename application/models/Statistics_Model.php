@@ -14,15 +14,21 @@ class Statistics_Model extends CI_Model implements iModule
     //     $this->db->insert($this->table, $data);
     //     return $this->db->insert_id();
     // }
-    public function getdata( $select = '' , $table = '', $where = [], $o = '', $limit = 1){
+    public function getdata( $select = '' , $table = '', $where = [], $o = '', $limit = null, $offset = null){
         if(empty($select)) return false;
         $this->db->select($select);
         $this->db->from($table);
         $this->db->where($where);
         $this->db->order_by($o, 'DESC');
-        $this->db->limit($limit);
+        $this->db->limit($limit, $offset);
         $query = $this->db->get()->result_array();
-        if ($query) return $query;
+        $countAll = $this->db->count_all_results($table, FALSE);
+        if ($query) {
+            return [
+                'countAll' => $countAll,
+                'content'=> $query
+            ];
+        }
         return false;
 
     }
