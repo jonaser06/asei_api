@@ -123,7 +123,7 @@ class Statistics extends MY_Controller {
     }
 
     public function getchart(){
-        $notes_quanty = 10;
+        $notes_quanty = 6;
         $page = $this->input->get('page');
         $limit = $this->input->get('limit');
 
