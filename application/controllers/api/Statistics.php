@@ -211,22 +211,22 @@ class Statistics extends MY_Controller {
     }
 
     public function getbulletin(){
-        $notes_quanty = 10;
-        $page = $this->input->get('page');
-        $limit = $this->input->get('limit');
+        // $notes_quanty = 10;
+        // $page = $this->input->get('page');
+        // $limit = $this->input->get('limit');
 
-        $for_page   = $limit ? (int) $limit : $notes_quanty;
-        $offset     = $page  ? $for_page * ($page - 1) : 0;
-        $page = $page ? (int) $page : 1 ;
+        // $for_page   = $limit ? (int) $limit : $notes_quanty;
+        // $offset     = $page  ? $for_page * ($page - 1) : 0;
+        // $page = $page ? (int) $page : 1 ;
 
         $select = '*';
         $table = 'bulletin';
         #an error occurred 
-        $this->data = $this->statistics->getdata($select, $table, [], 'id', $for_page, $offset);
+        $this->data = $this->statistics->getdata($select, $table, [], 'id');
 
-        $pages = ($this->data['countAll'] % $for_page ) ?   (int)($this->data['countAll'] / $for_page) + 1 : (int)$this->data['countAll'] / $for_page  ; 
+        /* $pages = ($this->data['countAll'] % $for_page ) ?   (int)($this->data['countAll'] / $for_page) + 1 : (int)$this->data['countAll'] / $for_page  ; 
         $this->data['page'] = $page;
-        $this->data['pages'] = $pages;
+        $this->data['pages'] = $pages; */
         if( !$this->data ) return $this->output_json(400,'an error occurred while get the data');
         return $this->output_json(200,'query successfully', $this->data);
     }
