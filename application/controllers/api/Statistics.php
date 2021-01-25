@@ -123,10 +123,22 @@ class Statistics extends MY_Controller {
     }
 
     public function getchart(){
+        $notes_quanty = 3;
+        $page = $this->input->get('page');
+        $limit = $this->input->get('limit');
+
+        $for_page   = $limit ? (int) $limit : $notes_quanty;
+        $offset     = $page  ? $for_page * ($page - 1) : 0;
+        $page = $page ? (int) $page : 1 ;
+        
         $select = '*';
         $table = 'statistics';
         #an error occurred 
-        $this->data = $this->statistics->getdata($select, $table, [], 'id', 6);
+        $this->data = $this->statistics->getdata($select, $table, [], 'id', $for_page, $offset);
+
+        $pages = ($this->data['countAll'] % $for_page ) ?   (int)($this->data['countAll'] / $for_page) + 1 : (int)$this->data['countAll'] / $for_page  ; 
+        $this->data['page'] = $page;
+        $this->data['pages'] = $pages;
         if( !$this->data ) return $this->output_json(200,'an error occurred while get the dataa');
         return $this->output_json(200,'query successfully', $this->data);
     }
@@ -190,7 +202,7 @@ class Statistics extends MY_Controller {
 
     public function deletebulletin(){
         #validating input data
-        if ( !$this->input->post('id') )           return $this->output_json(400,'The id is necessary');
+        if ( !$this->input->post('id') ) return $this->output_json(400,'The id is necessary');
         $data = ['id' => $this->input->post('id')];
 
         #an error occurred 
@@ -199,13 +211,26 @@ class Statistics extends MY_Controller {
     }
 
     public function getbulletin(){
+        $notes_quanty = 3;
+        $page = $this->input->get('page');
+        $limit = $this->input->get('limit');
+
+        $for_page   = $limit ? (int) $limit : $notes_quanty;
+        $offset     = $page  ? $for_page * ($page - 1) : 0;
+        $page = $page ? (int) $page : 1 ;
+
         $select = '*';
         $table = 'bulletin';
         #an error occurred 
-        $this->data = $this->statistics->getdata($select, $table, [], 'id');
+        $this->data = $this->statistics->getdata($select, $table, [], 'id', $for_page, $offset);
+
+        $pages = ($this->data['countAll'] % $for_page ) ?   (int)($this->data['countAll'] / $for_page) + 1 : (int)$this->data['countAll'] / $for_page  ; 
+        $this->data['page'] = $page;
+        $this->data['pages'] = $pages;
         if( !$this->data ) return $this->output_json(400,'an error occurred while get the data');
         return $this->output_json(200,'query successfully', $this->data);
     }
+    
     public function newIndicador(){
         #validating input data
         if ( !$this->input->post('title') )        return $this->output_json(400,'The title is necessary');
@@ -262,10 +287,22 @@ class Statistics extends MY_Controller {
     }
 
     public function getIndicador(){
+        $notes_quanty = 3;
+        $page = $this->input->get('page');
+        $limit = $this->input->get('limit');
+
+        $for_page   = $limit ? (int) $limit : $notes_quanty;
+        $offset     = $page  ? $for_page * ($page - 1) : 0;
+        $page = $page ? (int) $page : 1 ;
+
         $select = '*';
         $table = 'indicadores';
         #an error occurred 
-        $this->data = $this->statistics->getdata($select, $table, [], 'id', 4);
+        $this->data = $this->statistics->getdata($select, $table, [], 'id', $for_page, $offset);
+
+        $pages = ($this->data['countAll'] % $for_page ) ?   (int)($this->data['countAll'] / $for_page) + 1 : (int)$this->data['countAll'] / $for_page  ; 
+        $this->data['page'] = $page;
+        $this->data['pages'] = $pages;
         if( !$this->data ) return $this->output_json(200,'an error occurred while get the dataa');
         return $this->output_json(200,'query successfully', $this->data);
     }
