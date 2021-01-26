@@ -17,7 +17,7 @@ class Notes extends MY_Controller {
     {
         $notes_quanty = 3;
 
-        $section = $this->NotesModel->get_section( [ 'nombre' => $categorie ]);
+        $section = $this->NotesModel->get_section( [ 'nombre' => $categorie,'ID_MOD' => 3 ]);
         if ( !$section ) return $this->output_json(200 , 'Not exists this section' , [] , false );
         
         $params     = $this->input->get(['page', 'limit', 'search'], TRUE);
@@ -109,12 +109,13 @@ class Notes extends MY_Controller {
            }
            if( ! $this->input->post('fecha_publicacion') )  return $this->output_json(400 , 'Debe enviar la fecha publicacion');
            if( ! $this->input->post('hora_publicacion') )  return $this->output_json(400 , 'Debe enviar la hora de publicación');
+           if( ! $this->input->post('link') )  return $this->output_json(400 , 'Debe enviar el link de la nota');
 
            if ( empty($_FILES['files']['name']) )      return $this->output_json(400 , 'no select any file');    
            if ( $_FILES['files']['size'][0] > 2000000 ) return $this->output_json(400 , 'La imagen debe ser menor a 2MB' );    
 
            $inputs = $this->input->post(NULL, TRUE);
-           $section = $this->NotesModel->get_section( [ 'nombre' => $this->input->post('seccion') ]);
+           $section = $this->NotesModel->get_section( [ 'nombre' => $this->input->post('seccion'),'ID_MOD' => 3 ]);
            if( !$section ) return $this->output_json(200 , 'Not exists this section for note' , [] , false );
 
            $text  = $this->saveFormat($inputs['texto']);
@@ -124,6 +125,7 @@ class Notes extends MY_Controller {
             'titulo'       => $inputs['titulo'],
             'resumen'      => $inputs['resumen'],
             'texto'        => $text,
+            'link'         => $inputs['link'],
             'ID_SEC'       => (int)$section['ID_SEC'],
            ];
 
@@ -167,7 +169,7 @@ class Notes extends MY_Controller {
     {
         $notes_quanty = 3;
 
-        $section = $this->NotesModel->get_section( [ 'nombre' => $categorie ]);
+        $section = $this->NotesModel->get_section( [ 'nombre' => $categorie ,'ID_MOD' => 3]);
         if ( !$section ) return $this->output_json(200 , 'Not exists this section' , [] , false );
         
         $params     = $this->input->get(['page', 'limit', 'last', 'search'], TRUE);
@@ -224,13 +226,14 @@ class Notes extends MY_Controller {
         }
         if( ! $this->input->post('fecha_publicacion') )  return $this->output_json(400 , 'Debe enviar la fecha publicacion');
         if( ! $this->input->post('hora_publicacion') )  return $this->output_json(400 , 'Debe enviar la hora de publicación');
+        if( ! $this->input->post('link') )  return $this->output_json(400 , 'Debe enviar el link de la nota');
 
         if ( empty($_FILES['file']['name']) )      return $this->output_json(400 , 'no select any file');    
         if ( $_FILES['file']['size'] > 2000000 ) return $this->output_json(400 , 'La imagen debe ser menor a 2MB' );    
 
 
         $inputs = $this->input->post(NULL, TRUE);
-        $section = $this->NotesModel->get_section( [ 'nombre' => $this->input->post('seccion') ]);
+        $section = $this->NotesModel->get_section( [ 'nombre' => $this->input->post('seccion') , 'ID_MOD' => 3 ]);
         if( !$section ) return $this->output_json(200 , 'Not exists this section for note' , [] , false );
 
         $text  = $this->saveFormat($inputs['texto']);
@@ -238,6 +241,7 @@ class Notes extends MY_Controller {
             'titulo'       => $inputs['titulo'],
             'resumen'      => $inputs['resumen'],
             'texto'        => $text,
+            'link'         => $inputs['link'],
             'ID_SEC'       => (int)$section['ID_SEC'],
         ];
 

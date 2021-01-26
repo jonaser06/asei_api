@@ -110,8 +110,6 @@ class MY_Controller extends CI_Controller
         },$convert);
         return $array_convert ;
     }
-
-
     #CONFIG UPLOAD
     private function configImg () {
         $uploadPath = 'uploads/notes/';

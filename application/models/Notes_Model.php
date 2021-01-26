@@ -10,14 +10,15 @@ class Notes_Model extends CI_Model
         
         $section = $condition 
                     ? $this->db->get_where( $this->table_section , $condition )->row_array()
-                    : $this->db->get($this->table_section)->result_array();
+                    : $this->db->get_where( $this->table_section , ['ID_MOD' => 3])->result_array();
         return $section ? $section : FALSE ;
     }
+  
 
 
     public function get( int $id_nota)
     {
-        $this->db->select('notas.ID_NO , titulo ,resumen , texto , fecha_inicio , fecha_fin ,sec.nombre as seccion ,hora_inicio ,hora_fin,FECHA_PUBLISHED as fecha_publicacion');
+        $this->db->select('notas.ID_NO , titulo ,resumen , texto ,link, fecha_inicio , fecha_fin ,sec.nombre as seccion ,hora_inicio ,hora_fin,FECHA_PUBLISHED as fecha_publicacion');
         $this->db->from('notas');
         $this->db->join('secciones as sec' , 'notas.ID_SEC = sec.ID_SEC');
         $this->db->where(['notas.ID_NO ' =>(int) $id_nota]);
@@ -28,8 +29,8 @@ class Notes_Model extends CI_Model
     public function getAll( int $limit = 1, int $offset = 0, array $conditions = [] , bool $lasted = FALSE , array $params  = [] )
     {
         ((int)$conditions['notas.ID_SEC'] == 1 )
-        ? $this->db->select('notas.ID_NO  , titulo ,resumen , texto ,sec.nombre as seccion , FECHA_PUBLISHED as fecha_publicacion')
-        : $this->db->select('notas.ID_NO  , titulo ,resumen , texto , fecha_inicio , fecha_fin ,sec.nombre as seccion ,  hora_inicio , hora_fin , FECHA_PUBLISHED as fecha_publicacion ');
+        ? $this->db->select('notas.ID_NO  , titulo ,resumen , texto ,sec.nombre as seccion, link, FECHA_PUBLISHED as fecha_publicacion')
+        : $this->db->select('notas.ID_NO  , titulo ,resumen , texto , fecha_inicio , fecha_fin ,sec.nombre as seccion ,link,  hora_inicio , hora_fin , FECHA_PUBLISHED as fecha_publicacion ');
 
         $this->db->join('secciones as sec' , 'notas.ID_SEC = sec.ID_SEC');
         if( count ($params) != 0) {
@@ -43,6 +44,10 @@ class Notes_Model extends CI_Model
         if($lasted) {
             $this->db->where( 'FECHA_PUBLISHED >= (CURDATE() - INTERVAL 30 DAY)');
         }
+        // else {
+        //     $this->db->where( 'FECHA_PUBLISHED < (CURDATE() - INTERVAL  30 DAY)');
+
+        // }
         $this->db->order_by('FECHA_PUBLISHED', 'DESC');
 
         $countAll = $this->db->count_all_results('notas', FALSE);

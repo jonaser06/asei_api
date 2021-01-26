@@ -69,6 +69,11 @@ $route['notes/search/(:any)']['GET'] = 'api/Notes/search/$1';
 #sections
 $route['sections']['GET'] = 'api/Notes/get_sections';
 
+#learn
+$route['learn/new']['POST'] = 'api/Contenidos/insert';
+$route['learn/(:any)']['GET'] = 'api/Contenidos/get/$1';
+$route['learn/(:any)/(:num)']['GET'] = 'api/Contenidos/getById/$1/$2';
+
 
 
 

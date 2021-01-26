@@ -3,9 +3,6 @@
 class Privileges_Model extends CI_Model
 {
     protected $table = 'modulos_perfiles';
-
-  
-   
     public function get($id)
     {
         $this->db->select('mod.nombre as modulo , mod.path , mod.icon , CREAR as crear , ACTUALIZAR as actualizar , ELIMINAR as eliminar , VISUALIZAR as visualizar');
