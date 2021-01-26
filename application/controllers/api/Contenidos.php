@@ -10,7 +10,7 @@ class Contenidos extends MY_Controller {
     {
         parent::__construct();
         date_default_timezone_set("America/Lima");        
-        $this->load->model('Contenidos_Model', 'ContenidoModel');
+        $this->load->model('Contenido_Model', 'ContenidoModel');
         $this->load->model('Files_Model','FileModel');
 
     }
