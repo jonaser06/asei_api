@@ -15,7 +15,7 @@ class Notes extends MY_Controller {
     }
     public function search( $categorie )
     {
-        $notes_quanty = 3;
+        $notes_quanty = 9;
 
         $section = $this->NotesModel->get_section( [ 'nombre' => $categorie,'ID_MOD' => 3 ]);
         if ( !$section ) return $this->output_json(200 , 'Not exists this section' , [] , false );

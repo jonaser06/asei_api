@@ -6,8 +6,7 @@ class Contenido_Model extends CI_Model
     private $table_section = 'secciones';
     private $id_mod = 4;
     public function get_section ( array $condition = NUll )  
-    {   
-        
+    {     
         $section = $condition 
                     ? $this->db->get_where( $this->table_section , $condition )->row_array()
                     : $this->db->get_where( $this->table_section , ['ID_MOD' => $this->id_mod])->result_array();
