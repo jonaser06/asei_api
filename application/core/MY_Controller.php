@@ -115,7 +115,7 @@ class MY_Controller extends CI_Controller
         $uploadPath = 'uploads/notes/';
 
         #congiguramos el upload para cada  file
-        $config['allowed_types']  = 'gif|jpg|png';
+        $config['allowed_types']  = 'gif|jpg|png|jpeg';
         $config['max_size']       = 50000;
         $config['max_width']      = 3000;
         $config['max_height']     = 3000;

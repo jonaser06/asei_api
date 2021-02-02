@@ -266,8 +266,6 @@ class Notes extends MY_Controller {
         $img = $note_imgs[0];
         $this->editFile( $_FILES ,$img['ID_MULTI']);
         return $this->output_json( 200 , 'note update !');
-
-
     }
     public function delete( int $id )
     {

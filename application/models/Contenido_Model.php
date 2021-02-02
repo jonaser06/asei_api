@@ -87,7 +87,12 @@ class Contenido_Model extends CI_Model
     }
     public function delete( int $id ) 
     {
-        $result  = $this->db->delete($this->table, [ 'ID_NO' => $id ] );
+        $result  = $this->db->delete($this->table, [ 'ID_CO' => $id ] );
+        return $result ? true : false;
+    }
+    public function remove( string $table, array $condition ) 
+    {
+        $result  = $this->db->delete($table,$condition);
         return $result ? true : false;
     }
 }
