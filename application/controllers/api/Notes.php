@@ -228,8 +228,8 @@ class Notes extends MY_Controller {
         if( ! $this->input->post('hora_publicacion') )  return $this->output_json(400 , 'Debe enviar la hora de publicación');
         if( ! $this->input->post('link') )  return $this->output_json(400 , 'Debe enviar el link de la nota');
 
-        if ( empty($_FILES['file']['name']) )      return $this->output_json(400 , 'no select any file');    
-        if ( $_FILES['file']['size'] > 2000000 ) return $this->output_json(400 , 'La imagen debe ser menor a 2MB' );    
+        // if ( empty($_FILES['file']['name']) )      return $this->output_json(400 , 'no select any file');    
+        // if ( $_FILES['file']['size'] > 2000000 ) return $this->output_json(400 , 'La imagen debe ser menor a 2MB' );    
 
 
         $inputs = $this->input->post(NULL, TRUE);
@@ -259,12 +259,14 @@ class Notes extends MY_Controller {
                $set['FECHA_PUBLISHED'] = $inputs['fecha_publicacion'].' '.$inputs['hora_publicacion'];
            }
        
-
+        if ( !empty($_FILES['file']['name']) ) {
+            $note_imgs = $this->FileModel->getOne('ID_NO','multimedia_notas',['ID_NO' => $id]);
+            $img = $note_imgs[0];
+            $this->editFile( $_FILES ,$img['ID_MULTI']);
+        }
         $noteUpdate = $this->NotesModel->update( $set , ['ID_NO' => $id] );
         if( !$noteUpdate ) return $this->output_json( 400 , 'Error not update note!');
-        $note_imgs = $this->FileModel->getOne('ID_NO','multimedia_notas',['ID_NO' => $id]);
-        $img = $note_imgs[0];
-        $this->editFile( $_FILES ,$img['ID_MULTI']);
+        
         return $this->output_json( 200 , 'note update !');
     }
     public function delete( int $id )
