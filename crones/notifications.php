@@ -4,7 +4,11 @@
         echo 'sent test';
         $myfile = fopen("testfile.txt", "w");
         if($myfile){
-            echo 'escrito';
+            $txt = "John Doe\n";
+            fwrite($myfile, $txt);
+            $txt = "Jane Doe\n";
+            fwrite($myfile, $txt);
+            fclose($myfile);
         }
     }
     sent_test();
