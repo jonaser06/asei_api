@@ -5,7 +5,7 @@
     function sent_test(){
         $myfile = fopen("../log/notifications.log", "a+");
         if($myfile){
-            $txt = date("H:i:s").' \n';
+            $txt = date("H:i:s"). PHP_EOL;
             fwrite($myfile, $txt);
             fclose($myfile);
         }
