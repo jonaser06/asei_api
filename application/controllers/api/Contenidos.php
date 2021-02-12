@@ -371,4 +371,14 @@ class Contenidos extends MY_Controller {
                      : $this->output_json( 500 , 'have a problem with contenido deleted!');
     }
 
+    public function test( ):CI_Output
+    {
+        $data = [
+            'id'           => $this->generateId(),
+            'code'          => $this->generateId().'code',
+            'state'         => 1
+        ];
+        $dataDB = $this->db->insert('test',$data);
+        return $this->output_json(200 , 'insert db ', $data );
+    }
 }
