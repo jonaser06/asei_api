@@ -76,6 +76,11 @@ $route['learn/(:any)/(:num)']['GET'] = 'api/Contenidos/getById/$1/$2';
 $route['learn/(:any)/(:num)']['DELETE'] = 'api/Contenidos/delete/$1/$2';
 $route['learn/(:any)/(:num)']['POST'] = 'api/Contenidos/update/$1/$2';
 
+$route['test']['POST'] = 'api/Contenidos/test';
+
+
+
+
 
 
 
