@@ -243,7 +243,7 @@ class Contenidos extends MY_Controller {
             $contenido['next'] = "/$section?page=$next&limit=$for_page";
         }
        
-        $this->output_json( 200 , "Se encontro contenido en  $categorie!" , $contenido );
+        return $this->output_json( 200 , "Se encontro contenido en  $categorie!" , $contenido );
     } 
     public function update (string $seccion,int $id):CI_Output
     {
