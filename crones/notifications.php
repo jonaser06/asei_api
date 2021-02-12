@@ -2,11 +2,9 @@
 
     function sent_test(){
         echo 'sent test';
-        $myfile = fopen("testfile.txt", "a+");
+        $myfile = fopen("../log/notifications.txt", "a+");
         if($myfile){
-            $txt = "John Doe\n";
-            fwrite($myfile, $txt);
-            $txt = "Jane Doe\n";
+            $txt = date("H:i:s");
             fwrite($myfile, $txt);
             fclose($myfile);
         }
