@@ -3,7 +3,7 @@
 
     #definition
     function sent_test(){
-        $myfile = fopen("../log/notifications.log", "a+");
+        $myfile = fopen("../log/notifications.txt", "a+");
         if($myfile){
             $txt = date("H:i:s");
             fwrite($myfile, $txt);
