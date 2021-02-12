@@ -2,7 +2,7 @@
 
     function sent_test(){
         echo 'sent test';
-        $myfile = fopen("testfile.txt", "w");
+        $myfile = fopen("testfile.txt", "a+");
         if($myfile){
             $txt = "John Doe\n";
             fwrite($myfile, $txt);
