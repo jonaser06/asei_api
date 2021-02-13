@@ -1,3 +1,2 @@
 #!/bin/sh
-
-echo 'al fin csmr \n' > /var/www/html/api.blogingenieria.site/log/notifications.log
+curl -X GET http://api.blogingenieria.site/crones/notifications.php
