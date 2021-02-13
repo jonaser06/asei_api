@@ -1,3 +1,3 @@
 #!/bin/sh
 
-echo 'hola cron';
+echo 'hola mundo \n' > /var/www/html/api.blogingenieria.site/log/notifications.log
