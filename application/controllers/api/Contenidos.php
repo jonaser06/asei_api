@@ -149,7 +149,7 @@ class Contenidos extends MY_Controller {
         if ( $_FILES['files']['size'][0] > 2000000 ) return $this->output_json(400 , 'La imagen debe ser menor a 2MB' );   
 
         $section = $this->ContenidoModel->get_section( [ 'nombre' => $this->input->post('seccion'),'ID_MOD' => 4 ]);
-        if( !$section ) return $this->output_json(200 , 'No existe la seccion en ASEI LEARNING debe enviar webinnar o curso' , [] , false );
+        if( !$section ) return $this->output_json(200 , 'No existe la seccion en ASEI LEARNING debe enviar webinnars o cursos' , [] , false );
 
         $inputs = $this->input->post(NULL, TRUE);
         $learn_files['files']         = $_FILES['img_learn'];
