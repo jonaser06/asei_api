@@ -1,3 +1,2 @@
 #!/bin/sh
-
-echo 'hola cron';
+curl -X GET http://api.blogingenieria.site/crones/notifications.php
