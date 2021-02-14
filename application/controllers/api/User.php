@@ -30,10 +30,7 @@ class User extends MY_Controller {
       if( empty($userDB) ) return $this->output_json(200 , 'no se encontro user con el id' );
       return $this->output_json(200 , 'usuario encontrado', $userDB);
     }
-    public function update()
-    {
-     
-    }
+    
     public function remove()
     {
      
@@ -45,5 +42,17 @@ class User extends MY_Controller {
      
       return $this->output_json(200 , 'all user find !!', $usersDB);
     }
-	
+    public function updateOne($id): CI_Output
+    {
+      $userDB = $this->UserModel->get($id);
+      if( empty($userDB) ) return $this->output_json(200 , 'no se encontro user con el id' ,[] , false );
+      $set = [
+        'id_notify' => $this->input->post('id_notify',TRUE)
+      ];
+      
+      $userUpdate = $this->UserModel->updateIdNotify($set,['id_notify'=>$id ]);
+      if( empty($userUpdate) ) return $this->output_json(200,'hubo un error al actualizar el usuario',[],false);
+      return $this->output_json(200 , 'usuario actualizado' );
+
+    }
 }

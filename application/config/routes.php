@@ -15,6 +15,9 @@ $route['users'] ['GET'] = 'api/User/getAll';
 $route['user/(:num)'] ['GET'] = function ($id) {
     return 'api/User/get/'.$id;
 };
+$route['user/(:num)/update/'] ['POST'] = function ($id) {
+    return 'api/User/updateOne/'.$id;
+};
 
 
 

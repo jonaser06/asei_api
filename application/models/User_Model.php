@@ -55,6 +55,15 @@ class User_Model extends CI_Model
         $user = $this->db->get()->row_array();
         return $user ? $user : FALSE;
     }
+    public function updateIdNotify(array $set , array $where )
+    {
+       
+            if( empty($set) ) return false;
+            $this->db->set($set);
+            $this->db->where($where);
+            return  $this->db->update($this->table) ? true : false;  
+        
+    }
    
  
 }
