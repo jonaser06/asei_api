@@ -46,11 +46,12 @@ class User extends MY_Controller {
     {
       $userDB = $this->UserModel->get($id);
       if( empty($userDB) ) return $this->output_json(200 , 'no se encontro user con el id' ,[] , false );
+      $id_notify = $this->input->post('id_notify',TRUE);
       $set = [
-        'id_notify' => $this->input->post('id_notify',TRUE)
+        'id_notify' => $id_notify
       ];
       
-      $userUpdate = $this->UserModel->updateIdNotify($set,['id_notify'=>$id ]);
+      $userUpdate = $this->UserModel->updateIdNotify($set,['ID_US'=>(int)$id ]);
       if( empty($userUpdate) ) return $this->output_json(200,'hubo un error al actualizar el usuario',[],false);
       return $this->output_json(200 , 'usuario actualizado' );
 
