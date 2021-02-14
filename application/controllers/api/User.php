@@ -44,6 +44,7 @@ class User extends MY_Controller {
     }
     public function updateOne($id): CI_Output
     {
+      return $this->output_json(200 , 'no se encontro user con el id' ,[] , false );
       $userDB = $this->UserModel->get($id);
       if( empty($userDB) ) return $this->output_json(200 , 'no se encontro user con el id' ,[] , false );
       $set = [

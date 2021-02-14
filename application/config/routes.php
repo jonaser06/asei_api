@@ -6,7 +6,7 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 #API LOGIN USER
-$route[''] = '';
+// $route[''] = '';
 $route['login']['POST'] = 'api/LoginUser/login';
 $route['register'] ['POST'] = 'api/LoginUser/register';
 
