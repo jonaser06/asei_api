@@ -40,6 +40,9 @@ $route['editIndicador']  = 'api/Statistics/editIndicador';
 $route['deleteIndicador'] = 'api/Statistics/deleteIndicador';
 $route['getIndicador']['GET'] = 'api/Statistics/getIndicador';
 
+##Notification
+$route['setNotification'] = 'api/Notification/setNotification';
+
 #PERFILES
 
 $route['api/perfiles'] = 'api/Perfiles';
