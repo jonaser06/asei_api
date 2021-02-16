@@ -11,27 +11,34 @@ class Notification extends MY_Controller {
 
     public function setNotification(){
 
-        if ( !$this->input->post('titulo') ) return $this->output_json(400,'The title is necessary');
-        if ( !$this->input->post('descripcion') ) return $this->output_json(400,'The description is necessary');
-        if ( !$this->input->post('fecha') ) return $this->output_json(400,'The date is necessary');
-        if ( !$this->input->post('destino') ) return $this->output_json(400,'The destination is necessary');
-        if ( !$this->input->post('categoria') ) return $this->output_json(400,'The category is necessary');
-        if ( !$this->input->post('ID_US') ) return $this->output_json(400,'The ID_US is necessary');
-        if ( !$this->input->post('estado') ) return $this->output_json(400,'The state is necessary'); # notificacion 1: Nuevo 2: Leido 3: Eliminado
+        if(($this->input->server('REQUEST_METHOD') === 'POST')){
+            
+            $inputJSON = file_get_contents('php://input');
+            $input = json_decode($inputJSON, TRUE);
 
-        $this->data[0] = [
-            'titulo'      => $this->input->post('titulo'),
-            'descripcion' => $this->input->post('descripcion'),
-            'fecha'       => $this->input->post('fecha'),
-            'destino'     => $this->input->post('destino'),
-            'categoria'   => $this->input->post('categoria'),
-            'ID_US'       => $this->input->post('ID_US'),
-            'estado'      => $this->input->post('estado')
-        ];
+            if ( isset($input['titulo']) && $input['titulo'] == "" ) return $this->output_json(400,'The title is necessary');
+            if ( isset($input['descripcion']) && $input['descripcion'] == "" ) return $this->output_json(400,'The description is necessary');
+            if ( isset($input['fecha']) && $input['fecha'] == "" ) return $this->output_json(400,'The date is necessary');
+            if ( isset($input['destino']) && $input['destino'] == "" ) return $this->output_json(400,'The destination is necessary');
+            if ( isset($input['categoria']) && $input['categoria'] == "" ) return $this->output_json(400,'The category is necessary');
+            if ( isset($input['ID_US']) && $input['ID_US'] == "" ) return $this->output_json(400,'The ID_US is necessary');
+            if ( isset($input['estado']) && $input['estado'] == "" ) return $this->output_json(400,'The state is necessary'); # notificacion 1: Nuevo 2: Leido 3: Eliminado
+            
+            $this->data[0] = [
+                'titulo'      => $input['titulo'],
+                'descripcion' => $input['descripcion'],
+                'fecha'       => $input['fecha'],
+                'destino'     => $input['destino'],
+                'categoria'   => $input['categoria'],
+                'ID_US'       => $input['ID_US'],
+                'estado'      => $input['estado']
+            ];
+    
+            #an error occurred 
+            if( !$this->notification->setdata( $this->data[0] , 'notificaciones' ) ) return $this->output_json(200,'an error occurred while inserting the data');
+    
+            return $this->output_json(200,'query successfully', $this->data);
+        }
 
-        #an error occurred 
-        if( !$this->notification->setdata( $this->data[0] , 'notificaciones' ) ) return $this->output_json(200,'an error occurred while inserting the data');
-
-        return $this->output_json(200,'query successfully', $this->data);
     }
 }
