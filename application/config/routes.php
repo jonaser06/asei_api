@@ -42,6 +42,7 @@ $route['getIndicador']['GET'] = 'api/Statistics/getIndicador';
 
 ##Notification
 $route['setNotification'] = 'api/Notification/setNotification';
+$route['getNotification'] = 'api/Notification/getNotification';
 
 #PERFILES
 

@@ -44,4 +44,33 @@ class Notification extends MY_Controller {
         }
 
     }
+
+    public function getNotification(){
+        if(($this->input->server('REQUEST_METHOD') === 'POST')){
+            $inputJSON = file_get_contents('php://input');
+            $input = json_decode($inputJSON, TRUE);
+
+            if ( isset($input['ID_US']) && $input['ID_US'] == "" ) return $this->output_json(400,'The id user is necessary');
+
+            $ID_US = $input['ID_US'];
+            $notes_quanty = 6;
+            $page = $input['page'];
+            $limit = $input['limit'];
+            
+            $for_page   = $limit ? (int) $limit : $notes_quanty;
+            $offset     = $page  ? $for_page * ($page - 1) : 0;
+            $page = $page ? (int) $page : 1 ;
+
+            $select = '*';
+            $table = 'notificaciones';
+            #an error occurred 
+            $this->data = $this->notification->getdata($select, $table, ['ID_US' => $ID_US], 'id_notificacion', $for_page, $offset);
+
+            $pages = ($this->data['countAll'] % $for_page ) ?   (int)($this->data['countAll'] / $for_page) + 1 : (int)$this->data['countAll'] / $for_page  ; 
+            $this->data['page'] = $page;
+            $this->data['pages'] = $pages;
+            if( !$this->data ) return $this->output_json(200,'an error occurred while get the dataa');
+            return $this->output_json(200,'query successfully', $this->data);
+        }
+    }
 }
