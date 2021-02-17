@@ -49,13 +49,13 @@ class Notification extends MY_Controller {
         if(($this->input->server('REQUEST_METHOD') === 'POST')){
             $inputJSON = file_get_contents('php://input');
             $input = json_decode($inputJSON, TRUE);
-
             if ( isset($input['ID_US']) && $input['ID_US'] == "" ) return $this->output_json(400,'The id user is necessary');
 
             $ID_US = $input['ID_US'];
             $notes_quanty = 6;
             $page = $input['page'];
             $limit = $input['limit'];
+            $match = ( !isset($input['match']) ) ? false : $input['match'];
             
             $for_page   = $limit ? (int) $limit : $notes_quanty;
             $offset     = $page  ? $for_page * ($page - 1) : 0;
@@ -64,7 +64,11 @@ class Notification extends MY_Controller {
             $select = '*';
             $table = 'notificaciones';
             #an error occurred 
-            $this->data = $this->notification->getdata($select, $table, ['ID_US' => $ID_US], 'id_notificacion', $for_page, $offset);
+            if($match){
+                $this->data = $this->notification->searchdata($select, $table, ['ID_US' => $ID_US], $match, 'id_notificacion', $for_page, $offset);
+            }else{
+                $this->data = $this->notification->getdata($select, $table, ['ID_US' => $ID_US], 'id_notificacion', $for_page, $offset);
+            }
 
             $pages = ($this->data['countAll'] % $for_page ) ?   (int)($this->data['countAll'] / $for_page) + 1 : (int)$this->data['countAll'] / $for_page  ; 
             $this->data['page'] = $page;

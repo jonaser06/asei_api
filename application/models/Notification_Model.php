@@ -42,4 +42,22 @@ class Notification_Model extends CI_Model implements iModule
         if ($query) return true;
         return false;
     }
+    public function searchdata($select = '' , $table = '', $where = [], $match='', $o = '', $limit = null, $offset = null){
+        if(empty($select)) return false;
+        $this->db->select($select);
+        $this->db->from($table);
+        $this->db->where($where);
+        $this->db->like('titulo', $match);
+        $this->db->order_by($o, 'DESC');
+        $this->db->limit($limit, $offset);
+        $query = $this->db->get()->result_array();
+        $countAll = count($query);
+        if ($query) {
+            return [
+                'countAll' => $countAll,
+                'content'=> $query
+            ];
+        }
+        return false;
+    }
 }
