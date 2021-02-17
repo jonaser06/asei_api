@@ -51,7 +51,15 @@ class Notification_Model extends CI_Model implements iModule
         $this->db->order_by($o, 'DESC');
         $this->db->limit($limit, $offset);
         $query = $this->db->get()->result_array();
-        $countAll = count($query);
+
+        $this->db->select($select);
+        $this->db->from($table);
+        $this->db->where($where);
+        $this->db->like('titulo', $match);
+        $this->db->order_by($o, 'DESC');
+        $query2 = $this->db->get()->result_array();
+        $countAll = count($query2);
+        
         if ($query) {
             return [
                 'countAll' => $countAll,
