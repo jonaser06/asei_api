@@ -49,7 +49,7 @@ class Contenido_Model extends CI_Model
         $this->db->join('secciones as sec' , 'contenido.ID_SEC = sec.ID_SEC');
         if( count ($params) != 0) {
             array_map(function ($param) {
-                $this->db->like('contenido.titulo', $param, 'both');
+                $this->db->like('titulo', $param, 'both');
             }, $params);
         }
         $this->db->where( $conditions );

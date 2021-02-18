@@ -17,7 +17,6 @@ class Contenidos extends MY_Controller {
     public function search( $categorie )
     {
         $notes_quanty = 3;
-
         $section = $this->NotesModel->get_section( [ 'nombre' => $categorie,'ID_MOD' => 3 ]);
         if ( !$section ) return $this->output_json(200 , 'Not exists this section' , [] , false );
         
@@ -210,12 +209,14 @@ class Contenidos extends MY_Controller {
         if ( !$section ) return $this->output_json(200 , 'No existe la sección en LEARNING CENTER' , [] , false );
         
         $params     = $this->input->get(['page', 'limit', 'last', 'search'], TRUE);
+        $search   = ! $params['search'] ? [] : explode(' ', $params['search']) ;
         $for_page   = $params['limit'] ? (int) $params['limit'] : $notes_quanty;
         $offset     = $params['page']  ? $for_page * ($params['page'] - 1) : 0;
         $last       = $params['last'] == 'true' ? true :false;
         $conditions = ['contenido.ID_SEC' => (int) $section['ID_SEC']];
 
-        $contenido = $this->ContenidoModel->getAll( $for_page ,$offset ,$conditions , $last );
+        $contenido = $this->ContenidoModel->getAll( $for_page ,$offset ,$conditions , false , $search );
+        
         if ( !$contenido )  return $this->output_json(200 , "not no se encontraron resultados en  : $categorie" ,[] ,false );
         
         for( $i = 0; $i < count( $contenido['contenido'] ) ; $i ++ ): 

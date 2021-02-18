@@ -112,8 +112,6 @@ class LoginUser extends MY_Controller {
 
             $this->output_json(200 , 'login success',$this->data);
     }
-    public function update() {
-        
-    }
+    
 	
 }
