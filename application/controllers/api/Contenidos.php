@@ -130,6 +130,8 @@ class Contenidos extends MY_Controller {
     }
     public function insert() : CI_Output
     {      
+        var_dump($_FILES['img_learn']);
+        exit;
         if( ! $this->input->post('seccion') )        return $this->output_json(400 , 'Debe enviar la sección'); 
         if( ! $this->input->post('titulo') )         return $this->output_json(400 , 'Debe enviar el título');
         if( ! $this->input->post('resumen') )        return $this->output_json(400 , 'Debe enviar el resumen');
