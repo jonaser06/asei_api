@@ -35,7 +35,7 @@ class Contenido_Model extends CI_Model
     }
     public function get_capacitadores ( int $id_contenido)
     {
-        $this->db->select('ID_CA ,nombre , resumen');
+        $this->db->select('ID_CA ,nombre , resumen,foto');
         $this->db->from('capacitadores');
         $this->db->where(['capacitadores.ID_CO' =>(int) $id_contenido]);
         $cap = $this->db->get()->result_array();
