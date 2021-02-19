@@ -41,6 +41,7 @@ $route['deleteIndicador'] = 'api/Statistics/deleteIndicador';
 $route['getIndicador']['GET'] = 'api/Statistics/getIndicador';
 
 ##Notification
+$route['newNotification'] = 'api/Notification/newNotification';
 $route['setNotification'] = 'api/Notification/setNotification';
 $route['getNotification'] = 'api/Notification/getNotification';
 

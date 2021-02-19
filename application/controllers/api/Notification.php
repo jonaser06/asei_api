@@ -9,6 +9,68 @@ class Notification extends MY_Controller {
 		$this->load->model('Notification_Model', 'notification');
         date_default_timezone_set("America/Lima");
     }
+    public function newNotification(){
+
+        if(($this->input->server('REQUEST_METHOD') === 'POST')){
+            
+            $inputJSON = file_get_contents('php://input');
+            $input = json_decode($inputJSON, TRUE);
+
+            
+        }
+
+        $payload = [
+            "titulo" => "Noticias",
+            "descripcion" => "Decimo aniversario inmobiliaria los faroles del sol.",
+            "fecha" => "2021-02-15 23:34:24",
+            "destino" => "infcenter/anniversary/info/66977858",
+            "categoria" => "anniversary.",
+            "ID_US" => "1294347",
+            "estado" => 1
+        ];
+
+        $body =[
+            "app_id" => APP_ID,
+            "included_segments" => [ "Active Users", "Inactive Users" ],
+            "data" => $payload,
+            "contents" => [
+                "en" => $payload['descripcion'],
+                "es" => $payload['descripcion']
+            ],
+            "headings" => [
+                "en" => $payload['titulo'],
+                "es" => $payload['titulo'],
+            ]
+        ];
+
+        echo json_encode($body);
+        exit;
+
+        /* $body = '{
+                "app_id" : "ece9b11d-d45d-4fa4-819f-413949e79b36",
+                "included_segments":["Active Users","Inactive Users"],
+                "data": {"userId": "Test"},
+                "contents": {"en":"En: $ '.$precioD.' Apresurate!","es":"En: $ '.$precioD.' Apresurate!"},
+                "headings": {"en":"'.$producto.'","es":"'.$producto.'"}
+            }';
+
+            $url = 'https://onesignal.com/api/v1/notifications';
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+            curl_setopt(
+                $ch,
+                CURLOPT_HTTPHEADER,
+                array(
+                'Content-Type:application/json',
+                'Authorization:Basic MTk5Y2M0ZDktNTVmYy00ZjIxLWJiMmYtNDJkMTMzMzYwN2Qy'
+                )
+            );
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $result = curl_exec($ch);
+            curl_close($ch); */
+
+            /**termino de enviar por push */
+    }
 
     public function setNotification(){
         // $date = new DateTime();
