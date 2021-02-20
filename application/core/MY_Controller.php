@@ -170,6 +170,7 @@ class MY_Controller extends CI_Controller
         int $id_entidad,
         array $files = [] 
     )
+    
     {
         $uploads = $this->files_for_insert($files , $id_name ,(int)$id_entidad );
         $uploadData = $uploads['multimedia'];
@@ -182,6 +183,7 @@ class MY_Controller extends CI_Controller
             endif;
         }
     }
+
     /**
      * @param {$keys_relation}:keys de las entidades
      * @param {$table_relation}: table de relacion entity1_entity_2
