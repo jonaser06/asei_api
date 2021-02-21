@@ -23,6 +23,45 @@ class User extends MY_Controller {
      */
 	
 	
+    public function getRol( $role ):CI_Output
+    {
+        $users_quanty = 9;
+
+        $role = $this->UserModel->get_profile( ['TIPO' => $role ]);
+        if ( !$role ) return $this->output_json(200 , 'Not exists this role' , [] , false );
+        
+        $params     = $this->input->get(['page', 'limit', 'last', 'search'], TRUE);
+        $for_page   = $params['limit'] ? (int) $params['limit'] : $users_quanty;
+        $offset     = $params['page']  ? $for_page * ($params['page'] - 1) : 0;
+        $last       = $params['last'] == 'true' ? true :false;
+        $conditions = ['perfiles.ID_PE' => (int) $role['ID_PE']];
+
+        $users = $this->UserModel->getAll( $for_page ,$offset ,$conditions , $last );
+        if ( !$users )  return $this->output_json(200 , "no existen usuarios para este rol : $role" ,[] ,false );
+        
+        for( $i = 0; $i < count( $users['users'] ) ; $i ++ ): 
+            $user_imgs = $this->FileModel->getOne('ID_US','multimedia_usuarios',['ID_US' => $users['users'][$i]['ID_US']]);
+            $users['users'][$i]['imagenes'] = $user_imgs ? $user_imgs : 'no images found';
+
+        endfor;
+
+        $page           = $params['page'] ? (int) $params['page'] : 1 ;
+        $users['page']  = $page;
+        $pages          = ($users['countAll'] % $for_page ) ?   (int)($users['countAll'] / $for_page) + 1 : (int)$users['countAll'] / $for_page  ; 
+        $users['pages'] = $pages;
+        $perfil        = $role['TIPO'];
+
+        if($page > 1) {
+            $prev = $page - 1  ;
+            $users['prev'] = "$perfil/?page=$prev&limit=$for_page";
+        } 
+        if( $page < $pages ) {
+            $next = $page + 1 ;
+            $users['next'] = "$perfil/?page=$next&limit=$for_page";
+        }
+       
+        return $this->output_json( 200 , 'usuarios encontrados !' , $users );
+    } 
     public function get($id) : CI_Output
     {
       if (!(int)$id)    return $this->output_json(400 ,'param id is required'); 
@@ -37,10 +76,39 @@ class User extends MY_Controller {
     }
     public function getAll() : CI_Output
     {
-      $usersDB = $this->UserModel->getAll();
-      if( empty($usersDB) ) return $this->output_json( 200 , `No existen usuarios`);
+      $users_quanty = 9;
+
+        
+        $params     = $this->input->get(['page', 'limit', 'last', 'search'], TRUE);
+        $for_page   = $params['limit'] ? (int) $params['limit'] : $users_quanty;
+        $offset     = $params['page']  ? $for_page * ($params['page'] - 1) : 0;
+        $last       = $params['last'] == 'true' ? true :false;
+
+        $users = $this->UserModel->getAll( $for_page ,$offset ,[] , $last );
+        if ( empty($users) )  return $this->output_json(200 , "no existen usuarios" ,[] ,false );
+        
+        for( $i = 0; $i < count( $users['users'] ) ; $i ++ ): 
+            $user_imgs = $this->FileModel->getOne('ID_US','multimedia_usuarios',['ID_US' => $users['users'][$i]['ID_US']]);
+            $users['users'][$i]['imagenes'] = $user_imgs ? $user_imgs : 'no images found';
+
+        endfor;
+
+        $page           = $params['page'] ? (int) $params['page'] : 1 ;
+        $users['page']  = $page;
+        $pages          = ($users['countAll'] % $for_page ) ?   (int)($users['countAll'] / $for_page) + 1 : (int)$users['countAll'] / $for_page  ; 
+        $users['pages'] = $pages;
+
+        if($page > 1) {
+            $prev = $page - 1  ;
+            $users['prev'] = "/users?page=$prev&limit=$for_page";
+        } 
+        if( $page < $pages ) {
+            $next = $page + 1 ;
+            $users['next'] = "/users?page=$next&limit=$for_page";
+        }
+       
+        return $this->output_json( 200 , 'all user find !' , $users );
      
-      return $this->output_json(200 , 'all user find !!', $usersDB);
     }
     public function updateOne($id): CI_Output
     {

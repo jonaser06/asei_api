@@ -12,10 +12,13 @@ $route['register'] ['POST'] = 'api/LoginUser/register';
 
 #Users
 $route['user/(:num)/update']['POST']= 'api/User/updateOne/$1';
+$route['users/(:any)'] ['GET'] = 'api/User/getRol/$1';
 $route['users'] ['GET'] = 'api/User/getAll';
 $route['user/(:num)'] ['GET'] = function ($id) {
     return 'api/User/get/'.$id;
 };
+
+
 
 
 

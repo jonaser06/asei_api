@@ -36,19 +36,41 @@ class User_Model extends CI_Model
             ? $this->db->get($this->table)->result_array()
             : $this->db->get_where($this->table, $conditions)->row_array();
     }
-
-    public function getALL(int $limit = 1, int $offset = 0 )
+    public function get_profile(
+        ?array $conditions = NULL
+    ) {
+           return empty($conditions)
+            ? $this->db->get('perfiles')->result_array()
+            : $this->db->get_where('perfiles', $conditions)->row_array();
+    }
+    public function insert( array $data = [] )
     {
-        $this->db->select('ID_US, NOMBRES,APELLIDO_PATERNO,APELLIDO_MATERNO,EMAIL,p.TIPO');
-        $this->db->from('usuarios as us');
-        $this->db->join('perfiles as p', 'p.ID_PE = us.ID_PE');
-        $users = $this->db->get()->result_array();
+        $users = $this->db->insert($this->table, $data);
+        return $users ?$users : false ;
+    }
+    
+    public function getALL(int $limit = 1, int $offset = 0, array $conditions = [] , bool $lasted = FALSE , array $params  = [] )
+    {
+        $this->db->select('ID_US, NOMBRES,APELLIDO_PATERNO,APELLIDO_MATERNO,EMAIL,CARGO,DIRECCION,EMPRESA,p.TIPO');
+        $this->db->join('perfiles as p', 'p.ID_PE = usuarios.ID_PE');
+        if( count ($params) != 0) {
+            array_map(function ($param) {
+                $this->db->like('NOMBRES', $param, 'both');
+            }, $params);
+        }
+        $this->db->where( $conditions );
+
+        $countAll = $this->db->count_all_results('usuarios', FALSE);
         $this->db->limit($limit, $offset);
-        return $users ? $users : FALSE;
+        $users = $this->db->get()->result_array();
+        return $users ? [
+            'countAll'     => $countAll,
+            'users'        => $users
+        ] : FALSE;
     }
     public function get($id)
     {
-        $this->db->select('ID_US, NOMBRES,APELLIDO_PATERNO,APELLIDO_MATERNO,EMAIL,TELEFONO,id_notify,p.TIPO');
+        $this->db->select('ID_US, NOMBRES,APELLIDO_PATERNO,APELLIDO_MATERNO,EMAIL,TELEFONO,CARGO,DIRECCION,EMPRESA,id_notify,p.TIPO');
         $this->db->from('usuarios as us');
         $this->db->join('perfiles as p', 'p.ID_PE = us.ID_PE');
         $this->db->where(['ID_US' => (int) $id]);
@@ -64,6 +86,7 @@ class User_Model extends CI_Model
             return  $this->db->update($this->table) ? true : false;  
         
     }
+    
    
  
 }
