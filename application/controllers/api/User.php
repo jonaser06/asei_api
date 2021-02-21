@@ -25,6 +25,7 @@ class User extends MY_Controller {
 	
     public function getRol( $role ):CI_Output
     {
+
         $users_quanty = 9;
 
         $role = $this->UserModel->get_profile( ['TIPO' => $role ]);
@@ -34,7 +35,7 @@ class User extends MY_Controller {
         $for_page   = $params['limit'] ? (int) $params['limit'] : $users_quanty;
         $offset     = $params['page']  ? $for_page * ($params['page'] - 1) : 0;
         $last       = $params['last'] == 'true' ? true :false;
-        $conditions = ['perfiles.ID_PE' => (int) $role['ID_PE']];
+        $conditions = ['p.ID_PE' => (int) $role['ID_PE']];
 
         $users = $this->UserModel->getAll( $for_page ,$offset ,$conditions , $last );
         if ( !$users )  return $this->output_json(200 , "no existen usuarios para este rol : $role" ,[] ,false );
