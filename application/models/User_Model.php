@@ -55,7 +55,7 @@ class User_Model extends CI_Model
         $this->db->join('perfiles as p', 'p.ID_PE = usuarios.ID_PE');
         if( count ($params) != 0) {
             array_map(function ($param) {
-                $this->db->like('NOMBRES', $param, 'both');
+                $this->db->like('usuarios.NOMBRES', $param, 'both');
             }, $params);
         }
         $this->db->where( $conditions );

@@ -36,6 +36,7 @@ class LoginUser extends MY_Controller {
         if ( ! $this->input->post('empresa', TRUE) ) return $this->output_json(200 , 'Debe enviar el campo empresa' , [] , false );
         if ( ! $this->input->post('cargo', TRUE) ) return $this->output_json(200 , 'Debe enviar el campo cargo' , [] , false );
         if ( ! $this->input->post('fecha_ingreso', TRUE) ) return $this->output_json(200 , 'Debe enviar el campo fecha de ingreso' , [] , false );
+        if ( ! $this->input->post('estado', TRUE) ) return $this->output_json(200 , 'Debe enviar el campo estado' , [] , false );
         if ( ! $this->input->post('perfil', TRUE) ) return $this->output_json(200 , 'Debe enviar el campo perfil' , [] , false );
 
         // if( $this->input->post('nombres', TRUE) == '' ||
@@ -76,6 +77,7 @@ class LoginUser extends MY_Controller {
             'CARGO' => $this->input->post('cargo', TRUE),
             'TELEFONO' => $this->input->post('telefono', TRUE),
             'FECHA_INGRESO' => $this->input->post('fecha_ingreso',TRUE), 
+            'estado' => $this->input->post('estado',TRUE), 
             'ID_PE' =>(int)$perfil['ID_PE'], 
             'ID_UB' => 1,
         ];
@@ -123,6 +125,7 @@ class LoginUser extends MY_Controller {
             $token_data['email'] = $userDB['EMAIL'];
             $token_data['telefono'] = $userDB['TELEFONO'];
             $token_data['rol'] = $userDB['TIPO'];
+            $token_data['estado'] = $userDB['estado'];
             $token_data['id_notification'] = $userDB['id_notify']  ;
             $token_data['time'] = time();
 

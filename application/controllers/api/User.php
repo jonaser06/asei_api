@@ -32,13 +32,14 @@ class User extends MY_Controller {
         if ( !$role ) return $this->output_json(200 , 'Not exists this role' , [] , false );
         
         $params     = $this->input->get(['page', 'limit', 'last', 'search'], TRUE);
+        $search   = ! $params['search'] ? [] : explode(' ', $params['search']) ;
         $for_page   = $params['limit'] ? (int) $params['limit'] : $users_quanty;
         $offset     = $params['page']  ? $for_page * ($params['page'] - 1) : 0;
         $last       = $params['last'] == 'true' ? true :false;
         $conditions = ['p.ID_PE' => (int) $role['ID_PE']];
 
-        $users = $this->UserModel->getAll( $for_page ,$offset ,$conditions , $last );
-        if ( !$users )  return $this->output_json(200 , "no existen usuarios para este rol : $role" ,[] ,false );
+        $users = $this->UserModel->getAll( $for_page ,$offset ,$conditions , $last ,$search);
+        if ( !$users )  return $this->output_json(200 , "no existen usuarios para este rol : ".$role['TIPO'] ,[] ,false );
         
         for( $i = 0; $i < count( $users['users'] ) ; $i ++ ): 
             $user_imgs = $this->FileModel->getOne('ID_US','multimedia_usuarios',['ID_US' => $users['users'][$i]['ID_US']]);
@@ -93,11 +94,13 @@ class User extends MY_Controller {
     {
       $users_quanty = 9;
         $params     = $this->input->get(['page', 'limit', 'last', 'search'], TRUE);
+        $search   = ! $params['search'] ? [] : explode(' ', $params['search']) ;
+
         $for_page   = $params['limit'] ? (int) $params['limit'] : $users_quanty;
         $offset     = $params['page']  ? $for_page * ($params['page'] - 1) : 0;
         $last       = $params['last'] == 'true' ? true :false;
 
-        $users = $this->UserModel->getAll( $for_page ,$offset ,[] , $last );
+        $users = $this->UserModel->getAll( $for_page ,$offset ,[] , $last ,$search);
         if ( empty($users) )  return $this->output_json(200 , "no existen usuarios" ,[] ,false );
         
         for( $i = 0; $i < count( $users['users'] ) ; $i ++ ): 
@@ -127,6 +130,7 @@ class User extends MY_Controller {
     {
       $userDB = $this->UserModel->get($id);
       if( empty($userDB) ) return $this->output_json(200 , 'no se encontro user con el id' ,[] , false );
+      
       $id_notify = $this->input->post('id_notify',TRUE);
       $set = [
         'id_notify' => $id_notify
