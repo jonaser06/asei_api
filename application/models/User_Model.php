@@ -70,7 +70,7 @@ class User_Model extends CI_Model
     }
     public function get($id)
     {
-        $this->db->select('ID_US, NOMBRES,APELLIDO_PATERNO,APELLIDO_MATERNO,EMAIL,TELEFONO,CARGO,DIRECCION,EMPRESA,FECHA_INGRESO,usuarios.estado,id_notify,p.TIPO');
+        $this->db->select('ID_US, NOMBRES,APELLIDO_PATERNO,APELLIDO_MATERNO,EMAIL,TELEFONO,CARGO,DIRECCION,EMPRESA,FECHA_INGRESO,us.estado,id_notify,p.TIPO');
         $this->db->from('usuarios as us');
         $this->db->join('perfiles as p', 'p.ID_PE = us.ID_PE');
         $this->db->where(['ID_US' => (int) $id]);
