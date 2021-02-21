@@ -263,75 +263,26 @@ class Contenidos extends MY_Controller {
         if( ! $this->input->post('resumen') )        return $this->output_json(400 , 'Debe enviar el resumen');
         if( ! $this->input->post('objetivo') )       return $this->output_json(400 , 'Debe enviar el Objetivo');
         if( ! $this->input->post('duracion') )       return $this->output_json(400 , 'Debe enviar la duracion');
-        if ( empty($_FILES['img_learn']['name']) )   return $this->output_json(400 , 'Debe seleccion una imagen para el webinnar o curso');    
-        if( ! $this->input->post('sesion_nombres') ) return $this->output_json(400 , 'Debe enviar el nombre por cada sesión');
-        if( ! $this->input->post('sesion_links') )   return $this->output_json(400 , 'Debe enviar un link por sesión');
-        if( !( count($this->input->post('sesion_nombres')) == count($this->input->post('sesion_links')) ) )return $this->output_json(400 , 'Debe enviar un link y un nombre por cada sesión');
-        if( ! $this->input->post('cap_nombres') )    return $this->output_json(400 , 'Debe enviar un nombre por capacitador'); 
-        if( ! $this->input->post('cap_resumen') )    return $this->output_json(400 , 'Debe enviar un resumen por capacitador');
-        if ( empty($_FILES['files']['name']) )       return $this->output_json(400 , 'Debe seleccionar una foto por capacitador');   
-        if( ! (  count($this->input->post('cap_nombres')) == count($this->input->post('cap_resumen')) && count($this->input->post('cap_nombres')) == count($_FILES['cap_img']['name'])) ) return $this->output_json(400 , 'Debe enviar un nombre y un resumen e imagen por cada capacitador agregado'); 
-        if ( $_FILES['cap_img']['size'][0] > 2000000 ) return $this->output_json(400 , 'La imagen debe ser menor a 2MB' );   
-
-         #contenido
-         $contenido_imgs = $this->FileModel->getOne('ID_CO','multimedia_contenido',[ 'ID_CO' => (int)$id]);
-         if($contenido_imgs) {
-             for ( $i = 0; $i < count( $contenido_imgs ); $i++ ) { 
-                 $this->deleteFile('multimedia_contenido',$contenido_imgs[$i]['ID_MULTI']);
-             }
-         }
-         #sesiones 
-         $capacitadoresDB   = $this->ContenidoModel->get_capacitadores( (int)$id);
-         if($capacitadoresDB) {
-             $caps_imgs = []; #array de img 
-             for ( $i = 0; $i < count( $capacitadoresDB ); $i++ ) { 
-                 $capacitador_imgs =  $this->FileModel->getOne('ID_CA','multimedia_capacitadores',['ID_CA' => (int) $capacitadoresDB[$i]['ID_CA']]);
-                 if($capacitador_imgs) {
-                     array_push($caps_imgs , $capacitador_imgs);
-                 }     
-             }
-             for ( $i = 0; $i < count( $caps_imgs ); $i++ ) { 
-                 $this->deleteFile('multimedia_capacitadores',$caps_imgs[$i][0]['ID_MULTI']);
-             } 
-         }
-         $this->ContenidoModel->remove( 'sesiones' , ['ID_CO' => (int)$id]);
-         $this->ContenidoModel->remove( 'capacitadores' , ['ID_CO' => (int)$id]);
-         $resp = $this->ContenidoModel->delete( (int) $id);
-
+       
          $inputs = $this->input->post(NULL, TRUE);
-         $learn_files['files']         = $_FILES['img_learn'];
-         $capacitadores_files['files'] = $_FILES['cap_img'];
          
-         $content = [
-             'ID_CO'           => $id,
+         $set = [
              'titulo'          => $inputs['titulo'],
              'resumen'         => $inputs['resumen'],
              'objetivo'        => $inputs['objetivo'],
              'duracion'        => $inputs['duracion'],
              'ID_SEC'          => (int)$section['ID_SEC'],
-             'FECHA_PUBLISHED' => date("Y-m-d H:i:s")
          ];
-         $sesiones      = $this->sesiones_for_insert( $inputs['sesion_nombres'],$inputs['sesion_links'], $id );
-         $capacitadores = $this->capacitadores_for_insert( $inputs['cap_nombres'],$inputs['cap_resumen'],$inputs['cap_img'], $id );
  
-         $learn = $this->ContenidoModel->insert( $content );
-         if( !$learn )   return $this->output_json(400 , 'Fallo la insercción');
-         $this->create_files('multimedia_contenido','ID_CO', (int)$id ,$learn_files );
-         $sesionesDB = $this->ContenidoModel->insert_rows($sesiones, 'sesiones');
-         if( !$sesionesDB) return $this->output_json(400 , 'Fallo en insertar las sesiones.');
-         $capacitadoresDB = $this->ContenidoModel->insert_rows($capacitadores, 'capacitadores');
-         if( !$capacitadoresDB) return $this->output_json(400 , 'Fallo en insertar los capacitadores.');
-         $this->create_files_cap ( $capacitadores , $capacitadores_files );
-           
-         $learn       = $this->ContenidoModel->get( (int)$id);
-         $learn_imgs  = $this->FileModel->getOne('ID_CO','multimedia_contenido',['ID_CO' => (int) $learn['ID_CO']]);
-         if( !empty($learn) ) $learn['files'] = $learn_imgs;
-         $sesionesDB  = $this->ContenidoModel->get_sesiones( (int)$learn['ID_CO']);
-         $capsDB       = $this->ContenidoModel->get_capacitadores( (int)$learn['ID_CO']);
-         $learn['capacitadores'] = $this->capacitador_send($capsDB);
-         $learn['sesiones']      = $sesionesDB;
-         
-         return $this->output_json(200 , 'update contenido', $learn);
+        if ( !empty($_FILES['img_learn']['name']) ) {
+            $contenido_imgs = $this->FileModel->getOne('ID_CO','multimedia_contenido',['ID_CO' => $id]);
+            $img = $contenido_imgs[0];
+
+            $this->editFileImg( $_FILES ,$img['ID_MULTI'],'img_learn');
+        }
+        $contenidoUpdate = $this->ContenidoModel->update( $set , ['ID_CO' => $id] );
+        if( !$contenidoUpdate ) return $this->output_json( 400 , 'Error not update learn!');
+         return $this->output_json(200 , 'update contenido');
 
     }
    
@@ -390,16 +341,22 @@ class Contenidos extends MY_Controller {
         return $this->output_json(200 , 'insert db ', $data );
     }
 
-    public function addCap( int $id_learn) 
+    public function addCap( string $seccion ,int $id_learn) 
     {
         
+        $section = $this->ContenidoModel->get_section( [ 'nombre' => $seccion ,'ID_MOD' => 4 ]);
+        if( !$section ) return $this->output_json(200 , 'No existe la seccion en ASEI LEARNING debe enviar webinnar o curso' , [] , false );
+        $learn = $this->ContenidoModel->get((int) $id_learn , ['contenido.ID_SEC' => $section['ID_SEC']] );
+
+        if( !$learn ) return $this->output_json( 200 , "El id es incorrecto , no existe este conetenido en $seccion " , [] , false );
         if( ! $this->input->post('cap_nombres') )    return $this->output_json(400 , 'Debe enviar un nombre por capacitador'); 
         if( ! $this->input->post('cap_resumen') )    return $this->output_json(400 , 'Debe enviar un resumen por capacitador');
-        if ( empty($_FILES['cap_img']['name']) )       return $this->output_json(400 , 'Debe seleccionar una foto por capacitador');  
+        if ( empty($_FILES['cap_img']['name']) )     return $this->output_json(400 , 'Debe seleccionar una foto por capacitador');  
         $inputs = $this->input->post(NULL, TRUE);
+
         $capacitadores_files['files'] = $_FILES['cap_img'];
         
-        $capacitadores = $this->capacitadores_for_insert( $inputs['cap_nombres'],$inputs['cap_resumen'], $id_learn);
+        $capacitadores = $this->capacitadores_for_insert( $inputs['cap_nombres'],$inputs['cap_resumen'], (int)$id_learn);
         $capacitadoresDB = $this->ContenidoModel->insert_rows($capacitadores, 'capacitadores');
         if( !$capacitadoresDB) return $this->output_json(400 , 'Fallo en insertar los capacitadores.');
         $this->create_files_cap ( $capacitadores , $capacitadores_files );
@@ -407,20 +364,38 @@ class Contenidos extends MY_Controller {
 
 
     }
-    public function removeCap(int  $id_learn , int $id_cap ) 
+    public function removeCap( int $id_cap ) 
     {
-        $capacitador_imgs =  $this->FileModel->getOne('ID_CA','multimedia_capacitadores',['ID_CA' => (int) $capacitadoresDB[$i]['ID_CA']]);
-                if($capacitador_imgs) {
-                    array_push($caps_imgs , $capacitador_imgs);
-                }
+        $capacitador_imgs =  $this->FileModel->getOne('ID_CA','multimedia_capacitadores',['ID_CA' => (int) $id_cap]);
+        if($capacitador_imgs) {
+            for ( $i = 0; $i < count( $capacitador_imgs ); $i++ ) { 
+                $this->deleteFile('multimedia_capacitadores',$capacitador_imgs[$i]['ID_MULTI']);
+            }
+        }
+        $resp = $this->ContenidoModel->remove( 'capacitadores' , ['ID_CA' => (int)$id_cap]);
+        return $resp ? $this->output_json( 200 , 'delete capacitador!')
+        : $this->output_json( 500 , 'have a problem with capacitador deleted!');
     }
-    public function addSession( int $id_learn , int $id_session ) 
+    public function addSession(string $seccion , int $id_learn) 
     {
-        $sesionesDB  = $this->ContenidoModel->get_sesiones( (int)$contenido['contenido'][$i]['ID_CO']);
+        $section = $this->ContenidoModel->get_section( [ 'nombre' => $seccion ,'ID_MOD' => 4 ]);
+        if( !$section ) return $this->output_json(200 , 'No existe la seccion en ASEI LEARNING debe enviar webinnar o curso' , [] , false );
+        $learn = $this->ContenidoModel->get((int) $id_learn , ['contenido.ID_SEC' => $section['ID_SEC']] );
+        if( !$learn ) return $this->output_json( 200 , "El id es incorrecto , no existe este conetenido en $seccion " , [] , false );
 
+        if( ! $this->input->post('sesion_nombres') ) return $this->output_json(400 , 'Debe enviar el nombre por cada sesión');
+        if( ! $this->input->post('sesion_links') )   return $this->output_json(400 , 'Debe enviar un link por sesión');
+        $inputs = $this->input->post(NULL, TRUE);
+
+        $sesiones      = $this->sesiones_for_insert( $inputs['sesion_nombres'],$inputs['sesion_links'], $id_learn );
+        $sesionesDB = $this->ContenidoModel->insert_rows($sesiones, 'sesiones');
+        if( !$sesionesDB) return $this->output_json(400 , 'Fallo en insertar la session.');
+        return $this->output_json(201 , 'session insert');
     }
-    public function removeSession( int $id_learn , int $id_session ) 
+    public function removeSession(int $id_session ) 
     {
-
+        $resp = $this->ContenidoModel->remove( 'sesiones' , ['ID_SE' => (int)$id_session]);
+        return $resp ? $this->output_json( 200 , 'delete sesión !')
+        : $this->output_json( 500 , 'have a problem with capacitador deleted!');
     }
 }

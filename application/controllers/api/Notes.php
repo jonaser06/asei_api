@@ -97,6 +97,7 @@ class Notes extends MY_Controller {
 
     public function insert()
     {
+            
            if( ! $this->input->post('titulo') )        return $this->output_json(400 , 'Debe enviar el título');
            if( ! $this->input->post('resumen') )       return $this->output_json(400 , 'Debe enviar el resumen');
            if( ! $this->input->post('texto') )         return $this->output_json(400 , 'Debe enviar el texto');

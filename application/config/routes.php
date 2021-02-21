@@ -79,12 +79,22 @@ $route['notes/search/(:any)']['GET'] = 'api/Notes/search/$1';
 #sections
 $route['sections']['GET'] = 'api/Notes/get_sections';
 
+#cap
+$route['learn/(:any)/(:num)/addCap']['POST'] = 'api/Contenidos/addCap/$1/$2';
+$route['capacitadores/(:num)/delete']['GET'] = 'api/Contenidos/removeCap/$1';
+#cap
+$route['learn/(:any)/(:num)/sesion']['POST'] = 'api/Contenidos/addSession/$1/$2';
+$route['sesiones/(:num)/delete']['GET'] = 'api/Contenidos/removeSession/$1';
 #learn
 $route['learn/new']['POST'] = 'api/Contenidos/insert';
 $route['learn/(:any)']['GET'] = 'api/Contenidos/get/$1';
 $route['learn/(:any)/(:num)']['GET'] = 'api/Contenidos/getById/$1/$2';
 $route['learn/(:any)/(:num)/delete']['GET'] = 'api/Contenidos/delete/$1/$2';
 $route['learn/(:any)/(:num)']['POST'] = 'api/Contenidos/update/$1/$2';
+
+
+
+
 
 $route['testing']['POST'] = 'api/Contenidos/test';
 

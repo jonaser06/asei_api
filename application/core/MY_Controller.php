@@ -224,6 +224,25 @@ class MY_Controller extends CI_Controller
         return true;
 
     } 
+    public function editFileImg (array $files , int $id_file ,$nameImg)
+    {
+        $file = $this->FileModel->get(['ID_MULTI' => $id_file]);
+        if ( !$file) return false;
+        $path    =  DIR_U . $file['RUTA'];
+        if( !file_exists($path) ) return false;
+        unlink($path);
+
+        $this->configImg();
+        if($this->upload->do_upload($nameImg)) $fileData = $this->upload->data();
+        date_default_timezone_set("America/Lima");          
+        $set = [
+            'MODIFICADO' => date("Y-m-d H:i:s"),
+            'FILE_NAME'  =>$fileData['file_name'],
+            'RUTA'       => 'uploads/notes/'.$fileData['file_name']
+        ];
+        $result = $this->FileModel->update( $set , ['ID_MULTI' => $id_file ]);
+        return $result;
+    }
     public function editFile (array $files , int $id_file )
     {
         $file = $this->FileModel->get(['ID_MULTI' => $id_file]);
