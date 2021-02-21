@@ -80,7 +80,7 @@ $route['notes/search/(:any)']['GET'] = 'api/Notes/search/$1';
 $route['sections']['GET'] = 'api/Notes/get_sections';
 
 #cap
-$route['learn/(:any)/(:num)/addCap']['POST'] = 'api/Contenidos/addCap/$1/$2';
+$route['learn/(:any)/(:num)/capacitador']['POST'] = 'api/Contenidos/addCap/$1/$2';
 $route['capacitadores/(:num)/delete']['GET'] = 'api/Contenidos/removeCap/$1';
 #cap
 $route['learn/(:any)/(:num)/sesion']['POST'] = 'api/Contenidos/addSession/$1/$2';
