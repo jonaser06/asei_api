@@ -68,18 +68,30 @@ class User extends MY_Controller {
       if (!(int)$id)    return $this->output_json(400 ,'param id is required'); 
       $userDB = $this->UserModel->get($id);
       if( empty($userDB) ) return $this->output_json(200 , 'no se encontro user con el id' );
+      $user_imgs = $this->FileModel->getOne('ID_US','multimedia_usuarios',['ID_US' => $userDB['ID_US']]);
+      if( !empty($user_imgs) ) $userDB['imagenes'] = $user_imgs;
       return $this->output_json(200 , 'usuario encontrado', $userDB);
     }
     
-    public function remove()
+    public function delete( int $id )
     {
-     
+        $note = $this->UserModel->get((int) $id);
+        if( !$note ) return $this->output_json( 200 , 'no existe usuario con ese id ' , [] , false );
+
+        $user_imgs = $this->FileModel->getOne('ID_US','multimedia_usuarios',[ 'ID_US' => $id]);
+        if($user_imgs) {
+            for ( $i = 0; $i < count( $user_imgs ); $i++ ) { 
+                $this->deleteFile('multimedia_usuarios',$user_imgs[$i]['ID_MULTI']);
+            }
+        }
+        $resp = $this->UserModel->delete( (int) $id);
+
+        return $resp ? $this->output_json( 200 , 'usuario eliminado!')
+                     : $this->output_json( 500 , 'hubo un problema al eliminar el usuario!');
     }
     public function getAll() : CI_Output
     {
       $users_quanty = 9;
-
-        
         $params     = $this->input->get(['page', 'limit', 'last', 'search'], TRUE);
         $for_page   = $params['limit'] ? (int) $params['limit'] : $users_quanty;
         $offset     = $params['page']  ? $for_page * ($params['page'] - 1) : 0;
