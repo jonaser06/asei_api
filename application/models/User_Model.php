@@ -51,7 +51,7 @@ class User_Model extends CI_Model
     
     public function getALL(int $limit = 1, int $offset = 0, array $conditions = [] , bool $lasted = FALSE , array $params  = [] )
     {
-        $this->db->select('ID_US, NOMBRES,APELLIDO_PATERNO,APELLIDO_MATERNO,EMAIL,CARGO,DIRECCION,EMPRESA,FECHA_INGRESO,estado,p.TIPO');
+        $this->db->select('ID_US, NOMBRES,APELLIDO_PATERNO,APELLIDO_MATERNO,EMAIL,CARGO,DIRECCION,EMPRESA,FECHA_INGRESO,usuarios.estado,p.TIPO');
         $this->db->join('perfiles as p', 'p.ID_PE = usuarios.ID_PE');
         if( count ($params) != 0) {
             array_map(function ($param) {
@@ -70,7 +70,7 @@ class User_Model extends CI_Model
     }
     public function get($id)
     {
-        $this->db->select('ID_US, NOMBRES,APELLIDO_PATERNO,APELLIDO_MATERNO,EMAIL,TELEFONO,CARGO,DIRECCION,EMPRESA,FECHA_INGRESO,estado,id_notify,p.TIPO');
+        $this->db->select('ID_US, NOMBRES,APELLIDO_PATERNO,APELLIDO_MATERNO,EMAIL,TELEFONO,CARGO,DIRECCION,EMPRESA,FECHA_INGRESO,usuarios.estado,id_notify,p.TIPO');
         $this->db->from('usuarios as us');
         $this->db->join('perfiles as p', 'p.ID_PE = us.ID_PE');
         $this->db->where(['ID_US' => (int) $id]);
