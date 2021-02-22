@@ -248,6 +248,8 @@ class MY_Controller extends CI_Controller
         $file = $this->FileModel->get(['ID_MULTI' => $id_file]);
         if ( !$file) return false;
         $path    =  DIR_U . $file['RUTA'];
+        $rutas = explode('/',$path);
+        if (array_pop($rutas) == '' )return false;
         if( !file_exists($path) ) return false;
         unlink($path);
 

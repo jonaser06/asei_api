@@ -3,6 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class User extends MY_Controller {
 
+    private $keysDB = ['nombres','ap_mat','ap_mat','direccion','telefono','email','password','cargo','fecha_ingreso','empresa','estado','id_notify'];
 	public function __construct()
     {
 	    	parent::__construct();
@@ -130,15 +131,46 @@ class User extends MY_Controller {
     {
       $userDB = $this->UserModel->get($id);
       if( empty($userDB) ) return $this->output_json(200 , 'no se encontro user con el id' ,[] , false );
-      
-      $id_notify = $this->input->post('id_notify',TRUE);
-      $set = [
-        'id_notify' => $id_notify
-      ];
-      
+      $set = $this->filter_attr( $_POST , $this->keysDB );
       $userUpdate = $this->UserModel->updateIdNotify($set,['ID_US'=>(int)$id ]);
+      
+      if ( !empty($_FILES['user_img']['name']) ) {
+        $user_imgs = $this->FileModel->getOne('ID_US','multimedia_usuarios',['ID_US' => $id]);
+        if (!$user_imgs) {
+            $user_img['files'] = $_FILES['user_img'];
+            $this->create_files('multimedia_usuarios','ID_US', (int)$userDB['ID_US'] , $user_img );
+        }else {
+            $img = $user_imgs[0];
+            $resp = $this->editFile( $_FILES ,$img['ID_MULTI']);
+            if (!$resp) {
+                $user_img['files'] = $_FILES['user_img'];
+                $this->create_files('multimedia_usuarios','ID_US', (int)$userDB['ID_US'] , $user_img );  
+            } 
+        }
+      } 
       if( empty($userUpdate) ) return $this->output_json(200,'hubo un error al actualizar el usuario',[],false);
       return $this->output_json(200 , 'usuario actualizado' );
 
     }
+
+    /**
+     * @param post : data send for Client
+     * @param keysDB : valid keys in DB
+     * @return : valid data for insert
+     */
+    private function filter_attr ( array $post  , array $keysDB )
+    {   
+        $inputs = $this->security->xss_clean($post); #evitar un posible atac xcss
+        $result = [];
+        foreach ($inputs as $key => $value) {
+            if (in_array($key , $keysDB )) {
+                if ($key == 'password') {
+                    $result['clave'] = md5($value);
+                }
+                $result[$key] = $value;
+            };
+        }
+        return $result;
+    }
+    
 }

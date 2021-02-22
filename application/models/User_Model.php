@@ -79,12 +79,10 @@ class User_Model extends CI_Model
     }
     public function updateIdNotify(array $set , array $where )
     {
-       
             if( empty($set) ) return false;
             $this->db->set($set);
             $this->db->where($where);
             return  $this->db->update($this->table) ? true : false;  
-        
     }
     
     public function delete( int $id ) 
