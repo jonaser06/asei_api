@@ -30,7 +30,7 @@ class Contenido_Model extends CI_Model
         $this->db->select('ID_SE ,nombre , link ');
         $this->db->from('sesiones');
         $this->db->where(['sesiones.ID_CO ' =>(int) $id_contenido]);
-        $this->db->order_by('FECHA_REGISTRO', 'DESC');
+        $this->db->order_by('FECHA_REGISTRO', 'ASC');
 
         $sesiones = $this->db->get()->result_array();
         return $sesiones ? $sesiones : FALSE;
