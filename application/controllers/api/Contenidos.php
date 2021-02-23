@@ -274,12 +274,21 @@ class Contenidos extends MY_Controller {
              'ID_SEC'          => (int)$section['ID_SEC'],
          ];
  
+
         if ( !empty($_FILES['img_learn']['name']) ) {
             $contenido_imgs = $this->FileModel->getOne('ID_CO','multimedia_contenido',['ID_CO' => $id]);
-            $img = $contenido_imgs[0];
-
-            $this->editFileImg( $_FILES ,$img['ID_MULTI'],'img_learn');
-        }
+            if (!$contenido_imgs) {
+                $contenido_imgs['files'] = $_FILES['img_learn'];
+                $this->create_files('multimedia_contenido','ID_CO', (int)$id , $contenido_imgs );
+            }else {
+                $img = $contenido_imgs[0];
+                $resp = $this->editFile( $_FILES ,$img['ID_MULTI']);
+                if (!$resp) {
+                    $contenido_imgs['files'] = $_FILES['img_learn'];
+                    $this->create_files('multimedia_contenido','ID_CO', (int)$id , $contenido_imgs );  
+                } 
+            }
+          } 
         $contenidoUpdate = $this->ContenidoModel->update( $set , ['ID_CO' => $id] );
         if( !$contenidoUpdate ) return $this->output_json( 400 , 'Error not update learn!');
          return $this->output_json(200 , 'update contenido');

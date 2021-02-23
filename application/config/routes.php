@@ -20,10 +20,6 @@ $route['user/(:num)'] ['GET'] = function ($id) {
 $route['user/(:num)/delete']['DELETE'] =  'api/User/delete/$1';
 
 
-
-
-
-
 $route['test']  = 'api/Statistics/test';
 #Statistics
 
