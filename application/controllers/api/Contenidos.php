@@ -283,10 +283,10 @@ class Contenidos extends MY_Controller {
             }else {
                 $img = $contenido_imgs[0];
                 $resp = $this->editFile( $_FILES ,$img['ID_MULTI']);
-                if (!$resp) {
-                    $contenido_imgs['files'] = $_FILES['img_learn'];
-                    $this->create_files('multimedia_contenido','ID_CO', (int)$id , $contenido_imgs );  
-                } 
+                // if (!$resp) {
+                //     $contenido_imgs['files'] = $_FILES['img_learn'];
+                //     $this->create_files('multimedia_contenido','ID_CO', (int)$id , $contenido_imgs );  
+                // } 
             }
           } 
         $contenidoUpdate = $this->ContenidoModel->update( $set , ['ID_CO' => $id] );
