@@ -27,9 +27,11 @@ class Contenido_Model extends CI_Model
     }
     public function get_sesiones ( int $id_contenido)
     {
-        $this->db->select('ID_SE ,nombre , link');
+        $this->db->select('ID_SE ,nombre , link ');
         $this->db->from('sesiones');
         $this->db->where(['sesiones.ID_CO ' =>(int) $id_contenido]);
+        $this->db->order_by('FECHA_REGISTRO', 'DESC');
+
         $sesiones = $this->db->get()->result_array();
         return $sesiones ? $sesiones : FALSE;
     }
