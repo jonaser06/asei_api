@@ -91,6 +91,8 @@ class Contenidos extends MY_Controller {
                 $sessionData[$i]['nombre']   = $nombres[$i];
                 $sessionData[$i]['link']     = $links[$i];
                 $sessionData[$i]['ID_CO']    = $id; 
+                $sessionData[$i]['FECHA_REGISTRO']    = date('Y-m-d H:i:s'); 
+
         }
         return $sessionData;
     } 
@@ -274,7 +276,6 @@ class Contenidos extends MY_Controller {
              'ID_SEC'          => (int)$section['ID_SEC'],
          ];
  
-
         if ( !empty($_FILES['img_learn']['name']) ) {
             $contenido_imgs = $this->FileModel->getOne('ID_CO','multimedia_contenido',['ID_CO' => $id]);
             if (!$contenido_imgs) {
@@ -282,11 +283,8 @@ class Contenidos extends MY_Controller {
                 $this->create_files('multimedia_contenido','ID_CO', (int)$id , $contenido_imgs );
             }else {
                 $img = $contenido_imgs[0];
-                $resp = $this->editFile( $_FILES ,$img['ID_MULTI']);
-                // if (!$resp) {
-                //     $contenido_imgs['files'] = $_FILES['img_learn'];
-                //     $this->create_files('multimedia_contenido','ID_CO', (int)$id , $contenido_imgs );  
-                // } 
+                $contenido_imgs['files'] = $_FILES['img_learn'];
+                $this->editFile( $contenido_imgs ,$img['ID_MULTI']);
             }
           } 
         $contenidoUpdate = $this->ContenidoModel->update( $set , ['ID_CO' => $id] );

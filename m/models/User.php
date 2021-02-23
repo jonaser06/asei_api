@@ -23,11 +23,11 @@ class User_Model extends CI_Model
      */
     public function login( string $correo, string $password)
     {
-        // $this->db->select('*');
-        // $this->db->from('usuarios as us');
-        // $this->db->join('perfiles as p', 'p.ID_PE = us.ID_PE');
-        // $this->db->where(['EMAIL' => $correo , 'CLAVE' => md5($password)]);
-        // $user = $this->db->get()->row_array();
+        $this->db->select('*');
+        $this->db->from('usuarios as us');
+        $this->db->join('perfiles as p', 'p.ID_PE = us.ID_PE');
+        $this->db->where(['EMAIL' => $correo , 'CLAVE' => md5($password)]);
+        $user = $this->db->get()->row_array();
         return $user ? $user : FALSE;
     }
     

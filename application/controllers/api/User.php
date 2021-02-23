@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class User extends MY_Controller {
 
-    private $keysDB = ['nombres','ap_mat','ap_mat','direccion','telefono','email','password','cargo','fecha_ingreso','empresa','estado','id_notify'];
+    private $keysDB = ['nombres','apellido_materno','apellido_materno','direccion','telefono','email','clave','cargo','fecha_ingreso','empresa','estado','id_notify'];
 	public function __construct()
     {
 	    	parent::__construct();
@@ -141,11 +141,9 @@ class User extends MY_Controller {
             $this->create_files('multimedia_usuarios','ID_US', (int)$userDB['ID_US'] , $user_img );
         }else {
             $img = $user_imgs[0];
-            $resp = $this->editFile( $_FILES ,$img['ID_MULTI']);
-            if (!$resp) {
-                $user_img['files'] = $_FILES['user_img'];
-                $this->create_files('multimedia_usuarios','ID_US', (int)$userDB['ID_US'] , $user_img );  
-            } 
+            $user_img['files'] = $_FILES['user_img'];
+            $this->editFile( $user_img ,$img['ID_MULTI']);
+            
         }
       } 
       if( empty($userUpdate) ) return $this->output_json(200,'hubo un error al actualizar el usuario',[],false);

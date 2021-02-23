@@ -224,8 +224,9 @@ class MY_Controller extends CI_Controller
         return true;
 
     } 
-    public function editFileImg (array $files , int $id_file ,$nameImg)
+    public function editFileImg (array $files , int $id_file )
     {
+    
         $file = $this->FileModel->get(['ID_MULTI' => $id_file]);
         if ( !$file) return false;
         $path    =  DIR_U . $file['RUTA'];
@@ -233,7 +234,7 @@ class MY_Controller extends CI_Controller
         unlink($path);
 
         $this->configImg();
-        if($this->upload->do_upload($nameImg)) $fileData = $this->upload->data();
+        if($this->upload->do_upload('file')) $fileData = $this->upload->data();
         date_default_timezone_set("America/Lima");          
         $set = [
             'MODIFICADO' => date("Y-m-d H:i:s"),
@@ -245,6 +246,13 @@ class MY_Controller extends CI_Controller
     }
     public function editFile (array $files , int $id_file )
     {
+
+        $_FILES['file']['name']     = $files['files']['name'][0];
+        $_FILES['file']['type']     = $files['files']['type'][0];
+        $_FILES['file']['tmp_name'] = $files['files']['tmp_name'][0];
+        $_FILES['file']['error']    = $files['files']['error'][0];
+        $_FILES['file']['size']     = $files['files']['size'][0];
+        
         $file = $this->FileModel->get(['ID_MULTI' => $id_file]);
         if ( !$file) return false;
         $path    =  DIR_U . $file['RUTA'];
