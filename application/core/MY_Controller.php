@@ -248,11 +248,8 @@ class MY_Controller extends CI_Controller
         $file = $this->FileModel->get(['ID_MULTI' => $id_file]);
         if ( !$file) return false;
         $path    =  DIR_U . $file['RUTA'];
-        // $rutas = explode('/',$path);
-        // if (array_pop($rutas) == '' )return false;
-        if( file_exists($path) ) unlink($path);
-        
-
+        $rutas = explode('/',$path);
+        if( file_exists($path)&& array_pop($rutas) !== ''  ) unlink($path);
         $this->configImg();
         if($this->upload->do_upload('file')) $fileData = $this->upload->data();
         date_default_timezone_set("America/Lima");          
