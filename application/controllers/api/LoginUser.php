@@ -124,7 +124,6 @@ class LoginUser extends MY_Controller {
             $token_data['email'] = $userDB['EMAIL'];
             $token_data['telefono'] = $userDB['TELEFONO'];
             $token_data['rol'] = $userDB['TIPO'];
-            $token_data['estado'] = $userDB['estado'];
             $token_data['id_notification'] = $userDB['id_notify']  ;
             $token_data['time'] = time();
 

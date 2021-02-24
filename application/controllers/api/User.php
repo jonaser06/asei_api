@@ -32,12 +32,18 @@ class User extends MY_Controller {
         $role = $this->UserModel->get_profile( ['TIPO' => $role ]);
         if ( !$role ) return $this->output_json(200 , 'Not exists this role' , [] , false );
         
-        $params     = $this->input->get(['page', 'limit', 'last', 'search'], TRUE);
+        $params     = $this->input->get(['page', 'limit', 'last','estado', 'search'], TRUE);
+       
         $search   = ! $params['search'] ? [] : explode(' ', $params['search']) ;
         $for_page   = $params['limit'] ? (int) $params['limit'] : $users_quanty;
         $offset     = $params['page']  ? $for_page * ($params['page'] - 1) : 0;
         $last       = $params['last'] == 'true' ? true :false;
         $conditions = ['p.ID_PE' => (int) $role['ID_PE']];
+        
+        if($params['estado']) {
+            $estado   =  $params['estado'] == 'inactivo' ? 0 : 1 ;
+            $conditions['usuarios.estado'] = $estado;
+        }
 
         $users = $this->UserModel->getAll( $for_page ,$offset ,$conditions , $last ,$search);
         if ( !$users )  return $this->output_json(200 , "no existen usuarios para este rol : ".$role['TIPO'] ,[] ,false );
@@ -94,14 +100,15 @@ class User extends MY_Controller {
     public function getAll() : CI_Output
     {
       $users_quanty = 9;
-        $params     = $this->input->get(['page', 'limit', 'last', 'search'], TRUE);
+        $params     = $this->input->get(['page', 'limit', 'estado','last', 'search'], TRUE);
         $search   = ! $params['search'] ? [] : explode(' ', $params['search']) ;
+        $estado   =  $params['estado'] == 'inactivo' ? 0 : 1 ;
 
         $for_page   = $params['limit'] ? (int) $params['limit'] : $users_quanty;
         $offset     = $params['page']  ? $for_page * ($params['page'] - 1) : 0;
         $last       = $params['last'] == 'true' ? true :false;
 
-        $users = $this->UserModel->getAll( $for_page ,$offset ,[] , $last ,$search);
+        $users = $this->UserModel->getAll( $for_page ,$offset ,['usuarios.estado' => (int )$estado] , $last ,$search);
         if ( empty($users) )  return $this->output_json(200 , "no existen usuarios" ,[] ,false );
         
         for( $i = 0; $i < count( $users['users'] ) ; $i ++ ): 
