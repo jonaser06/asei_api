@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class User extends MY_Controller {
 
-    private $keysDB = ['nombres','apellido_materno','apellido_materno','direccion','telefono','email','clave','cargo','fecha_ingreso','empresa','estado','id_notify'];
+    private $keysDB = ['nombres','apellido_paterno','apellido_materno','direccion','telefono','email','clave','cargo','fecha_ingreso','empresa','estado','id_notify'];
 	public function __construct()
     {
 	    	parent::__construct();
