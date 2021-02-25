@@ -171,8 +171,9 @@ class User extends MY_Controller {
             if (in_array($key , $keysDB )) {
                 if ($key == 'clave') {
                     $result['clave'] = md5($value);
+                }else {
+                    $result[$key] = $value;
                 }
-                $result[$key] = $value;
             };
         }
         return $result;
