@@ -169,7 +169,7 @@ class User extends MY_Controller {
         $result = [];
         foreach ($inputs as $key => $value) {
             if (in_array($key , $keysDB )) {
-                if ($key == 'password') {
+                if ($key == 'clave') {
                     $result['clave'] = md5($value);
                 }
                 $result[$key] = $value;
