@@ -17,7 +17,7 @@ $route['users'] ['GET'] = 'api/User/getAll';
 $route['user/(:num)'] ['GET'] = function ($id) {
     return 'api/User/get/'.$id;
 };
-$route['user/(:num)/delete']['DELETE'] =  'api/User/delete/$1';
+$route['user/(:num)/delete']['GET'] =  'api/User/delete/$1';
 
 
 $route['test']  = 'api/Statistics/test';
