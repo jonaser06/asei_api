@@ -27,11 +27,11 @@ class LoginUser extends MY_Controller {
 	{
         $_POST = $this->security->xss_clean($_POST);
         if ( ! $this->input->post('nombres', TRUE) ) return $this->output_json(200 , 'Debe enviar el campo nombres' , [] , false );
-        if ( ! $this->input->post('ap_mat', TRUE) ) return $this->output_json(200 , 'Debe enviar el campo apellido paterno' , [] , false );
-        if ( ! $this->input->post('ap_pat', TRUE) ) return $this->output_json(200 , 'Debe enviar el campo apellido materno' , [] , false );
+        if ( ! $this->input->post('apellido_paterno', TRUE) ) return $this->output_json(200 , 'Debe enviar el campo apellido paterno' , [] , false );
+        if ( ! $this->input->post('apellido_materno', TRUE) ) return $this->output_json(200 , 'Debe enviar el campo apellido materno' , [] , false );
         if ( ! $this->input->post('telefono', TRUE) ) return $this->output_json(200 , 'Debe enviar el campo teléfono' , [] , false );
         if ( ! $this->input->post('email', TRUE) ) return $this->output_json(200 , 'Debe enviar el campo email' , [] , false );
-        if ( ! $this->input->post('password', TRUE) ) return $this->output_json(200 , 'Debe enviar el campo password' , [] , false );
+        if ( ! $this->input->post('clave', TRUE) ) return $this->output_json(200 , 'Debe enviar el campo clave' , [] , false );
         if ( ! $this->input->post('direccion', TRUE) ) return $this->output_json(200 , 'Debe enviar el campo direccion' , [] , false );
         if ( ! $this->input->post('empresa', TRUE) ) return $this->output_json(200 , 'Debe enviar el campo empresa' , [] , false );
         if ( ! $this->input->post('cargo', TRUE) ) return $this->output_json(200 , 'Debe enviar el campo cargo' , [] , false );
