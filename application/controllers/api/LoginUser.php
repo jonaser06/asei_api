@@ -68,10 +68,10 @@ class LoginUser extends MY_Controller {
         $insert_data = [
             'ID_US'   => $this->generateId(),
             'NOMBRES' => $this->input->post('nombres', TRUE),
-            'APELLIDO_PATERNO' => $this->input->post('ap_pat', TRUE),
-            'APELLIDO_MATERNO' => $this->input->post('ap_mat', TRUE),
+            'APELLIDO_PATERNO' => $this->input->post('apellido_paterno', TRUE),
+            'APELLIDO_MATERNO' => $this->input->post('apellido_materno', TRUE),
             'EMAIL' =>$this->input->post('email', TRUE), 
-            'CLAVE' => md5($this->input->post('password', TRUE)),
+            'CLAVE' => md5($this->input->post('clave', TRUE)),
             'DIRECCION' => $this->input->post('direccion', TRUE),
             'EMPRESA' => $this->input->post('empresa', TRUE),
             'CARGO' => $this->input->post('cargo', TRUE),
