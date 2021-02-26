@@ -56,12 +56,12 @@ class LoginUser extends MY_Controller {
     
         $response = $this->UserModel->getOne(['EMAIL' => $this->input->post('email', TRUE)]);
         if($response):
-            return $this->output_json(400,'El correo ya esta registrado , pruebe con otro');
+            return $this->output_json(200,'El correo ya esta registrado , pruebe con otro',[],false);
         endif;
 
         $perfil = $this->PerfilModel->get(['TIPO' => $this->input->post('perfil', TRUE)]);
         if(!$perfil):
-            return $this->output_json(400,'no existe el perfil , pruebe con otro');
+            return $this->output_json(200,'no existe el perfil , pruebe con otro',[],false);
         endif;
 
         
@@ -78,7 +78,7 @@ class LoginUser extends MY_Controller {
             'TELEFONO' => $this->input->post('telefono', TRUE),
             'FECHA_INGRESO' => $this->input->post('fecha_ingreso',TRUE), 
             'estado' => $this->input->post('estado',TRUE), 
-            'ID_PE' =>(int)$perfil['ID_PE'], 
+            'ID_PE' =>(int)$perfil['ID_PE'],
             'ID_UB' => 1,
         ];
          
