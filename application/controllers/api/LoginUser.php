@@ -137,6 +137,7 @@ class LoginUser extends MY_Controller {
                 'apellidos' => trim($userDB['APELLIDO_PATERNO']).' '.trim($userDB['APELLIDO_MATERNO']),
                 'rol' => strtolower ($userDB['TIPO']),
                 'cargo' => $userDB['CARGO'],
+                'email' => $userDB['EMAIL'],
                 'telefono' => $userDB['TELEFONO'],
                 'empresa' => $userDB['EMPRESA'],
                 'fecha_ingreso' => $userDB['FECHA_INGRESO'],
@@ -147,7 +148,8 @@ class LoginUser extends MY_Controller {
                 'token' => $user_token,
             ];
             $user_imgs = $this->FileModel->getOne('ID_US','multimedia_usuarios',['ID_US' => $userDB['ID_US']]);
-            if( !empty($user_imgs) ) $data['imagenes'] = $user_imgs;
+            if( !empty($user_imgs) ) $this->data['imagenes'] = $user_imgs;
+
 
             $this->output_json(200 , 'login success',$this->data);
     }
