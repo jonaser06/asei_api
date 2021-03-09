@@ -95,6 +95,11 @@ $route['learn/(:any)/(:num)']['POST'] = 'api/Contenidos/update/$1/$2';
 
 $route['testing']['POST'] = 'api/Contenidos/test';
 
+#es
+$route['promedio']['GET'] = 'api/Calificaciones/getAllProm'; 
+$route['suma']['GET'] = 'api/Calificaciones/getAllSuma'; 
+$route['bpromedio/(:num)']['GET'] = 'api/Calificaciones/getByIdProm/$1'; 
+$route['bsuma/(:num)']['GET'] = 'api/Calificaciones/getByIdSuma/$1'; 
 
 
 
