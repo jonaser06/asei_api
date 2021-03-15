@@ -88,10 +88,8 @@ class Upload extends MY_Controller {
     }
     public function index()
     {
-        var_dump($_FILES);exit();
         if(!empty($_FILES['files']['name'])){
             $id_entidad = $this->input->post('id', TRUE);
-
             if( !isset ($id_entidad )) return $this->output_json(400 , 'this Id is necesary ');
             if(!empty($id_entidad) ) :
                 if(!$this->exist_entidad('usuarios', ['ID_US' => $id_entidad ])):
@@ -99,7 +97,6 @@ class Upload extends MY_Controller {
                 endif;
             endif;
             if($id_entidad == "" && $id_entidad !== NULL ) return $this->output_json(400, 'El parametro Id esta vacío');
-
             $this->create('ID_US', $id_entidad , $_FILES );
         }
     }
@@ -147,12 +144,12 @@ class Upload extends MY_Controller {
     {
         $file    =     $this->FileModel->get(['ID_MULTI' => $id_file]);
         if (!$file) return $this->output_json(200 , 'not exist register' , [] , false );
-        $path    =  DIR_U . $file['RUTA'];
         $result  =     $this->db->delete('multimedia_usuarios', [ 'ID_MULTI' => $id_file ] );
         if( !$result ) $this->output_json(200 , 'not delete file' , [] , false );
         $result  =     $this->db->delete('multimedia', [ 'ID_MULTI' => $id_file] );
         if( !$result ) $this->output_json(200 , 'not delete file ' , [] , false );
-
+        
+        $path    =  DIR_U . $file['RUTA'];
         if( !file_exists($path)) return $this->output_json(200 , 'not exist archive in this server' , [] , false );
         unlink($path);
         return $this->output_json(200 , 'delete file'  );

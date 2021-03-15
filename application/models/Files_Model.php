@@ -3,15 +3,19 @@
 class Files_Model extends CI_Model
 {
     protected $table = 'multimedia';
+    protected $table2= 'documentos';
 
     /**
      * Upload subida de archivos
      * @param: {array} imagenes Data
      * @param: {$relacion: array} : llaves primarias de las entidades
      */
-    public function insert(array $uploadData = [] ) :bool{
+    public function insert(array $uploadData = [], $documents = FALSE ) :bool{
 
-        $uploads = $this->db->insert_batch($this->table, $uploadData);
+        $uploads = !$documents 
+                    ? $this->db->insert_batch($this->table, $uploadData)
+                    : $this->db->insert_batch($this->table2, $uploadData);
+
         return $uploads ? TRUE : FALSE;
     }
     public function insert_relation (array $data_relation = [] , $table_relation ):bool {
@@ -34,11 +38,13 @@ class Files_Model extends CI_Model
     public function getOne( 
         string $id_name,
         string $table,
-        ?array $conditions)
+        ?array $conditions,
+        $documents = FALSE 
+    )
     {
         $this->db->select('*');
         $this->db->from($table);
-        $this->db->join('multimedia as m', 'm.ID_MULTI ='.$table.'.ID_MULTI');
+        !$documents ? $this->db->join('multimedia as m', 'm.ID_MULTI ='.$table.'.ID_MULTI') : $this->db->join('documentos as d', 'd.ID_DO ='.$table.'.ID_DO');
         $this->db->where($conditions);
         $files = $this->db->get()->result_array();
         return $files ? $files : FALSE;

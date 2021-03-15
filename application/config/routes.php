@@ -50,6 +50,8 @@ $route['getNotification'] = 'api/Notification/getNotification';
 $route['api/perfiles'] = 'api/Perfiles';
 
 $route['perfiles']['GET'] = 'api/Privileges';
+$route['privileges/(:num)']['GET'] = 'api/Privileges/get/$1';
+$route['privileges/(:num)']['POST'] = 'api/Privileges/edit/$1';
 
 
 

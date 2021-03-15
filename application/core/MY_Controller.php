@@ -123,11 +123,23 @@ class MY_Controller extends CI_Controller
         $this->load->library('upload', $config);
         $this->upload->initialize($config);
     }
+    private function configFile () {
+        $uploadPath = 'uploads/documents/';
+
+        #congiguramos el upload para cada  file
+        $config['allowed_types']  = 'pdf';
+        $config['max_size']       = 50000;
+        $config['max_width']      = 3000;
+        $config['max_height']     = 3000;
+        $config['upload_path']    = $uploadPath;
+        $this->load->library('upload', $config);
+        $this->upload->initialize($config);
+    }
 
     /**
      * @param {key} NAME OF ID ENTITY  
      */
-    private function files_for_insert( array $files  , string $key_entity , int $id_entidad) : array 
+    private function files_for_insert( array $files  , string $key_entity , int $id_entidad , $documents = FALSE ) : array 
     {
         $uploadData = [];
         $upload_relation = [];
@@ -140,20 +152,21 @@ class MY_Controller extends CI_Controller
             $_FILES['file']['size']     = $files['files']['size'][$i];
             #fin contructor
 
-            $this->configImg();
+            !$documents ? $this->configImg() : $this->configFile();
             date_default_timezone_set("America/Lima");          
 
             if($this->upload->do_upload('file')){
                 $fileData = $this->upload->data();
-                $uploadData[$i]['ID_MULTI']      = $this->generateId();
+                $ID_RECURSO = !$documents ? 'ID_MULTI':'ID_DO';
+                $uploadData[$i][$ID_RECURSO]     = $this->generateId();
                 $uploadData[$i]['FILE_NAME']     = $fileData['file_name'];
-                $uploadData[$i]['RUTA']          = 'uploads/notes/'.$fileData['file_name'];
+                $uploadData[$i]['RUTA']          =  !$documents ? 'uploads/notes/'.$fileData['file_name'] :'uploads/documents/'.$fileData['file_name']  ;
                 $uploadData[$i]['TIPO']          =  'Imagen';
                 $uploadData[$i]['FECHA_CREATED'] = date("Y-m-d H:i:s");
                 $uploadData[$i]['MODIFICADO']    = date("Y-m-d H:i:s");
                 
                 if(!empty($id_entidad)):
-                    $upload_relation[$i]['ID_MULTI'] = $uploadData[$i]['ID_MULTI'];
+                    $upload_relation[$i][] = $uploadData[$i][$ID_RECURSO];
                     $upload_relation[$i][$key_entity] = $id_entidad;
                 endif;
             }
@@ -168,21 +181,23 @@ class MY_Controller extends CI_Controller
         string $table_relation,
         string $id_name,
         int $id_entidad,
-        array $files = [] 
+        array $files = [] ,
+        bool  $documents = FALSE
     )
     
     {
-        $uploads = $this->files_for_insert($files , $id_name ,(int)$id_entidad );
-        $uploadData = $uploads['multimedia'];
+        $uploads         = $this->files_for_insert($files , $id_name ,(int)$id_entidad ,$documents);
+        $uploadData      = $uploads['multimedia'];
         $upload_relation = $uploads['relation'];
         if(!empty($uploadData)) {
-            $insert = $this->FileModel->insert($uploadData);
+            $insert = $this->FileModel->insert($uploadData , $documents);
             if(!empty($upload_relation) && $insert) :
                 $response = $this->upload_entidad_multi($upload_relation,$table_relation);
                 if( $response ) return $uploadData;
             endif;
         }
     }
+    
 
     /**
      * @param {$keys_relation}:keys de las entidades
@@ -209,14 +224,16 @@ class MY_Controller extends CI_Controller
             ? $this->output_json(200 , 'Files exits !!' , $data)
             : $this->output_json(200 , 'Not exist files ' , [] , false );
     }
-    public function deleteFile(string $table_relation , int $id_file )
+    public function deleteFile(string $table_relation , int $id_file , $documents = FALSE)
     {
-        $file    =  $this->FileModel->get(['ID_MULTI' => $id_file]);
+        $ID_RECURSO = !$documents ? 'ID_MULTI'  :'ID_DO';
+        $TABLE      = !$documents ? 'multimedia':'documentos';
+        $file    =  $this->FileModel->get([$ID_RECURSO => $id_file]);
         if (!$file) return false;
         $path    =  DIR_U . $file['RUTA'];
-        $result  =     $this->db->delete($table_relation, [ 'ID_MULTI' => $id_file ] );
+        $result  =     $this->db->delete($table_relation, [ $ID_RECURSO => $id_file ] );
         if( !$result ) return false;
-        $result  =     $this->db->delete('multimedia', [ 'ID_MULTI' => $id_file] );
+        $result  =     $this->db->delete($TABLE,[ $ID_RECURSO => $id_file] );
         if( !$result ) return false;
 
         if( !file_exists($path)) return false;

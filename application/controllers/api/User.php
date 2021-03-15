@@ -32,7 +32,7 @@ class User extends MY_Controller {
         $role = $this->UserModel->get_profile( ['TIPO' => $role ]);
         if ( !$role ) return $this->output_json(200 , 'Not exists this role' , [] , false );
         
-        $params     = $this->input->get(['page', 'limit', 'last','estado', 'search'], TRUE);
+        $params     = $this->input->get(['page', 'limit', 'last','estado', 'search','empresa'], TRUE);
        
         $search   = ! $params['search'] ? [] : explode(' ', $params['search']) ;
         $for_page   = $params['limit'] ? (int) $params['limit'] : $users_quanty;
@@ -43,6 +43,9 @@ class User extends MY_Controller {
         if($params['estado']) {
             $estado   =  $params['estado'] == 'inactivo' ? 0 : 1 ;
             $conditions['usuarios.estado'] = $estado;
+        }
+        if($params['empresa']) {
+            $conditions['usuarios.empresa'] = $params['empresa'];
         }
 
         $users = $this->UserModel->getAll( $for_page ,$offset ,$conditions , $last ,$search);
@@ -84,9 +87,9 @@ class User extends MY_Controller {
     public function delete( int $id )
     {
         $note = $this->UserModel->get((int) $id);
-        if( !$note ) return $this->output_json( 200 , 'no existe usuario con ese id ' , [] , false );
+        if( !$note ) return $this->output_json( 200 , 'no existe usuario con ese id' , [] , false );
+        $user_imgs = $this->FileModel->getOne('ID_US','multimedia_usuarios',['ID_US' => $id]);
 
-        $user_imgs = $this->FileModel->getOne('ID_US','multimedia_usuarios',[ 'ID_US' => $id]);
         if($user_imgs) {
             for ( $i = 0; $i < count( $user_imgs ); $i++ ) { 
                 $this->deleteFile('multimedia_usuarios',$user_imgs[$i]['ID_MULTI']);
@@ -100,15 +103,22 @@ class User extends MY_Controller {
     public function getAll() : CI_Output
     {
       $users_quanty = 9;
-        $params     = $this->input->get(['page', 'limit', 'estado','last', 'search'], TRUE);
+        $params     = $this->input->get(['page', 'limit', 'estado','last', 'search','empresa'], TRUE);
         $search   = ! $params['search'] ? [] : explode(' ', $params['search']) ;
-        $estado   =  $params['estado'] == 'inactivo' ? 0 : 1 ;
+        $conditions = [];
+        if($params['estado']) {
+            $estado   =  $params['estado'] == 'inactivo' ? 0 : 1 ;
+            $conditions['usuarios.estado'] = $estado;
+        }
+        if($params['empresa']) {
+            $conditions['usuarios.empresa'] = $params['empresa'];
+        }        
 
         $for_page   = $params['limit'] ? (int) $params['limit'] : $users_quanty;
         $offset     = $params['page']  ? $for_page * ($params['page'] - 1) : 0;
         $last       = $params['last'] == 'true' ? true :false;
 
-        $users = $this->UserModel->getAll( $for_page ,$offset ,['usuarios.estado' => (int )$estado] , $last ,$search);
+        $users = $this->UserModel->getAll( $for_page ,$offset ,$conditions, $last ,$search);
         if ( empty($users) )  return $this->output_json(200 , "no existen usuarios" ,[] ,false );
         
         for( $i = 0; $i < count( $users['users'] ) ; $i ++ ): 
@@ -150,14 +160,12 @@ class User extends MY_Controller {
             $img = $user_imgs[0];
             $user_img['files'] = $_FILES['user_img'];
             $this->editFile( $user_img ,$img['ID_MULTI']);
-            
         }
       } 
       if( empty($userUpdate) ) return $this->output_json(200,'hubo un error al actualizar el usuario',[],false);
       return $this->output_json(200 , 'usuario actualizado' );
 
     }
-
     /**
      * @param post : data send for Client
      * @param keysDB : valid keys in DB
@@ -178,5 +186,6 @@ class User extends MY_Controller {
         }
         return $result;
     }
+    
     
 }
