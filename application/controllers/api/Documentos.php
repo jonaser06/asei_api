@@ -223,8 +223,8 @@ class Documentos extends MY_Controller {
     {
       $cat_documento =  $this->FileModel->get_entidad('area', [ 'id_ar' => (int)$id ]);
       if( ! $cat_documento ) return $this->output_json( 200 , 'no existe esta categoría con el id enviado', [] , FALSE );
-      $catDB =  $this->FileModel->get_entidad('area', [ 'area' => $this->input->post('area')]);
-      if ( $catDB ) return $this->output_json( 200 ,"la categoria ya existe pruebe con otro valor en el campo area", [],FALSE);
+    //   $catDB =  $this->FileModel->get_entidad('area', [ 'area' => $this->input->post('area')]);
+    //   if ( $catDB ) return $this->output_json( 200 ,"la categoria ya existe pruebe con otro valor en el campo area", [],FALSE);
       $set = $this->filter_attr( $_POST , $this->keys_categorie );
 
         if ( !empty($_FILES['imagen']['name']) ):
