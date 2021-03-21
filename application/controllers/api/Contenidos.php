@@ -133,9 +133,7 @@ class Contenidos extends MY_Controller {
    
     public function insert() :CI_Output
     {      
-        // var_dump($_FILES['img_learn']);
-        // var_dump($_FILES['cap_img']);
-        // exit();
+        
         if( ! $this->input->post('seccion') )        return $this->output_json(400 , 'Debe enviar la sección'); 
         if( ! $this->input->post('titulo') )         return $this->output_json(400 , 'Debe enviar el título');
         if( ! $this->input->post('resumen') )        return $this->output_json(400 , 'Debe enviar el resumen');
@@ -170,7 +168,10 @@ class Contenidos extends MY_Controller {
             'ID_SEC'          => (int)$section['ID_SEC'],
             'FECHA_PUBLISHED' => date("Y-m-d H:i:s")
         ];
-
+        if( $this->input->post('notificacion')) :
+            $content['notificacion'] = $this->input->post('notificacion',true);
+        endif;
+        
         $sesiones      = $this->sesiones_for_insert( $inputs['sesion_nombres'],$inputs['sesion_links'], $content['ID_CO'] );
         $capacitadores = $this->capacitadores_for_insert( $inputs['cap_nombres'],$inputs['cap_resumen'], $content['ID_CO'] );
 
@@ -200,6 +201,7 @@ class Contenidos extends MY_Controller {
         $section = $this->ContenidoModel->get_section( [ 'nombre' => $tipo,'ID_MOD' => 4 ]);
         if( !$section ) return $this->output_json(200 , 'No existe la seccion en ASEI LEARNING' , [] , false );
         $learn = $this->ContenidoModel->get((int) $id , ['contenido.ID_SEC' => $section['ID_SEC']]);
+        $learn['notificacion'] = json_decode($learn['notificacion'],true);
         if(!$learn) return $this->output_json( 200 , "El id es incorrecto , no existe este conetenido en $tipo" , [] , false );
         $learn_imgs  = $this->FileModel->getOne('ID_CO','multimedia_contenido',['ID_CO' => (int) $learn['ID_CO']]);
         if( !empty($learn) ) $learn['files'] = $learn_imgs;
@@ -233,6 +235,7 @@ class Contenidos extends MY_Controller {
             $contenido['contenido'][$i]['imagenes'] = $note_imgs ? $note_imgs : 'no images found';
             $sesionesDB  = $this->ContenidoModel->get_sesiones( (int)$contenido['contenido'][$i]['ID_CO']);
             $capsDB       = $this->ContenidoModel->get_capacitadores( (int)$contenido['contenido'][$i]['ID_CO']);
+            #caps 
             $contenido['contenido'][$i]['capacitadores'] = $this->capacitador_send($capsDB);
             $contenido['contenido'][$i]['sesiones']      = $sesionesDB;
         endfor;
@@ -275,7 +278,11 @@ class Contenidos extends MY_Controller {
              'duracion'        => $inputs['duracion'],
              'ID_SEC'          => (int)$section['ID_SEC'],
          ];
- 
+
+        if( $this->input->post('notificacion')) :
+            $content['notificacion'] = $this->input->post('notificacion',true);
+        endif;
+
         if ( !empty($_FILES['img_learn']['name']) ) {
             $contenido_imgs = $this->FileModel->getOne('ID_CO','multimedia_contenido',['ID_CO' => $id]);
             if (!$contenido_imgs) {

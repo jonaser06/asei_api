@@ -23,6 +23,11 @@ class Files_Model extends CI_Model
         $uploads = $this->db->insert_batch( $table_relation , $data_relation);
         return $uploads ? TRUE : FALSE;
     }
+    public function insert_categorie( array $data = [] )
+    {
+        $categorie_doc = $this->db->insert($this->area, $data);
+        return $categorie_doc ?$categorie_doc : FALSE ;
+    }
     public function get(
         ?array $conditions = NULL
     ) {
@@ -50,14 +55,63 @@ class Files_Model extends CI_Model
         $files = $this->db->get()->result_array();
         return $files ? $files : FALSE;
     }
-    public function getAll()
+    public function getAll( int $limit = 1, int $offset = 0, array $conditions = [] , bool $lasted = FALSE , array $params  = [] )
     {
-        $this->db->select('p.TIPO as perfil, mod.nombre as modulo , mod.path , mod.icon , CREAR as crear , ACTUALIZAR as actualizar , ELIMINAR as eliminar , VISUALIZAR as visualizar');
-        $this->db->from(' modulos_perfiles  as mod_p');
-        $this->db->join('perfiles as p', 'p.ID_PE = mod_p.ID_PE');
-        $this->db->join('modulos as mod', 'mod.ID_MO = mod_p.ID_MO');
-        $privileges = $this->db->get()->result_array();
-        return $privileges ? $privileges : FALSE;
+        $this->db->select('ID_DOC,documentos.RUTA,FILE_NAME,nombre,TIPO,FECHA_CREATED as fecha_publicacion ,area');
+        $this->db->join('area as a' , 'documentos.id_ar = a.id_ar');
+        if( count ($params) != 0) {
+            array_map(function ($param) {
+                $this->db->like('nombre', $param, 'both');
+                $this->db->or_like('TIPO', $param, 'both');
+            }, $params);
+        }
+        $this->db->where( $conditions );
+        if($lasted) {
+            $this->db->where( 'FECHA_CREATED >= (CURDATE() - INTERVAL 30 DAY)');
+        }
+        $this->db->order_by('FECHA_CREATED', 'DESC');
+
+        $countAll = $this->db->count_all_results('documentos', FALSE);
+        $this->db->limit($limit, $offset);
+        $documentos = $this->db->get()->result_array();
+
+        return $documentos ? [
+            'countAll'     => $countAll,
+            'archivos'         => $documentos
+        ] : FALSE;
+        
+    }
+    public function get_categories( int $limit = 1, int $offset = 0, array $conditions = [] , bool $lasted = FALSE , array $params  = [] )
+    {
+        $this->db->select('*');
+        if( count ($params) != 0) {
+            array_map(function ($param) {
+                $this->db->like('area', $param, 'both');
+            }, $params);
+        }
+        $this->db->where( $conditions );
+        if($lasted) {
+            $this->db->where( 'fecha >= (CURDATE() - INTERVAL 30 DAY)');
+        }
+        $this->db->order_by('fecha', 'DESC');
+
+        $countAll = $this->db->count_all_results('area', FALSE);
+        $this->db->limit($limit, $offset);
+        $areas = $this->db->get()->result_array();
+
+        return $areas ? [
+            'countAll'     => $countAll,
+            'areas'         => $areas
+        ] : FALSE;
+        
+    }
+    public function update_categorie (array $set , array $where )
+    {
+        if( empty($set) ) return false;
+        $this->db->set($set);
+        $this->db->where($where);
+        return  $this->db->update($this->area) ? true : false;
+        
     }
     public function update (array $set , array $where )
     {

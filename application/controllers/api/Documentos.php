@@ -5,7 +5,7 @@ use phpDocumentor\Reflection\Types\String_;
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Documentos extends MY_Controller {
-
+    private $keys_categorie = ['area','ruta','estado'];
 	public function __construct()
     {
         parent::__construct();
@@ -17,7 +17,7 @@ class Documentos extends MY_Controller {
     public function search( $categorie )
     {
         $notes_quanty = 3;
-        $section = $this->NotesModel->get_section( [ 'nombre' => $categorie,'ID_MOD' => 3 ]);
+        $section = $this->NotesModel->get_section( ['nombre' => $categorie,'ID_MOD' => 3 ]);
         if ( !$section ) return $this->output_json(200 , 'Not exists this section' , [] , false );
         
         $params     = $this->input->get(['page', 'limit', 'search'], TRUE);
@@ -131,19 +131,181 @@ class Documentos extends MY_Controller {
     }
 
    
-    public function insert() :CI_Output
+    public function insert($path_area) :CI_Output
     {      
-        $area = $this->input->post('area',TRUE);
-        var_dump($area);exit();
-        if ( !$area ) return $this->output_json( 200 , "No existe este tipo  de categoría para el documento a insertar ",[],false);
-        return 1;
-        $this->FileModel->get_entidad('area', ['estate' => true ]);
-
+        $areaDB = $this->FileModel->get_entidad('area', [ 'ruta' => $path_area ]);
+        if ( !$areaDB )  return $this->output_json( 200 , "La categoría de documentos no existe", [] ,false);
+        $cat_documento = $areaDB['area'];
+        if( ! $areaDB['estado']) return $this->output_json( 200 , "la categoría $cat_documento esta inactiva, porfavor actívela", [] ,false);
+        if( ! $this->input->post('nombre')) return $this->output_json(400 ,'debe envíar el campo nombre');
         if ( $_FILES['documentos']['size'][0] > 2000000 ) return $this->output_json(400 , 'el peso del archivo debe ser menor a 2MB' );  
         $documentos['files'] = $_FILES['documentos'];
+
+        $areas = $this->areas_for_any_documents($areaDB['id_ar'] ,$this->input->post('nombre'), $documentos);
+        $this->create_files('gremios_documentos','ID_GREM',1, $documentos ,TRUE , $areas );
+        return $this->output_json(200 , 'archivo insertado');
+    }
+
+
+    public function insert_categorie() : CI_Output
+    {
+        if( ! $this->input->post('area') )   return $this->output_json(400 , 'Debe enviar el nombre');
+        $areaDB = $this->FileModel->get_entidad('area' ,['area' =>$this->input->post('area',true)]);
+        if( $areaDB ) return $this->output_json( 200 , "La categoría ya existe");
+        if( ! $this->input->post('estado') )   return $this->output_json(400 , 'Debe enviar el estado : activo o inactivo');
+        if ( empty($_FILES['imagen']['name']) ) return $this->output_json(400 ,'Debe seleccionar una imagen para la categoria');    
+        if ( $_FILES['imagen']['size'][0] > 2000000 ) return $this->output_json(400 , 'La imagen debe ser menor a 2MB' );
+
+        $documentos_files['files'] = $_FILES['imagen'];
+        $post = $this->security->xss_clean($_POST);
+
+        $data = [
+            'id_ar'   => $this->generateId(),
+            'area'    => $post['area'],
+            'ruta'    => $this->clearName($post['area']),
+            'estado'  => $post['estado'] == 'activo' ? 1 : 0 ,
+            'fecha'   => date('Y-m-d H:i:s') 
+        ];
+        $doc_categorie = $this->FileModel->insert_categorie($data);
+        if( !$doc_categorie ) return $this->output_json( 400 , 'hubo un problema al insertar los datos');
+        $cat_documento = $this->FileModel->get_entidad('area', [ 'id_ar' => $data['id_ar'] ]);
+        $this->create_files('multimedia_area','id_ar', (int)$cat_documento['id_ar'] , $documentos_files );
+        $categorie_imgs = $this->FileModel->getOne('id_ar','multimedia_area',['id_ar' => $cat_documento['id_ar']]);
+        $cat_documento['imagen'] = $categorie_imgs[0]['RUTA'];
+        return $this->output_json( 200 , 'categoria insertada',$cat_documento);
        
-        $this->create_files('gremios_documentos','ID_GREM',1, $documentos ,TRUE , $area );
-        return $this->output_json(200 , 'documento insertado');
+    }
+    public function get_categorie(int $id) 
+    {
+        $cat_documento = $this->FileModel->get_entidad('area', [ 'id_ar' => (int)$id ]);
+        if( ! $cat_documento ) return $this->output_json( 400 , 'no existe esta categoria de documentos' );
+        $categorie_imgs = $this->FileModel->getOne('id_ar','multimedia_area',['id_ar' => $cat_documento['id_ar']]);
+        $cat_documento['imagen'] = $categorie_imgs[0]['RUTA'];
+        return $this->output_json(200,'categoria encontrada', $cat_documento);
+    }
+    public function get_categories()
+    {
+        $notes_quanty = 3;
+        
+        $params     = $this->input->get(['page', 'limit', 'last', 'search','estado'], TRUE);
+        $for_page   = $params['limit'] ? (int) $params['limit'] : $notes_quanty;
+        $offset     = $params['page']  ? $for_page * ($params['page'] - 1) : 0;
+        $last       = $params['last'] == 'true' ? true :false;
+        $conditions = $params['estado'] == 'inactivo'? ['estado' => 0 ]: [ 'estado' => 1] ;
+        
+        $categories = $this->FileModel->get_categories( $for_page ,$offset ,$conditions, $last );
+        if ( !$categories )  return $this->output_json(200 , "no se encontraron resultados " ,[] ,false );
+
+        for( $i = 0; $i < count( $categories['areas'] ) ; $i ++ ): 
+
+            $note_imgs = $this->FileModel->getOne('id_ar','multimedia_area',['id_ar' => $categories['areas'][$i]['id_ar']]);
+            $categories['areas'][$i]['imagen'] = $note_imgs ? $note_imgs[0]['RUTA'] : 'NO SE INSERTO IMAGEN';
+            
+        endfor;
+
+        $page           = $params['page'] ? (int) $params['page'] : 1 ;
+        $categories['page']  = $page;
+        $pages          = ($categories['countAll'] % $for_page ) ?   (int)($categories['countAll'] / $for_page) + 1 : (int)$categories['countAll'] / $for_page  ; 
+        $categories['pages'] = $pages;
+
+        if($page > 1) {
+            $prev = $page - 1  ;
+            $categories['prev'] = "?tipo-documentos/page=$prev&limit=$for_page";
+        } 
+        if( $page < $pages ) {
+            $next = $page + 1 ;
+            $categories['next'] = "?tipo-documentos/page=$next&limit=$for_page";
+        }
+       
+        $this->output_json( 200 , "Se encontro categories!" , $categories );
+    }
+    public function update_categorie(int $id): CI_Output
+    {
+      $cat_documento =  $this->FileModel->get_entidad('area', [ 'id_ar' => (int)$id ]);
+      if( ! $cat_documento ) return $this->output_json( 200 , 'no existe esta categoría con el id enviado', [] , FALSE );
+      $catDB =  $this->FileModel->get_entidad('area', [ 'area' => $this->input->post('area')]);
+      if ( $catDB ) return $this->output_json( 200 ,"la categoria ya existe pruebe con otro valor en el campo area", [],FALSE);
+      $set = $this->filter_attr( $_POST , $this->keys_categorie );
+
+        if ( !empty($_FILES['imagen']['name']) ):
+            
+            $area_imgs = $this->FileModel->getOne('ID_CO','multimedia_area',['id_ar' => $id]);
+            if (!$area_imgs) {
+                $area_imgs['files'] = $_FILES['imagen'];
+                $this->create_files('multimedia_area','id_ar', (int)$id , $area_imgs );
+            }else {
+                $img = $area_imgs[0];
+                $area_imgs['files'] = $_FILES['imagen'];
+                $this->editFile( $area_imgs ,$img['ID_MULTI']);
+            }
+        endif;      
+    $categorieUpdate = $this->FileModel->update_categorie( $set , ['id_ar' => $id] );
+      if( empty($categorieUpdate) ) return $this->output_json(200,'hubo un error al actualizar el categoria',[],false);
+      return $this->output_json(200 , 'categoria actualizada' );
+
+    }
+    /**
+     * @param post : data send for Client
+     * @param keysDB : valid keys in DB
+     * @return : valid data for insert
+     */
+    private function filter_attr ( array $post  , array $keysDB )
+    {   
+        $inputs = $this->security->xss_clean($post); 
+        $result = [];
+        foreach ($inputs as $key => $value) {
+            if (in_array($key , $keysDB )) :
+                if( $key == 'area'): 
+                    $result[$key] = $value;
+                    $result['ruta'] = $this->clearName($value);
+                else:
+                    $result[$key] = $value;
+                endif;
+            endif;
+        }
+        return $result;
+    }
+
+    public function get_all($id)
+    {
+        $notes_quanty = 3;
+        $section = $this->FileModel->get_entidad('area', [ 'id_ar' => $id ]);
+        if ( !$section ) return $this->output_json(200 , 'No existe la categoría' , [] , false );
+        
+        $params     = $this->input->get(['page', 'limit', 'last', 'search'], TRUE);
+        $search   = ! $params['search'] ? [] : explode(' ', $params['search']) ;
+        $for_page   = $params['limit'] ? (int) $params['limit'] : $notes_quanty;
+        $offset     = $params['page']  ? $for_page * ($params['page'] - 1) : 0;
+        $last       = $params['last'] == 'true' ? true :false;
+        $conditions = ['documentos.id_ar' => (int) $section['id_ar']];
+
+        $contenido = $this->FileModel->getAll( $for_page ,$offset ,$conditions , $last , $search );
+        if ( !$contenido )  return $this->output_json(200 , "not no se encontraron resultados en  : $id" ,[] ,false );
+        $page           = $params['page'] ? (int) $params['page'] : 1 ;
+        $contenido['page']  = $page;
+        $pages          = ($contenido['countAll'] % $for_page ) ?   (int)($contenido['countAll'] / $for_page) + 1 : (int)$contenido['countAll'] / $for_page  ; 
+        $contenido['pages'] = $pages;
+
+        if($page > 1) {
+            $prev = $page - 1  ;
+            $contenido['prev'] = "/$id/files?page=$prev&limit=$for_page";
+        } 
+        if( $page < $pages ) {
+            $next = $page + 1 ;
+            $contenido['next'] = "/$id/files?page=$next&limit=$for_page";
+        }
+       
+        $this->output_json( 200 , "Se encontro contenido en la categoría con id : $id!" , $contenido );
+    }
+    private function areas_for_any_documents (string $id,string $nombre , array $files) :array
+    {   
+        $areas = [];
+        for ($i = 0 ; $i <count ($files ) ; $i++) { 
+            $area['id_ar'] = $id;
+            $area['nombre'] = $nombre;
+            array_push($areas ,$area );
+        }
+        return $areas ;
     }
 
 

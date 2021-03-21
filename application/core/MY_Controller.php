@@ -41,6 +41,12 @@ class MY_Controller extends CI_Controller
         $title = trim($title);
         return $title;
     }
+    public function esImagen($path)
+    {
+        $imageSizeArray = getimagesize($path);
+        $imageTypeArray = $imageSizeArray[2];
+        return (bool)(in_array($imageTypeArray , array(IMAGETYPE_GIF , IMAGETYPE_JPEG ,IMAGETYPE_PNG , IMAGETYPE_BMP)));
+    }
     
     /**
      * @param $code :código http respuesta
@@ -127,7 +133,7 @@ class MY_Controller extends CI_Controller
         $uploadPath = 'uploads/documents/';
 
         #congiguramos el upload para cada  file
-        $config['allowed_types']  = 'pdf';
+        $config['allowed_types']  = '*';
         $config['max_size']       = 50000;
         $config['max_width']      = 3000;
         $config['max_height']     = 3000;
@@ -161,11 +167,12 @@ class MY_Controller extends CI_Controller
                 $uploadData[$i][$ID_RECURSO]     = $this->generateId();
                 $uploadData[$i]['FILE_NAME']     = $fileData['file_name'];
                 $uploadData[$i]['RUTA']          =  !$documents ? 'uploads/notes/'.$fileData['file_name'] :'uploads/documents/'.$fileData['file_name']  ;
-                $uploadData[$i]['TIPO']          =  !$documents ? 'Imagen' : 'Archivo';
+                $uploadData[$i]['TIPO']          =  !$documents ? 'Imagen' : $fileData['file_ext'];
                 $uploadData[$i]['FECHA_CREATED'] = date("Y-m-d H:i:s");
                 $uploadData[$i]['MODIFICADO']    = date("Y-m-d H:i:s");
                 if($documents):
-                    $uploadData[$i]['id_ar'] =$id_ars[$i] ;
+                    $uploadData[$i]['id_ar'] =$id_ars[$i]['id_ar'] ;
+                    $uploadData[$i]['nombre'] =$id_ars[$i]['nombre'] ;
                 endif;
 
                 

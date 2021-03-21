@@ -97,7 +97,13 @@ $route['learn/(:any)/(:num)']['POST'] = 'api/Contenidos/update/$1/$2';
 
 $route['testing']['POST'] = 'api/Contenidos/test';
 
-$route['doc']['POST'] = 'api/Documentos/insert';
+$route['(:any)/files']['POST'] = 'api/Documentos/insert/$1';
+$route['tipo-documento/(:num)/files']['GET'] = 'api/Documentos/get_all/$1';
+
+$route['tipo-documento']['POST'] = 'api/Documentos/insert_categorie';
+$route['tipo-documentos']['GET'] = 'api/Documentos/get_categories';
+$route['tipo-documentos/(:num)']['GET'] = 'api/Documentos/get_categorie/$1';
+$route['tipo-documentos/(:num)/update']['POST'] = 'api/Documentos/update_categorie/$1';
 
 #es
 $route['promedio']['GET'] = 'api/Calificaciones/getAllProm'; 

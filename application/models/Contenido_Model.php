@@ -15,7 +15,7 @@ class Contenido_Model extends CI_Model
 
     public function get( int $id_contenido , $condition = NULL)
     {
-        $this->db->select('ID_CO, titulo , resumen , objetivo , duracion , sec.nombre as tipo  ,FECHA_PUBLISHED as fecha_publicacion');
+        $this->db->select('ID_CO, titulo , resumen , objetivo , duracion , sec.nombre as tipo  ,FECHA_PUBLISHED as fecha_publicacion,notificacion');
         $this->db->from('contenido');
         $this->db->join('secciones as sec' , 'contenido.ID_SEC = sec.ID_SEC');
         $this->db->where(['contenido.ID_CO ' =>(int) $id_contenido]);
