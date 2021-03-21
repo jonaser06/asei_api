@@ -4,6 +4,7 @@ class Files_Model extends CI_Model
 {
     protected $table = 'multimedia';
     protected $table2= 'documentos';
+    protected $area= 'area';
 
     /**
      * Upload subida de archivos
@@ -44,7 +45,7 @@ class Files_Model extends CI_Model
     {
         $this->db->select('*');
         $this->db->from($table);
-        !$documents ? $this->db->join('multimedia as m', 'm.ID_MULTI ='.$table.'.ID_MULTI') : $this->db->join('documentos as d', 'd.ID_DO ='.$table.'.ID_DO');
+        !$documents ? $this->db->join('multimedia as m', 'm.ID_MULTI ='.$table.'.ID_MULTI') : $this->db->join('documentos as d', 'd.ID_DOC ='.$table.'.ID_DOC');
         $this->db->where($conditions);
         $files = $this->db->get()->result_array();
         return $files ? $files : FALSE;

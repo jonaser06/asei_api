@@ -139,7 +139,7 @@ class MY_Controller extends CI_Controller
     /**
      * @param {key} NAME OF ID ENTITY  
      */
-    private function files_for_insert( array $files  , string $key_entity , int $id_entidad , $documents = FALSE ) : array 
+    private function files_for_insert( array $files  , string $key_entity , int $id_entidad , $documents = FALSE ,$id_ars = []) : array 
     {
         $uploadData = [];
         $upload_relation = [];
@@ -157,16 +157,20 @@ class MY_Controller extends CI_Controller
 
             if($this->upload->do_upload('file')){
                 $fileData = $this->upload->data();
-                $ID_RECURSO = !$documents ? 'ID_MULTI':'ID_DO';
+                $ID_RECURSO = !$documents ? 'ID_MULTI':'ID_DOC';
                 $uploadData[$i][$ID_RECURSO]     = $this->generateId();
                 $uploadData[$i]['FILE_NAME']     = $fileData['file_name'];
                 $uploadData[$i]['RUTA']          =  !$documents ? 'uploads/notes/'.$fileData['file_name'] :'uploads/documents/'.$fileData['file_name']  ;
-                $uploadData[$i]['TIPO']          =  'Imagen';
+                $uploadData[$i]['TIPO']          =  !$documents ? 'Imagen' : 'Archivo';
                 $uploadData[$i]['FECHA_CREATED'] = date("Y-m-d H:i:s");
                 $uploadData[$i]['MODIFICADO']    = date("Y-m-d H:i:s");
+                if($documents):
+                    $uploadData[$i]['id_ar'] =$id_ars[$i] ;
+                endif;
+
                 
                 if(!empty($id_entidad)):
-                    $upload_relation[$i][] = $uploadData[$i][$ID_RECURSO];
+                    $upload_relation[$i][$ID_RECURSO] = $uploadData[$i][$ID_RECURSO];
                     $upload_relation[$i][$key_entity] = $id_entidad;
                 endif;
             }
@@ -182,11 +186,12 @@ class MY_Controller extends CI_Controller
         string $id_name,
         int $id_entidad,
         array $files = [] ,
-        bool  $documents = FALSE
+        bool  $documents = FALSE,
+        array $id_ars = []
     )
     
     {
-        $uploads         = $this->files_for_insert($files , $id_name ,(int)$id_entidad ,$documents);
+        $uploads         = $this->files_for_insert($files , $id_name ,(int)$id_entidad,$documents,$id_ars);
         $uploadData      = $uploads['multimedia'];
         $upload_relation = $uploads['relation'];
         if(!empty($uploadData)) {
@@ -226,7 +231,7 @@ class MY_Controller extends CI_Controller
     }
     public function deleteFile(string $table_relation , int $id_file , $documents = FALSE)
     {
-        $ID_RECURSO = !$documents ? 'ID_MULTI'  :'ID_DO';
+        $ID_RECURSO = !$documents ? 'ID_MULTI'  :'ID_DOC';
         $TABLE      = !$documents ? 'multimedia':'documentos';
         $file    =  $this->FileModel->get([$ID_RECURSO => $id_file]);
         if (!$file) return false;
