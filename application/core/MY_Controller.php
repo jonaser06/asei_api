@@ -130,12 +130,7 @@ class MY_Controller extends CI_Controller
         $this->upload->initialize($config);
     }
     private function configFile () {
-        $uploadPath = 'documents/';
-        $path = APPPATH.'documents';
-        if( !is_dir($path)) {
-            mkdir($path, 0777 , true);
-        }
-       
+        $uploadPath = 'uploads/documents/';
         
 
         #congiguramos el upload para cada  file
