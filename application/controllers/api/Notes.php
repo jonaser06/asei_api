@@ -149,6 +149,11 @@ class Notes extends MY_Controller {
            if( !$note ) return $this->output_json(400 , 'no se pudo insertar la nota ');
            $multi = $this->create_files('multimedia_notas','ID_NO', (int)$data['ID_NO'] , $_FILES );
 
+           if($this->input->post('notificacion')):
+            $data = json_decode($this->input->post('notificacion'), TRUE);
+            $this->newNotification($data['message'], $data['type'],$note['ID_NO']);
+           endif;
+
            $note  = $this->NotesModel->get( (int)$data['ID_NO']);
            $note  = $this->noteSend($note);
             $note_imgs = $this->FileModel->getOne('ID_NO','multimedia_notas',['ID_NO' => (int) $note['ID_NO']]);
