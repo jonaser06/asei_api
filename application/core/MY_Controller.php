@@ -34,16 +34,20 @@ class MY_Controller extends CI_Controller
         //     $input = json_decode($inputJSON, TRUE);
         // }
         $path = [
-            "estadistica" => '/tabs/stadistics',
-            "indicador" => '/tabs/stadistics',
-            "boletin" => '/tabs/stadistics',
+            "estadistica" => 'tabs/stadistics',
+            "indicador" => 'tabs/stadistics',
+            "boletin" => 'tabs/stadistics',
+            "aniversarios" => 'infcenter/anniversary/info/',
+            "eventos" => 'infcenter/info/info/',
+            "fairs" => 'infcenter/fairs/info/',
+            "news" => 'infcenter/news/info/',
         ];
 
         $payload = [
             "titulo" => $type,
             "descripcion" => $message,
             "fecha" => "2021-02-15 23:34:24",
-            "destino" => $path[$type],
+            "destino" => $path[$type].$id,
             "categoria" => $type,
             "ID_US" => $idus,
             "estado" => 1
