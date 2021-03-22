@@ -150,8 +150,8 @@ class Notes extends MY_Controller {
            $multi = $this->create_files('multimedia_notas','ID_NO', (int)$data['ID_NO'] , $_FILES );
 
            if($this->input->post('notificacion')):
-            $data = json_decode($this->input->post('notificacion'), TRUE);
-            $this->newNotification($data['message'], $data['type'],$note['ID_NO']);
+            $notification = json_decode($this->input->post('notificacion'), TRUE);
+            $this->newNotification($notification['message'], $notification['type'],$notification['idus'],$data['ID_NO']);
            endif;
 
            $note  = $this->NotesModel->get( (int)$data['ID_NO']);
@@ -272,7 +272,11 @@ class Notes extends MY_Controller {
         }
         $noteUpdate = $this->NotesModel->update( $set , ['ID_NO' => $id] );
         if( !$noteUpdate ) return $this->output_json( 400 , 'Error not update note!');
-        
+        #notification
+        if($this->input->post('notificacion')):
+            $notification = json_decode($this->input->post('notificacion'), TRUE);
+            $this->newNotification($notification['message'], $notification['type'],$notification['idus'],$id);
+        endif;
         return $this->output_json( 200 , 'note update !');
     }
     public function delete( int $id )

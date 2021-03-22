@@ -168,9 +168,7 @@ class Contenidos extends MY_Controller {
             'ID_SEC'          => (int)$section['ID_SEC'],
             'FECHA_PUBLISHED' => date("Y-m-d H:i:s")
         ];
-        if( $this->input->post('notificacion')) :
-            $content['notificacion'] = $this->input->post('notificacion',true);
-        endif;
+       
         
         $sesiones      = $this->sesiones_for_insert( $inputs['sesion_nombres'],$inputs['sesion_links'], $content['ID_CO'] );
         $capacitadores = $this->capacitadores_for_insert( $inputs['cap_nombres'],$inputs['cap_resumen'], $content['ID_CO'] );
@@ -197,9 +195,10 @@ class Contenidos extends MY_Controller {
         
         #notification
         if($this->input->post('notificacion')):
-            $data = json_decode($this->input->post('notificacion'), TRUE);
-            $this->newNotification($data['message'], $data['type'],$learn['ID_CO']);
-        endif;
+            $notification = json_decode($this->input->post('notificacion'), TRUE);
+            $this->newNotification($notification['message'], $notification['type'],$notification['idus'],$learn['ID_CO']);
+           endif;
+       
 
         return $this->output_json(200 , 'learn insert', $learn);
     }
@@ -286,8 +285,10 @@ class Contenidos extends MY_Controller {
              'ID_SEC'          => (int)$section['ID_SEC'],
          ];
 
-        if( $this->input->post('notificacion')) :
-            $content['notificacion'] = $this->input->post('notificacion',true);
+        #notification
+        if($this->input->post('notificacion')):
+            $notification = json_decode($this->input->post('notificacion'), TRUE);
+            $this->newNotification($notification['message'], $notification['type'],$notification['idus'],$id);
         endif;
 
         if ( !empty($_FILES['img_learn']['name']) ) {
