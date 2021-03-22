@@ -178,6 +178,7 @@ class Contenidos extends MY_Controller {
         $learn = $this->ContenidoModel->insert( $content);
         if( !$learn )   return $this->output_json(400 , 'Fallo la insercción');
         $this->create_files('multimedia_contenido','ID_CO', (int)$content['ID_CO'] ,$learn_files );
+
         $sesionesDB = $this->ContenidoModel->insert_rows($sesiones, 'sesiones');
         if( !$sesionesDB) return $this->output_json(400 , 'Fallo en insertar las sesiones.');
         $capacitadoresDB = $this->ContenidoModel->insert_rows($capacitadores, 'capacitadores');
@@ -194,6 +195,12 @@ class Contenidos extends MY_Controller {
         $learn['capacitadores'] = $this->capacitador_send($capsDB);
         $learn['sesiones']      = $sesionesDB;
         
+        #notification
+        if($this->input->post('notificacion')):
+            $data = json_decode($this->input->post('notificacion'), TRUE);
+            $this->newNotification($data['message'], $data['type'],$learn['ID_CO']);
+        endif;
+
         return $this->output_json(200 , 'learn insert', $learn);
     }
     public function getById( string $tipo , int $id ): CI_Output
