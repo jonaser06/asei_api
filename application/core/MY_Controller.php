@@ -27,7 +27,7 @@ class MY_Controller extends CI_Controller
         return false;
     }
 
-    public function newNotification($message= '', $type = '', $id = '', $idus=''){
+    public function newNotification($message= '', $type = '', $idus = '', $id=''){
 
         // if(($this->input->server('REQUEST_METHOD') === 'POST')){
         //     $inputJSON = file_get_contents('php://input');

@@ -43,7 +43,7 @@ class Statistics extends MY_Controller {
         if($this->input->post('notificacion')){
             $data = json_decode($this->input->post('notificacion'), true);
             # newNotification(mensaje, tipo);
-            $this->newNotification($data['message'], $data['type']);
+            $this->newNotification($data['message'], $data['type'], $data['idus']);
         }
 
         #save img
@@ -93,7 +93,7 @@ class Statistics extends MY_Controller {
         if($this->input->post('notificacion')){
             $data = json_decode($this->input->post('notificacion'), true);
             # newNotification(mensaje, tipo);
-            $this->newNotification($data['message'], $data['type']);
+            $this->newNotification($data['message'], $data['type'], $data['idus']);
         }
 
         $where = ['id' => $this->input->post('id')];
@@ -175,7 +175,7 @@ class Statistics extends MY_Controller {
         if($this->input->post('notificacion')){
             $data = json_decode($this->input->post('notificacion'), true);
             # newNotification(mensaje, tipo);
-            $this->newNotification($data['message'], $data['type']);
+            $this->newNotification($data['message'], $data['type'], $data['idus']);
         }
 
         #save file
@@ -210,7 +210,7 @@ class Statistics extends MY_Controller {
         if($this->input->post('notificacion')){
             $data = json_decode($this->input->post('notificacion'), true);
             # newNotification(mensaje, tipo);
-            $this->newNotification($data['message'], $data['type']);
+            $this->newNotification($data['message'], $data['type'], $data['idus']);
         }
 
         $where = ['id' => $this->input->post('id')];
@@ -282,7 +282,7 @@ class Statistics extends MY_Controller {
         if($this->input->post('notificacion')){
             $data = json_decode($this->input->post('notificacion'), true);
             # newNotification(mensaje, tipo);
-            $this->newNotification($data['message'], $data['type']);
+            $this->newNotification($data['message'], $data['type'], $data['idus']);
         }
 
 
@@ -311,7 +311,7 @@ class Statistics extends MY_Controller {
         if($this->input->post('notificacion')){
             $data = json_decode($this->input->post('notificacion'), true);
             # newNotification(mensaje, tipo);
-            $this->newNotification($data['message'], $data['type']);
+            $this->newNotification($data['message'], $data['type'], $data['idus']);
         }
 
     
