@@ -34,9 +34,9 @@ class MY_Controller extends CI_Controller
         //     $input = json_decode($inputJSON, TRUE);
         // }
         $path = [
-            "estadistica" => 'tabs/stadistics',
-            "indicador" => 'tabs/stadistics',
-            "boletin" => 'tabs/stadistics',
+            "estadistica" => 'stadistics',
+            "indicador" => 'stadistics',
+            "boletin" => 'stadistics',
             "aniversarios" => 'infcenter/anniversary/info/',
             "eventos" => 'infcenter/info/info/',
             "fairs" => 'infcenter/fairs/info/',
