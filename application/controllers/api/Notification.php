@@ -56,8 +56,9 @@ class Notification extends MY_Controller {
             $notes_quanty = 6;
             $page = $input['page'];
             $limit = $input['limit'];
-            $match = ( !isset($input['match']) ) ? false : $input['match'];
-            
+
+            $match = ( !isset($input['match']) ) ? [] : explode(' ', $input['match']) ;
+
             $for_page   = $limit ? (int) $limit : $notes_quanty;
             $offset     = $page  ? $for_page * ($page - 1) : 0;
             $page = $page ? (int) $page : 1 ;
