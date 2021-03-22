@@ -27,6 +27,62 @@ class MY_Controller extends CI_Controller
         return false;
     }
 
+    public function newNotification($message= '', $type = '', $id = '', $idus=''){
+
+        // if(($this->input->server('REQUEST_METHOD') === 'POST')){
+        //     $inputJSON = file_get_contents('php://input');
+        //     $input = json_decode($inputJSON, TRUE);
+        // }
+        $path = [
+            "estadistica" => '/tabs/stadistics',
+            "indicador" => '/tabs/stadistics',
+            "boletin" => '/tabs/stadistics',
+        ];
+
+        $payload = [
+            "titulo" => $type,
+            "descripcion" => $message,
+            "fecha" => "2021-02-15 23:34:24",
+            "destino" => $path[$type],
+            "categoria" => $type,
+            "ID_US" => $idus,
+            "estado" => 1
+        ];
+
+        $body =[
+            "app_id" => APP_ID,
+            "included_segments" => [ "Active Users", "Inactive Users" ],
+            "data" => $payload,
+            "contents" => [
+                "en" => $message,
+                "es" => $message
+            ],
+            "headings" => [
+                "en" => $type,
+                "es" => $type,
+            ]
+        ];
+
+        $body = json_encode($body);
+
+        $url = 'https://onesignal.com/api/v1/notifications';
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+        curl_setopt(
+            $ch,
+            CURLOPT_HTTPHEADER,
+            array(
+            'Content-Type:application/json',
+            'Authorization:Basic OGIwOGYxYmEtMDYyMS00MDkzLTkwNzktODVhOTE3ZGIxNDIy'
+            )
+        );
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $status = curl_exec($ch);
+        curl_close($ch);
+
+        /**termino de enviar por push */
+    }
+
     public function clearName($title){
         $ac2 = explode(',', 'ñ,Ñ,á,é,í,ó,ú,Á,É,Í,Ó,Ú,ä,ë,ï,ö,ü,Ä,Ë,Ï,Ö,Ü');
         $xc2 = explode(',', 'n,N,a,e,i,o,u,A,E,I,O,U,a,e,i,o,u,A,E,I,O,U');

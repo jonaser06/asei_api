@@ -146,4 +146,4 @@ define('SQL_PASS', $_ENV['SQL_PASS'] );
 define('URL_BASE', $_ENV['DOMAIN'] );
 define('DIR_U', $_ENV['DIR_U'] );
 define('KEY_API', $_ENV['KEY_API'] );
-define('APP_ID', 'ece9b11d-d45d-4fa4-819f-413949e79b36');
+define('APP_ID', 'a8ee2c87-30d7-4925-b437-66f2f84deef1');

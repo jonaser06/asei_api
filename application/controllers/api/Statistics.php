@@ -39,6 +39,13 @@ class Statistics extends MY_Controller {
         if ( !$_FILES['image']['tmp_name'] )       return $this->output_json(400,'I dont select any image');
         // if ( !$_FILES['file']['tmp_name'] )        return $this->output_json(400,'I dont select any file');
 
+        #notificacion
+        if($this->input->post('notificacion')){
+            $data = json_decode($this->input->post('notificacion'), true);
+            # newNotification(mensaje, tipo);
+            $this->newNotification($data['message'], $data['type']);
+        }
+
         #save img
         $path = IMG;
         $img = $_FILES['image']['tmp_name'];
@@ -81,6 +88,13 @@ class Statistics extends MY_Controller {
         // if ( !isset($_FILES['image']) )            return $this->output_json(400,'The image is necessary');
         // if ( !$_FILES['image']['tmp_name'] )       return $this->output_json(400,'I dont select any image');
         // if ( !$_FILES['file']['tmp_name'] )        return $this->output_json(400,'I dont select any file');
+
+        #notificacion
+        if($this->input->post('notificacion')){
+            $data = json_decode($this->input->post('notificacion'), true);
+            # newNotification(mensaje, tipo);
+            $this->newNotification($data['message'], $data['type']);
+        }
 
         $where = ['id' => $this->input->post('id')];
 
@@ -157,6 +171,13 @@ class Statistics extends MY_Controller {
         if ( !isset($_FILES['file']) )             return $this->output_json(400,'The file is necessary');
         if ( !$_FILES['file']['tmp_name'] )        return $this->output_json(400,'I dont select any file');
 
+        #notificacion
+        if($this->input->post('notificacion')){
+            $data = json_decode($this->input->post('notificacion'), true);
+            # newNotification(mensaje, tipo);
+            $this->newNotification($data['message'], $data['type']);
+        }
+
         #save file
         $path = PDF;
         $file = $_FILES['file']['tmp_name'];
@@ -184,6 +205,13 @@ class Statistics extends MY_Controller {
         if ( !$this->input->post('year') )         return $this->output_json(400,'The year is necessary');
         // if ( !isset($_FILES['file']) )             return $this->output_json(400,'The file is necessary');
         // if ( !$_FILES['file']['tmp_name'] )        return $this->output_json(400,'I dont select any file');
+
+        #notificacion
+        if($this->input->post('notificacion')){
+            $data = json_decode($this->input->post('notificacion'), true);
+            # newNotification(mensaje, tipo);
+            $this->newNotification($data['message'], $data['type']);
+        }
 
         $where = ['id' => $this->input->post('id')];
 
@@ -250,6 +278,13 @@ class Statistics extends MY_Controller {
         if ( !$this->input->post('percentage') )   return $this->output_json(400,'The percentage is necessary');
         if ( !$this->input->post('type') )         return $this->output_json(400,'The type is necessary');
 
+        #notificacion
+        if($this->input->post('notificacion')){
+            $data = json_decode($this->input->post('notificacion'), true);
+            # newNotification(mensaje, tipo);
+            $this->newNotification($data['message'], $data['type']);
+        }
+
 
         $this->data = [
             'title'             => $this->input->post('title'),
@@ -271,6 +306,13 @@ class Statistics extends MY_Controller {
         if ( !$this->input->post('description') )  return $this->output_json(400,'The description is necessary');
         if ( !$this->input->post('percentage') )   return $this->output_json(400,'The percentage is necessary');
         if ( !$this->input->post('type') )         return $this->output_json(400,'The type is necessary');
+
+        #notificacion
+        if($this->input->post('notificacion')){
+            $data = json_decode($this->input->post('notificacion'), true);
+            # newNotification(mensaje, tipo);
+            $this->newNotification($data['message'], $data['type']);
+        }
 
     
         
