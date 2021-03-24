@@ -11,6 +11,8 @@ class Notes extends MY_Controller {
         parent::__construct();
         $this->load->model('Notes_Model', 'NotesModel');
         $this->load->model('Files_Model','FileModel');
+        $this->load->model('calificaciones_model', 'CalificacionesModel');
+
 
     }
     public function search( $categorie )

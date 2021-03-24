@@ -55,21 +55,12 @@ class Calificaciones_model extends CI_Model {
         return $note ? $note : FALSE;
     } 
     
-    public function setVotar($id_us , $id_no )
-    {
-        $this->db->select('mod.nombre as modulo , mod.path , mod.icon , CREAR as crear , ACTUALIZAR as actualizar , ELIMINAR as eliminar , VISUALIZAR as visualizar');
-        $this->db->from(' modulos_perfiles  as mod_p');
-        $this->db->join('perfiles as p', 'p.ID_PE = mod_p.ID_PE');
-        $this->db->join('modulos as mod', 'mod.ID_MO = mod_p.ID_MO');
-        $this->db->where(['mod_p.ID_PE' => (int) $id_us , 'mod_p.ID_PE' => (int) $id_no]);
-        $privileges = $this->db->get()->result_array();
-        return $privileges ? $privileges : FALSE;
-    }
+ 
 
     public function insert( array $data = [] )
     {
-        $note = $this->db->insert($this->table, $data);
-        return $note ?$note : false ;
+        $calificacion = $this->db->insert($this->table, $data);
+        return $calificacion ? $calificacion : false ;
     }
 
     public function delete( int $id_no , int $id_us ) 

@@ -242,8 +242,10 @@ class Contenidos extends MY_Controller {
             $sesionesDB  = $this->ContenidoModel->get_sesiones( (int)$contenido['contenido'][$i]['ID_CO']);
             $capsDB       = $this->ContenidoModel->get_capacitadores( (int)$contenido['contenido'][$i]['ID_CO']);
             #caps 
-            $contenido['contenido'][$i]['capacitadores'] = $this->capacitador_send($capsDB);
-            $contenido['contenido'][$i]['sesiones']      = $sesionesDB;
+            if( $capsDB) {
+                $contenido['contenido'][$i]['capacitadores'] = $this->capacitador_send($capsDB);
+                $contenido['contenido'][$i]['sesiones']      = $sesionesDB;
+            }
         endfor;
 
         $page           = $params['page'] ? (int) $params['page'] : 1 ;

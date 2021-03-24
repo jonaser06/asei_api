@@ -81,4 +81,8 @@ class Calificaciones extends MY_Controller {
         
         $this->output_json( 200 ,'find note!' , $note ); 
     } 
+    public function setCalificacion(int $id_nota , int $id_us )
+    {
+        if ( !$this->input->post('calificacion',TRUE ) ) return $this->output_json( 400 , 'debe enviar la calificación para la nota'); 
+    }   
 }
