@@ -244,6 +244,8 @@ class Contenidos extends MY_Controller {
             #caps 
             if( $capsDB) {
                 $contenido['contenido'][$i]['capacitadores'] = $this->capacitador_send($capsDB);
+            }
+            if ($sesionesDB ) {
                 $contenido['contenido'][$i]['sesiones']      = $sesionesDB;
             }
         endfor;
