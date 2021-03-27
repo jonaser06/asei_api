@@ -4,6 +4,10 @@ class Calificaciones_model extends CI_Model {
 
     protected $table = 'usuarios_notas';
     
+    public function get_calification_us (int $id_no , int $id_us ) {
+        $calificacion = $this->db->get_where($this->table, [ 'ID_NO' => $id_no , 'ID_US' => $id_us] )->row_array();
+        return $calificacion ? $calificacion : FALSE;
+    }
 
     public function getAllPromedio()
     { 
@@ -56,7 +60,7 @@ class Calificaciones_model extends CI_Model {
     } 
     
  
-
+   
     public function insert( array $data = [] )
     {
         $calificacion = $this->db->insert($this->table, $data);
@@ -65,6 +69,7 @@ class Calificaciones_model extends CI_Model {
 
     public function delete( int $id_no , int $id_us ) 
     {
+
         $result  = $this->db->delete($this->table, [ 'ID_NO' => $id_no , 'ID_US' => $id_us] );
         return $result ? true : false;
     } 

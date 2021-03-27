@@ -83,6 +83,30 @@ class Calificaciones extends MY_Controller {
     } 
     public function setCalificacion(int $id_nota , int $id_us )
     {
-        if ( !$this->input->post('calificacion',TRUE ) ) return $this->output_json( 400 , 'debe enviar la calificación para la nota'); 
+
+        $userDB = $this->UserModel->get($id_us);
+        if( empty($userDB) ) return $this->output_json(200 , 'no se encontro user con el id' , [] , false );
+
+        $note = $this->NotesModel->get((int) $id_nota);
+
+        if(!$note) return $this->output_json( 200 , 'id is incorrect , not exist note ' , [] , false );
+
+        $calificationDB = $this->calificaciones_model->get_calification_us($id_nota, $id_us);
+
+        if( $calificationDB ) return $this->output_json(200 , 'la nota ya fue calificada por este usuario');
+
+        if ( !$this->input->post('calificacion') ) return $this->output_json( 400 , 'Debe enviar la calificación para la nota'); 
+        
+        $new_calification = $this->input->post('calificacion',TRUE );
+        $data = [
+            'ID_US'        => $id_us,
+            'ID_NO'        => $id_nota,
+            'calificacion' => $new_calification,
+            'estado'       => 1
+        ];
+        $result = $this->calificationes_model->insert($data);
+        if( !$result ) return $this->output_json( 400 , 'No se pudo insertar la calificación');
+        return $this->output_json( 200 , 'se califico con exito esta nota' , $result);
+
     }   
 }

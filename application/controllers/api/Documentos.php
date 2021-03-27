@@ -188,12 +188,13 @@ class Documentos extends MY_Controller {
         $notes_quanty = 3;
         
         $params     = $this->input->get(['page', 'limit', 'last', 'search','estado'], TRUE);
+        $search   = ! $params['search'] ? [] : explode(' ', $params['search']) ;
         $for_page   = $params['limit'] ? (int) $params['limit'] : $notes_quanty;
         $offset     = $params['page']  ? $for_page * ($params['page'] - 1) : 0;
         $last       = $params['last'] == 'true' ? true :false;
         $conditions = $params['estado'] == 'inactivo'? ['estado' => 0 ]: [ 'estado' => 1] ;
         
-        $categories = $this->FileModel->get_categories( $for_page ,$offset ,$conditions, $last );
+        $categories = $this->FileModel->get_categories( $for_page ,$offset ,$conditions, $last ,$search);
         if ( !$categories )  return $this->output_json(200 , "no se encontraron resultados " ,[] ,false );
 
         for( $i = 0; $i < count( $categories['areas'] ) ; $i ++ ): 
