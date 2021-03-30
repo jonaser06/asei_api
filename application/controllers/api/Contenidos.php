@@ -207,8 +207,9 @@ class Contenidos extends MY_Controller {
         $section = $this->ContenidoModel->get_section( [ 'nombre' => $tipo,'ID_MOD' => 4 ]);
         if( !$section ) return $this->output_json(200 , 'No existe la seccion en ASEI LEARNING' , [] , false );
         $learn = $this->ContenidoModel->get((int) $id , ['contenido.ID_SEC' => $section['ID_SEC']]);
-        $learn['notificacion'] = json_decode($learn['notificacion'],true);
+
         if(!$learn) return $this->output_json( 200 , "El id es incorrecto , no existe este conetenido en $tipo" , [] , false );
+        $learn['notificacion'] = json_decode($learn['notificacion'],true);
         $learn_imgs  = $this->FileModel->getOne('ID_CO','multimedia_contenido',['ID_CO' => (int) $learn['ID_CO']]);
         if( !empty($learn) ) $learn['files'] = $learn_imgs;
         $sesionesDB  = $this->ContenidoModel->get_sesiones( (int)$learn['ID_CO']);
