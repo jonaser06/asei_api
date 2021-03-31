@@ -171,6 +171,12 @@ class Notes extends MY_Controller {
 
         $note_imgs = $this->FileModel->getOne('ID_NO','multimedia_notas',['ID_NO' => $id]);
         if( !empty($note) ) $note['imagenes'] = $note_imgs;
+
+        $calification = $this->CalificacionesModel->getPromedio((int )$id);
+        if ( $calification ) :
+            $note['promedio']  = floatval($calification['PROMEDIO_ESTRELLAS']);
+        endif;
+
         $this->output_json( 200 ,'find note!' , $note );
     }
     public function get( $categorie )
@@ -197,6 +203,12 @@ class Notes extends MY_Controller {
 
             $note_imgs = $this->FileModel->getOne('ID_NO','multimedia_notas',['ID_NO' => $notes['notes'][$i]['ID_NO']]);
             $notes['notes'][$i]['imagenes'] = $note_imgs ? $note_imgs : 'no images found';
+
+            $calification = $this->CalificacionesModel->getPromedio($notes['notes'][$i]['ID_NO']);
+            if ( $calification ) :
+                $notes['notes'][$i]['promedio']  = floatval($calification['PROMEDIO_ESTRELLAS']);
+            endif;
+            
 
         endfor;
 

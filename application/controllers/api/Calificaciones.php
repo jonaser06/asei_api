@@ -7,6 +7,10 @@ class Calificaciones extends MY_Controller {
     {
         parent::__construct();
 		    $this->load->model('calificaciones_model', 'CalificacionesModel');
+            $this->load->model('User_Model', 'UserModel');
+            $this->load->model('Notes_Model', 'NotesModel');
+
+
     } 
 
     private function decorador_prom(array $registros ): array {
@@ -83,7 +87,6 @@ class Calificaciones extends MY_Controller {
     } 
     public function setCalificacion(int $id_nota , int $id_us )
     {
-
         $userDB = $this->UserModel->get($id_us);
         if( empty($userDB) ) return $this->output_json(200 , 'no se encontro user con el id' , [] , false );
 
@@ -91,22 +94,22 @@ class Calificaciones extends MY_Controller {
 
         if(!$note) return $this->output_json( 200 , 'id is incorrect , not exist note ' , [] , false );
 
-        $calificationDB = $this->calificaciones_model->get_calification_us($id_nota, $id_us);
+        $calificationDB = $this->CalificacionesModel->get_calification_us($id_nota, $id_us);
 
         if( $calificationDB ) return $this->output_json(200 , 'la nota ya fue calificada por este usuario');
 
         if ( !$this->input->post('calificacion') ) return $this->output_json( 400 , 'Debe enviar la calificación para la nota'); 
         
-        $new_calification = $this->input->post('calificacion',TRUE );
+        $new_calification = floatval($this->input->post('calificacion',TRUE ));
         $data = [
             'ID_US'        => $id_us,
             'ID_NO'        => $id_nota,
-            'calificacion' => $new_calification,
+            'cantidad' => $new_calification,
             'estado'       => 1
         ];
-        $result = $this->calificationes_model->insert($data);
+        $result = $this->CalificacionesModel->insert($data);
         if( !$result ) return $this->output_json( 400 , 'No se pudo insertar la calificación');
-        return $this->output_json( 200 , 'se califico con exito esta nota' , $result);
+        return $this->output_json( 200 , 'se califico con exito esta nota' );
 
     }   
 }
