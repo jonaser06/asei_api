@@ -57,7 +57,7 @@ class Files_Model extends CI_Model
     }
     public function getAll( int $limit = 1, int $offset = 0, array $conditions = [] , bool $lasted = FALSE , array $params  = [] )
     {
-        $this->db->select('ID_DOC,documentos.RUTA,FILE_NAME,nombre,TIPO,FECHA_CREATED as fecha_publicacion ,area');
+        $this->db->select('id_ar,ID_DOC,documentos.RUTA,FILE_NAME,nombre,TIPO,FECHA_CREATED as fecha_publicacion ,area');
         $this->db->join('area as a' , 'documentos.id_ar = a.id_ar');
         if( count ($params) != 0) {
             array_map(function ($param) {
