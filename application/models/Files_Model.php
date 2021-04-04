@@ -37,6 +37,22 @@ class Files_Model extends CI_Model
             : $this->db->get($this->table)->result_array();
         return !empty($result) ? $result : FALSE;
     }
+    public function get_doc(
+        ?array $conditions = NULL
+    ) {
+        $this->db->select('*');
+        $result = $conditions 
+            ? $this->db->get_where($this->table2 ,$conditions)->row_array()
+            : $this->db->get($this->table2)->result_array();
+        return !empty($result) ? $result : FALSE;
+    }
+    public function get_documentsAll(
+        ?array $conditions = NULL
+    ) {
+        $this->db->select('*');
+        $result = $this->db->get_where($this->table2 ,$conditions)->result_array();
+        return !empty($result) ? $result : FALSE;
+    }
     public function get_entidad (string $table , array $conditions = []) {
         return $this->db->get_where($table, $conditions)->row_array();
     }
@@ -120,6 +136,18 @@ class Files_Model extends CI_Model
         $this->db->where($where);
         return  $this->db->update($this->table) ? true : false;
         
+    }
+    public function update_doc (array $set , array $where )
+    {
+        if( empty($set) ) return false;
+        $this->db->set($set);
+        $this->db->where($where);
+        return  $this->db->update($this->table2) ? true : false;
+    }
+    public function remove( string $table, array $condition ) 
+    {
+        $result  = $this->db->delete($table,$condition);
+        return $result ? true : false;
     }
  
 }

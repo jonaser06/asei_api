@@ -314,6 +314,23 @@ class MY_Controller extends CI_Controller
         return true;
 
     } 
+    public function deleteOneFile(int $id_file , $documents = FALSE , $USER = FALSE)
+    {
+        $ID_RECURSO = !$documents ? 'ID_MULTI'  :'ID_DOC';
+        $TABLE      = !$documents ? 'multimedia':'documentos';
+        $TABLE_RELATION = $USER ? 'usuarios_documentos' :'gremios_documentos'; 
+        $file    =  $this->FileModel->get_entidad($TABLE,[$ID_RECURSO => $id_file]);
+        if (!$file) return false;
+        $path    =  DIR_U . $file['RUTA'];
+        $result  =     $this->db->delete($TABLE_RELATION, [ $ID_RECURSO => $id_file ] );
+        if( !$result ) return false;
+        $result  =     $this->db->delete($TABLE,[ $ID_RECURSO => $id_file] );
+        if( !$result ) return false;
+        if( !file_exists($path)) return false;
+        unlink($path);
+        return true;
+
+    } 
     public function editFileImg (array $files , int $id_file )
     {
     
@@ -357,6 +374,35 @@ class MY_Controller extends CI_Controller
             'RUTA'       => 'uploads/notes/'.$fileData['file_name']
         ];
         $result = $this->FileModel->update( $set , ['ID_MULTI' => $id_file ]);
+        return $result;
+    }
+    public function editFileDoc (array $files , int $id_file , $nombre = NULL)
+    {
+
+        $_FILES['file']['name']     = $files['files']['name'][0];
+        $_FILES['file']['type']     = $files['files']['type'][0];
+        $_FILES['file']['tmp_name'] = $files['files']['tmp_name'][0];
+        $_FILES['file']['error']    = $files['files']['error'][0];
+        $_FILES['file']['size']     = $files['files']['size'][0];
+        
+        $file = $this->FileModel->get_doc(['ID_DOC' => $id_file]);
+        if ( !$file) return false;
+        $path    =  DIR_U . $file['RUTA'];
+        $rutas = explode('/',$path);
+        if( file_exists($path)&& array_pop($rutas) !== ''  ) unlink($path);
+        $this->configFile();
+        if($this->upload->do_upload('file')) $fileData = $this->upload->data();
+        date_default_timezone_set("America/Lima");          
+        $set = [
+            'MODIFICADO' => date("Y-m-d H:i:s"),
+            'FILE_NAME'  =>$fileData['file_name'],
+            'RUTA'       => 'uploads/documents/'.$fileData['file_name'],
+            'TIPO' =>  $fileData['file_ext']
+        ];
+        if( $nombre ):
+            $set['nombre'] = $nombre;
+        endif;
+        $result = $this->FileModel->update_doc( $set , ['ID_DOC' => $id_file ]);
         return $result;
     }
 }

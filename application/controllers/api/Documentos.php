@@ -281,7 +281,7 @@ class Documentos extends MY_Controller {
         $conditions = ['documentos.id_ar' => (int) $section['id_ar']];
 
         $contenido = $this->FileModel->getAll( $for_page ,$offset ,$conditions , $last , $search );
-        if ( !$contenido )  return $this->output_json(200 , "not no se encontraron resultados en  : $id" ,[] ,false );
+        if ( !$contenido )  return $this->output_json(200 , "no se encontraron resultados en  : $id" ,[] ,false );
         $page           = $params['page'] ? (int) $params['page'] : 1 ;
         $contenido['page']  = $page;
         $pages          = ($contenido['countAll'] % $for_page ) ?   (int)($contenido['countAll'] / $for_page) + 1 : (int)$contenido['countAll'] / $for_page  ; 
@@ -297,6 +297,16 @@ class Documentos extends MY_Controller {
         }
        
         $this->output_json( 200 , "Se encontro contenido en la categoría con id : $id!" , $contenido );
+    }
+    public function get_doc( $id_ar , $id_doc):CI_Output 
+    {
+        $area = $this->FileModel->get_entidad('area', [ 'id_ar' => $id_ar ]);
+        if( !$area ) return $this->output_json( 200 , "No existe la categoría de documentos: $area ",[], FALSE );
+
+        $documento = $this->FileModel->get_entidad('documentos', [ 'ID_DOC' => $id_doc ,'id_ar'=> $id_ar]);
+        if( !$documento ) return $this->output_json( 200 , "No existe archivo con el id: $id_doc ",[], FALSE );
+        $documento['area'] = $area['area'];
+        return $this->output_json(200 , 'archivo encontrado', $documento);
     }
     private function areas_for_any_documents (string $id,string $nombre , array $files) :array
     {   
@@ -412,45 +422,24 @@ class Documentos extends MY_Controller {
 
     }
    
-    public function delete( string $tipo ,int $id ):CI_Output
+    public function delete( int $id_ar ):CI_Output
     {
-        $section = $this->ContenidoModel->get_section( [ 'nombre' => $tipo,'ID_MOD' => 4 ]);
-        if( !$section ) return $this->output_json(200 , 'No existe la seccion en ASEI LEARNING' , [] , false );
+        $seccion = $this->FileModel->get_entidad('area', [ 'id_ar' => $id_ar ]);
+        if ( !$seccion ) return $this->output_json( 200 , 'No existe la categoría ' , [] , FALSE );
+        $documents = $this->FileModel->get_documentsAll(['id_ar'=> $id_ar]);
+        if( $documents ) :
+            for ( $i = 0; $i < count( $documents ); $i++ ) { 
+                $this->deleteOneFile((int)$documents[$i]['ID_DOC'],TRUE );  
+            }
+        endif;
 
-        $contenido = $this->ContenidoModel->get((int) $id , ['contenido.ID_SEC' => $section['ID_SEC']]);
-        if( !$contenido ) return $this->output_json( 200 , "id is incorrect , no existe este contenido en $tipo " , [] , false );
-
-        #contenido
-        $contenido_imgs = $this->FileModel->getOne('ID_CO','multimedia_contenido',[ 'ID_CO' => (int)$id]);
+        $contenido_imgs = $this->FileModel->getOne('id_ar','multimedia_area',[ 'id_ar' => (int)$id_ar]);
         if($contenido_imgs) {
             for ( $i = 0; $i < count( $contenido_imgs ); $i++ ) { 
-                $this->deleteFile('multimedia_contenido',$contenido_imgs[$i]['ID_MULTI']);
+                $this->deleteFile('multimedia_area',$contenido_imgs[$i]['ID_MULTI']);
             }
         }
-        #sesiones 
-
-        $capacitadoresDB   = $this->ContenidoModel->get_capacitadores( (int)$contenido['ID_CO']);
-        
-        $sesionesDB  = $this->ContenidoModel->get_sesiones( (int)$contenido['ID_CO']);
-
-        if($capacitadoresDB) {
-            $caps_imgs = [];
-            for ( $i = 0; $i < count( $capacitadoresDB ); $i++ ) { 
-                $capacitador_imgs =  $this->FileModel->getOne('ID_CA','multimedia_capacitadores',['ID_CA' => (int) $capacitadoresDB[$i]['ID_CA']]);
-                if($capacitador_imgs) {
-                    array_push($caps_imgs , $capacitador_imgs);
-                }
-                
-            }
-            for ( $i = 0; $i < count( $caps_imgs ); $i++ ) { 
-                $this->deleteFile('multimedia_capacitadores',$caps_imgs[$i][0]['ID_MULTI']);
-            }
-            
-        }
-        
-        $this->ContenidoModel->remove( 'sesiones' , ['ID_CO' => (int)$contenido['ID_CO']]);
-        $this->ContenidoModel->remove( 'capacitadores' , ['ID_CO' => (int)$contenido['ID_CO']]);
-        $resp = $this->ContenidoModel->delete( (int) $id);
+        $resp = $this->FileModel->remove('area', ['id_ar'=>(int) $id_ar] );
         
         return $resp ? $this->output_json( 200 , 'delete contenido!')
                      : $this->output_json( 500 , 'have a problem with contenido deleted!');
@@ -518,10 +507,53 @@ class Documentos extends MY_Controller {
         if( !$sesionesDB) return $this->output_json(400 , 'Fallo en insertar la session.');
         return $this->output_json(201 , 'session insert');
     }
-    public function removeSession(int $id_session ) 
+    public function delete_document(int $id_ar ,int $id_doc ) 
     {
-        $resp = $this->ContenidoModel->remove( 'sesiones' , ['ID_SE' => (int)$id_session]);
-        return $resp ? $this->output_json( 200 , 'delete sesión !')
-        : $this->output_json( 500 , 'have a problem with capacitador deleted!');
+        $area = $this->FileModel->get_entidad('area', [ 'id_ar' => $id_ar ]);
+        if( !$area ) return $this->output_json( 200 , "No existe la categoría de documentos: $area ",[], FALSE );
+
+        $documentoDB = $this->FileModel->get_entidad('documentos', [ 'ID_DOC' => $id_doc ,'id_ar' => $id_ar]);
+
+        $resp = $this->deleteOneFile((int)$documentoDB['ID_DOC'],TRUE );  
+
+            return $resp ? $this->output_json( 200 , 'documento borrado !')
+        : $this->output_json( 500 , 'hubo un problema al borrar el archivo');
+    }
+    public function update_doc ($id_ar , $id_doc ):CI_Output 
+    {
+
+        $seccion = $this->FileModel->get_entidad('area', [ 'id_ar' => $id_ar ]);
+        if ( !$seccion ) return $this->output_json(200 , 'No existe la categoría ' , [] , false );
+        $documento = $this->FileModel->get_entidad('documentos', [ 'ID_doc' => $id_doc ]);
+        if ( !$documento ) return $this->output_json(200 , 'No documento en esta categoría ' , [] , false );
+
+        $set = $this->filter( $_POST , ['nombre']);
+        $resp = null;
+        if(empty($_FILES['documentos']['name']) && isset($set['nombre'] )) {
+            $resp = $this->FileModel->update_doc($set,['ID_DOC'=>(int)$id_doc ]);
+        }
+        
+        if ( !empty($_FILES['documentos']['name']) ) {
+            $documentos['files'] = $_FILES['documentos'];
+            if (isset($set['nombre'])) {
+                $resp = $this->editFileDoc( $documentos ,$documento['ID_DOC'], $set['nombre']);
+            }else {
+                $resp = $this->editFileDoc( $documentos ,$documento['ID_DOC']);
+            }
+        } 
+      if( !$resp ) return $this->output_json(200,'hubo un error al actualizar la información del documento',[],false);
+      return $this->output_json(200 , 'archivo actualizado' );
+
+    }
+    private function filter ( array $post  , array $keysDB )
+    {   
+        $inputs = $this->security->xss_clean($post); #evitar un posible atac xcss
+        $result = [];
+        foreach ($inputs as $key => $value) {
+            if (in_array($key , $keysDB )) {
+                $result[$key] = $value;
+            };
+        }
+        return $result;
     }
 }

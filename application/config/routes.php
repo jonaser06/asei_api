@@ -99,11 +99,16 @@ $route['testing']['POST'] = 'api/Contenidos/test';
 
 $route['(:any)/files']['POST'] = 'api/Documentos/insert/$1';
 $route['tipo-documento/(:num)/files']['GET'] = 'api/Documentos/get_all/$1';
+$route['tipo-documento/(:num)/files/(:num)/delete']['GET'] = 'api/Documentos/delete_document/$1/$2';
+$route['tipo-documento/(:num)/files/(:num)']['GET'] = 'api/Documentos/get_doc/$1/$2';
+$route['tipo-documento/(:num)/files/(:num)/update']['POST'] = 'api/Documentos/update_doc/$1/$2';
 
 $route['tipo-documento']['POST'] = 'api/Documentos/insert_categorie';
 $route['tipo-documentos']['GET'] = 'api/Documentos/get_categories';
 $route['tipo-documentos/(:num)']['GET'] = 'api/Documentos/get_categorie/$1';
 $route['tipo-documentos/(:num)/update']['POST'] = 'api/Documentos/update_categorie/$1';
+$route['tipo-documentos/(:num)/delete']['GET'] = 'api/Documentos/delete/$1';
+
 
 #es
 $route['promedio']['GET'] = 'api/Calificaciones/getAllProm'; 
