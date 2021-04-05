@@ -116,6 +116,7 @@ $route['suma']['GET'] = 'api/Calificaciones/getAllSuma';
 $route['bpromedio/(:num)']['GET'] = 'api/Calificaciones/getByIdProm/$1'; 
 $route['bsuma/(:num)']['GET'] = 'api/Calificaciones/getByIdSuma/$1'; 
 $route['calificar/(:num)/(:num)']['POST'] = 'api/Calificaciones/setCalificacion/$1/$2'; 
+$route['calificar/(:num)/(:num)']['GET'] = 'api/Calificaciones/comproved/$1/$2'; 
 
 
 
