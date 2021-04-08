@@ -78,6 +78,11 @@ class Notes_Model extends CI_Model
         $result  = $this->db->delete($this->table, [ 'ID_NO' => $id ] );
         return $result ? true : false;
     }
+    public function delete_calificaciones( int $id ) 
+    {
+        $result  = $this->db->delete('usuarios_notas', [ 'ID_NO' => $id ] );
+        return $result ? true : false;
+    }
 
     public function getAllCalendar( int $limit = 1, int $offset = 0, array $conditions = [] , bool $lasted = FALSE , array $params  = [] )
     {
