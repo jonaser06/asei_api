@@ -118,6 +118,10 @@ $route['bsuma/(:num)']['GET'] = 'api/Calificaciones/getByIdSuma/$1';
 $route['calificar/(:num)/(:num)']['POST'] = 'api/Calificaciones/setCalificacion/$1/$2'; 
 $route['comproved/(:num)/(:num)']['GET'] = 'api/Calificaciones/comproved/$1/$2'; 
 
+#certificados 
+$route['calendario']['GET'] = 'api/Notes/calendar';
+
+
 
 
 

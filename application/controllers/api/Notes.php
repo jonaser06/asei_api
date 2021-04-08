@@ -34,7 +34,6 @@ class Notes extends MY_Controller {
         if ( !$notes )  return $this->output_json(200 , "not exists results" ,[] ,false );
     
         for( $i = 0; $i < count( $notes['notes'] ) ; $i ++ ): 
-
             $time = explode(' ',$notes['notes'][$i]['fecha_publicacion']);
             $notes['notes'][$i]['fecha_publicacion'] = $time[0];
             $notes['notes'][$i]['hora_publicacion']  = $time[1];
@@ -131,7 +130,11 @@ class Notes extends MY_Controller {
             'link'         => $inputs['link'],
             'ID_SEC'       => (int)$section['ID_SEC'],
            ];
-
+           #esta en el calendar o no esta 
+           if( $this->input->post('calendario') && ($this->input->post('calendario') === 1 || $this->input->post('calendario') === 0 )):
+            $data['calendario'] = $this->input->post('calendario', TRUE);
+           endif;
+           #fin
            if( $section['nombre'] == 'noticias') {
                $data['fecha_inicio']    = $inputs['fecha_publicacion'];
                $data['fecha_fin']       = $inputs['fecha_publicacion'];
@@ -247,7 +250,7 @@ class Notes extends MY_Controller {
         if( ! $this->input->post('fecha_publicacion') )  return $this->output_json(400 , 'Debe enviar la fecha publicacion');
         if( ! $this->input->post('hora_publicacion') )  return $this->output_json(400 , 'Debe enviar la hora de publicación');
         if( ! $this->input->post('link') )  return $this->output_json(400 , 'Debe enviar el link de la nota');
-
+       
         // if ( empty($_FILES['file']['name']) )      return $this->output_json(400 , 'no select any file');    
         // if ( $_FILES['file']['size'] > 2000000 ) return $this->output_json(400 , 'La imagen debe ser menor a 2MB' );    
 
@@ -265,20 +268,26 @@ class Notes extends MY_Controller {
             'ID_SEC'       => (int)$section['ID_SEC'],
         ];
 
-           if( $section['nombre'] == 'noticias') {
-               $set['fecha_inicio']    = $inputs['fecha_publicacion'];
-               $set['fecha_fin']       = $inputs['fecha_publicacion'];
-               $set['hora_inicio']     = '00:00';
-               $set['hora_fin']        = '00:00';
-               $set['FECHA_PUBLISHED'] = $inputs['fecha_publicacion'].' '.$inputs['hora_publicacion'];
-           }else {
+        if( $section['nombre'] == 'noticias') {
+            $set['fecha_inicio']    = $inputs['fecha_publicacion'];
+            $set['fecha_fin']       = $inputs['fecha_publicacion'];
+            $set['hora_inicio']     = '00:00';
+            $set['hora_fin']        = '00:00';
+            $set['FECHA_PUBLISHED'] = $inputs['fecha_publicacion'].' '.$inputs['hora_publicacion'];
+        }else {
                $set['fecha_inicio']    = $inputs['fecha_inicio'];
                $set['fecha_fin']       = $inputs['fecha_fin'];
                $set['hora_inicio']     = $inputs['hora_inicio'];
                $set['hora_fin']        = $inputs['hora_fin'];
                $set['FECHA_PUBLISHED'] = $inputs['fecha_publicacion'].' '.$inputs['hora_publicacion'];
-           }
-       
+        }
+        if( $this->input->post('calendario') && ($this->input->post('calendario') === 1 || $this->input->post('calendario') === 0) ) : 
+            $set['calendario'] = $this->input->post('calendario');
+        endif;
+        #fecha publicacion es fecha calendario
+
+
+
         if ( !empty($_FILES['file']['name']) ) {
             $note_imgs = $this->FileModel->getOne('ID_NO','multimedia_notas',['ID_NO' => $id]);
             $img = $note_imgs[0];
@@ -309,4 +318,51 @@ class Notes extends MY_Controller {
         return $resp ? $this->output_json( 200 , 'delete note!')
                      : $this->output_json( 500 , 'have a problem with note deleted!');
     }
+
+
+    #CALENDARIO 
+    public function calendar()
+    {
+        $notes_quanty = 9;
+        $params     = $this->input->get(['page', 'limit', 'search'], TRUE);
+        $search   = ! $params['search'] ? [] : explode(' ', $params['search']) ;
+        
+        $for_page   = $params['limit'] ? (int) $params['limit'] : $notes_quanty;
+        $offset     = $params['page']  ? $for_page * ($params['page'] - 1) : 0;
+        
+        $conditions = ['notas.calendario' => 1 ];
+
+        $notes = $this->NotesModel->getAll( $for_page ,$offset ,$conditions ,false ,$search );
+        if ( !$notes )  return $this->output_json(200 , "No se agregaron contenido de las secciones al calendario" ,[] ,false );
+    
+        for( $i = 0; $i < count( $notes['notes'] ) ; $i ++ ): 
+            $time = explode(' ',$notes['notes'][$i]['fecha_publicacion']);
+            $notes['notes'][$i]['fecha_publicacion'] = $time[0];
+            $notes['notes'][$i]['hora_publicacion']  = $time[1];
+
+
+
+            $note_imgs = $this->FileModel->getOne('ID_NO','multimedia_notas',['ID_NO' => $notes['notes'][$i]['ID_NO']]);
+            $notes['notes'][$i]['imagenes'] = $note_imgs ? $note_imgs : 'no images found';
+            
+        endfor;
+
+        $page           = $params['page'] ? (int) $params['page'] : 1 ;
+        $notes['page']  = $page;
+        $pages          = ($notes['countAll'] % $for_page ) ?   (int)($notes['countAll'] / $for_page) + 1 : (int)$notes['countAll'] / $for_page  ; 
+        $notes['pages'] = $pages;
+        $section        = $notes['notes'][0]['seccion'];
+
+        $busqueda  = $params['search'] ;
+        if($page > 1) {
+            $prev = $page - 1  ;
+            $notes['prev'] = "/$section?page=$prev&limit=$for_page&search=$busqueda";
+        } 
+        if( $page < $pages ) {
+            $next = $page + 1 ;
+            $notes['next'] = "/$section?page=$next&limit=$for_page&search=$busqueda";
+        }
+       
+        $this->output_json( 200 , 'contenido encontrado!' , $notes );
+    } 
 }
