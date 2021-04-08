@@ -308,7 +308,7 @@ class Notes extends MY_Controller {
         if( !$note ) return $this->output_json( 200 , 'id is incorrect , not exist note ' , [] , false );
         $calificationes = $this->FileModel->get_entidad('usuarios_notas', ['ID_NO'=> $id]);
         if ($calificationes) : 
-            $this->FileModel->deleteCalificaciones($id);
+            $this->NotesModel->deleteCalificaciones($id);
         endif;
         $note_imgs = $this->FileModel->getOne('ID_NO','multimedia_notas',[ 'ID_NO' => $id]);
         if($note_imgs) {
