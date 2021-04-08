@@ -49,8 +49,12 @@ class Notification_Model extends CI_Model implements iModule
         $this->db->where($where);
         if( count ($match) != 0) {
             array_map(function ($param) {
-                $this->db->like('titulo', $param, 'both');
+                $this->db->group_start();
+
+                $this->db->or_like('titulo', $param, 'both');
                 $this->db->or_like('descripcion', $param, 'both');
+                $this->db->group_end();
+
             }, $match);
         }  
         $this->db->order_by($o, 'DESC');

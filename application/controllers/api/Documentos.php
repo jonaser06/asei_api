@@ -211,11 +211,11 @@ class Documentos extends MY_Controller {
 
         if($page > 1) {
             $prev = $page - 1  ;
-            $categories['prev'] = "?tipo-documentos/page=$prev&limit=$for_page";
+            $categories['prev'] = "/tipo-documentos?page=$prev&limit=$for_page";
         } 
         if( $page < $pages ) {
             $next = $page + 1 ;
-            $categories['next'] = "?tipo-documentos/page=$next&limit=$for_page";
+            $categories['next'] = "/tipo-documentos?page=$next&limit=$for_page";
         }
        
         $this->output_json( 200 , "Se encontro categories!" , $categories );

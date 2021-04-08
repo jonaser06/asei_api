@@ -75,13 +75,16 @@ class Files_Model extends CI_Model
     {
         $this->db->select('documentos.id_ar,ID_DOC,documentos.RUTA,FILE_NAME,nombre,TIPO,FECHA_CREATED as fecha_publicacion ,area');
         $this->db->join('area as a' , 'documentos.id_ar = a.id_ar');
+
+        $this->db->where( $conditions );
         if( count ($params) != 0) {
             array_map(function ($param) {
-                $this->db->like('nombre', $param, 'both');
+                $this->db->group_start();
+                $this->db->or_like('nombre', $param, 'both');
                 $this->db->or_like('TIPO', $param, 'both');
+                $this->db->group_end();
             }, $params);
         }
-        $this->db->where( $conditions );
         if($lasted) {
             $this->db->where( 'FECHA_CREATED >= (CURDATE() - INTERVAL 30 DAY)');
         }
