@@ -78,4 +78,39 @@ class Notes_Model extends CI_Model
         $result  = $this->db->delete($this->table, [ 'ID_NO' => $id ] );
         return $result ? true : false;
     }
+
+    public function getAllCalendar( int $limit = 1, int $offset = 0, array $conditions = [] , bool $lasted = FALSE , array $params  = [] )
+    {
+        
+         $this->db->select('notas.ID_NO  , titulo ,resumen , texto , fecha_inicio , fecha_fin ,sec.nombre as seccion ,link,  hora_inicio , hora_fin , FECHA_PUBLISHED as fecha_publicacion ');
+
+        $this->db->join('secciones as sec' , 'notas.ID_SEC = sec.ID_SEC');
+        if( count ($params) != 0) {
+            array_map(function ($param) {
+                $this->db->like('notas.titulo', $param, 'both');
+            }, $params);
+        }
+        
+        $this->db->where( $conditions );
+
+        if($lasted) {
+            $this->db->where( 'FECHA_PUBLISHED >= (CURDATE() - INTERVAL 30 DAY)');
+        }
+        // else {
+        //     $this->db->where( 'FECHA_PUBLISHED < (CURDATE() - INTERVAL  30 DAY)');
+
+        // }
+        $this->db->order_by('FECHA_PUBLISHED', 'DESC');
+
+        $countAll = $this->db->count_all_results('notas', FALSE);
+        $this->db->limit($limit, $offset);
+        $notes = $this->db->get()->result_array();
+
+        return $notes ? [
+            'countAll'     => $countAll,
+            'notes'         => $notes
+        ] : FALSE;
+        
+    }
 }
+

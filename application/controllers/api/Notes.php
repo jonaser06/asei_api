@@ -332,7 +332,7 @@ class Notes extends MY_Controller {
         
         $conditions = ['notas.calendario' => 1 ];
 
-        $notes = $this->NotesModel->getAll( $for_page ,$offset ,$conditions ,false ,$search );
+        $notes = $this->NotesModel->getAllCalendar( $for_page ,$offset ,$conditions ,false ,$search );
         if ( !$notes )  return $this->output_json(200 , "No se agregaron contenido de las secciones al calendario" ,[] ,false );
     
         for( $i = 0; $i < count( $notes['notes'] ) ; $i ++ ): 
