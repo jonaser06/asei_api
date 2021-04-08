@@ -306,7 +306,10 @@ class Notes extends MY_Controller {
     {
         $note = $this->NotesModel->get((int) $id);
         if( !$note ) return $this->output_json( 200 , 'id is incorrect , not exist note ' , [] , false );
-
+        $calificationes = $this->FileModel->get_entidad('usuarios_notas', ['ID_NO'=> $id]);
+        if ($calificationes) : 
+            $this->FileModel->deleteCalificaciones($id);
+        endif;
         $note_imgs = $this->FileModel->getOne('ID_NO','multimedia_notas',[ 'ID_NO' => $id]);
         if($note_imgs) {
             for ( $i = 0; $i < count( $note_imgs ); $i++ ) { 
@@ -351,16 +354,15 @@ class Notes extends MY_Controller {
         $notes['page']  = $page;
         $pages          = ($notes['countAll'] % $for_page ) ?   (int)($notes['countAll'] / $for_page) + 1 : (int)$notes['countAll'] / $for_page  ; 
         $notes['pages'] = $pages;
-        $section        = $notes['notes'][0]['seccion'];
 
         $busqueda  = $params['search'] ;
         if($page > 1) {
             $prev = $page - 1  ;
-            $notes['prev'] = "/$section?page=$prev&limit=$for_page&search=$busqueda";
+            $notes['prev'] = "/calendario?page=$prev&limit=$for_page&search=$busqueda";
         } 
         if( $page < $pages ) {
             $next = $page + 1 ;
-            $notes['next'] = "/$section?page=$next&limit=$for_page&search=$busqueda";
+            $notes['next'] = "/calendario?page=$next&limit=$for_page&search=$busqueda";
         }
        
         $this->output_json( 200 , 'contenido encontrado!' , $notes );
