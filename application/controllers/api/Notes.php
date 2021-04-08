@@ -297,10 +297,13 @@ class Notes extends MY_Controller {
         if ( !empty($_FILES['file']['name']) ) {
             $note_imgs = $this->FileModel->getOne('ID_NO','multimedia_notas',['ID_NO' => $id]);
             if (!$note_imgs) {
-                $array = [];
-                array_push($array['imgs'] ,$_FILES );
-                 $contenido_imgs['files'] = $array['igms'];
-                $this->create_files('multimedia_notas','ID_NO', (int)$id , $contenido_imgs );
+               
+                $files['files']['name'][0] = $_FILES['file']['name'] ;  
+                $files['files']['type'][0] = $_FILES['file']['type']  ;  
+                $files['files']['tmp_name'][0] = $_FILES['file']['tmp_name'];
+                $files['files']['error'][0] = $_FILES['file']['error']   ;
+                $files['files']['size'][0] = $_FILES['file']['size']    ;
+                $this->create_files('multimedia_notas','ID_NO', (int)$id , $files );
 
             }else {
                 $img = $note_imgs[0];
