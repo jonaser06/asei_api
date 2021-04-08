@@ -288,11 +288,26 @@ class Notes extends MY_Controller {
 
 
 
+        // if ( !empty($_FILES['file']['name']) ) {
+        //     $note_imgs = $this->FileModel->getOne('ID_NO','multimedia_notas',['ID_NO' => $id]);
+        //     $img = $note_imgs[0];
+        //     $this->editFileImg( $_FILES ,$img['ID_MULTI']);
+        // }
+
         if ( !empty($_FILES['file']['name']) ) {
             $note_imgs = $this->FileModel->getOne('ID_NO','multimedia_notas',['ID_NO' => $id]);
-            $img = $note_imgs[0];
-            $this->editFileImg( $_FILES ,$img['ID_MULTI']);
-        }
+            if (!$note_imgs) {
+                $array = [];
+                array_push( $array['files'], $_FILES['file']);
+                $this->create_files('multimedia_notas','ID_NO', (int)$id , $array );
+
+            }else {
+                $img = $note_imgs[0];
+                $this->editFileImg( $_FILES ,$img['ID_MULTI']);
+            }
+          } 
+
+
         $noteUpdate = $this->NotesModel->update( $set , ['ID_NO' => $id] );
         if( !$noteUpdate ) return $this->output_json( 400 , 'Error not update note!');
         #notification
