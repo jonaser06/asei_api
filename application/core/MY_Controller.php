@@ -41,6 +41,8 @@ class MY_Controller extends CI_Controller
             "eventos" => 'infcenter/info/info/',
             "fairs" => 'infcenter/fairs/info/',
             "news" => 'infcenter/news/info/',
+            "cursos" => 'learning-center/cursos/info/',
+            "webinnars" => 'learning-center/webinars/info/',
         ];
 
         $payload = [
