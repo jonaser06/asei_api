@@ -116,7 +116,7 @@ class Certificados extends MY_Controller {
     }
 
 
-    public function setCertificate(int $id_co , int $id_us )
+    public function set_certificate(int $id_co , int $id_us )
     {
 
         $learn = $this->ContenidoModel->get((int) $id_co);
@@ -144,6 +144,7 @@ class Certificados extends MY_Controller {
             'curse_duration' => $this->input->post('curse_duration'),
             'fecha_emited'   => date('Y-m-d'),
         ];
+
         $result = $this->CertificadosModel->insert($data);
         if( !$result ) return $this->output_json( 400 , 'No se puede guardar el registro para el certificado intentelo mas tarde');
         return $this->output_json( 200 , 'se guardo con éxito el registro' );
