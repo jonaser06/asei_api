@@ -46,7 +46,7 @@ class MY_Controller extends CI_Controller
         $payload = [
             "titulo" => $type,
             "descripcion" => $message,
-            "fecha" => date('d-m-Y H:i:s'),
+            "fecha" => date('Y-m-d H:i:s'),
             "destino" => $path[$type].$id,
             "categoria" => $type,
             "ID_US" => $idus,
