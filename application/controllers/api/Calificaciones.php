@@ -8,6 +8,8 @@ class Calificaciones extends MY_Controller {
         parent::__construct();
 		    $this->load->model('calificaciones_model', 'CalificacionesModel');
             $this->load->model('User_Model', 'UserModel');
+
+            $this->load->model('User_Model', 'UserModel');
             $this->load->model('Notes_Model', 'NotesModel');
 
 

@@ -8,7 +8,7 @@ class Certificados extends MY_Controller {
         parent::__construct();
         date_default_timezone_set("America/Lima");        
 
-		    $this->load->model('certificados_model', 'CertificadosModel');
+		    $this->load->model('Certificados_model', 'CertificadosModel');
             $this->load->model('User_Model', 'UserModel');
             $this->load->model('Contenido_Model', 'ContenidoModel');
 
