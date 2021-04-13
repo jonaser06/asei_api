@@ -78,11 +78,13 @@ class Certificados extends MY_Controller {
     
         $certificadosDB = $this->CertificadosModel->get_certificado_us($id_co, $id_us);
 
-        if(! $certificadosDB ) return $this->output_json(200 , 'No existe este certificado'[],FALSE);
+        if(!$certificadosDB) return $this->output_json(200 , 'No existe este certificado',[],FALSE);
         return $this->output_json(200 , "certificado encontrado !",$certificadosDB);
     }
     public function get_certificates( $id )
     {
+        $userDB = $this->UserModel->get($id);
+        if( empty($userDB) ) return $this->output_json(200 , 'no se encontro user con el id' , [] , false );
         $notes_quanty = 6;
         $certificates = $this->CertificadosModel->get_certificados_us( $id );
         if ( !$certificates ) return $this->output_json(200 , 'El usuario aun no tiene certificados' , [] , false );

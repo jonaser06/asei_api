@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); 
 
-class Certificado_model extends CI_Model {
+class Certificados_model extends CI_Model {
 
     protected $table = 'certificados';
     

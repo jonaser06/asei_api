@@ -92,7 +92,9 @@ $route['learn/(:any)/(:num)/delete']['GET'] = 'api/Contenidos/delete/$1/$2';
 $route['learn/(:any)/(:num)']['POST'] = 'api/Contenidos/update/$1/$2';
 
 
-
+$route['certificado/(:num)/(:num)']['GET'] = 'api/Certificados/getById/$1/$2';
+$route['certificados/(:num)']['GET'] = 'api/Certificados/get_certificates/$1';
+$route['new-certificado/(:num)/(:num)']['POST'] = 'api/Certificados/setCertificate/$1/$2';
 
 
 $route['testing']['POST'] = 'api/Contenidos/test';
@@ -123,9 +125,7 @@ $route['calendario']['GET'] = 'api/Notes/calendar';
 
 #certificados
 
-$route['new-certificado/(:num)/(:num)']['POST'] = 'api/Certificados/setCertificate/$1/$2';
-$route['certificado/(:num)/(:num)']['GET'] = 'api/Certificados/getById/$1/$2';
-$route['certificados/(:num)']['GET'] = 'api/Certificados/get_certificate/$1';
+
 
 
 
