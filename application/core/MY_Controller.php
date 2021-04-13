@@ -28,7 +28,7 @@ class MY_Controller extends CI_Controller
     }
 
     public function newNotification($message= '', $type = '', $idus = '', $id=''){
-
+        date_default_timezone_set('America/Lima');
         // if(($this->input->server('REQUEST_METHOD') === 'POST')){
         //     $inputJSON = file_get_contents('php://input');
         //     $input = json_decode($inputJSON, TRUE);
@@ -41,12 +41,14 @@ class MY_Controller extends CI_Controller
             "eventos" => 'infcenter/info/info/',
             "fairs" => 'infcenter/fairs/info/',
             "news" => 'infcenter/news/info/',
+            "cursos" => 'learning-center/cursos/info/',
+            "webinnars" => 'learning-center/webinars/info/',
         ];
 
         $payload = [
             "titulo" => $type,
             "descripcion" => $message,
-            "fecha" => "2021-02-15 23:34:24",
+            "fecha" => date('Y-m-d H:i:s'),
             "destino" => $path[$type].$id,
             "categoria" => $type,
             "ID_US" => $idus,
