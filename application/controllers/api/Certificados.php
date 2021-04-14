@@ -8,7 +8,7 @@ class Certificados extends MY_Controller {
         parent::__construct();
         date_default_timezone_set("America/Lima");        
 
-		    $this->load->model('Certificados_model', 'CertificadosModel');
+		    $this->load->model('certificados_model', 'CertificadosModel');
             $this->load->model('User_Model', 'UserModel');
             $this->load->model('Contenido_Model', 'ContenidoModel');
 
@@ -137,7 +137,7 @@ class Certificados extends MY_Controller {
         
         $data = [
             'ID_US'          => $id_us,
-            'ID_NO'          => $id_co,
+            'ID_CO'          => $id_co,
             'user'           => $this->input->post('user'),
             'curse_name'     =>  $this->input->post('curse_name'),
             'curse_inicio'   => $this->input->post('curse_inicio'),
