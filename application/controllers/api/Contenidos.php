@@ -432,15 +432,15 @@ class Contenidos extends MY_Controller {
 
     
 
-    public function getByIdCer(int $id_co , $id_us): CI_Output
+    public function getByIdCer(int $id): CI_Output
     {
        
 
-        $userDB = $this->UserModel->get($id_us);
-        if( empty($userDB) ) return $this->output_json(200 , 'no se encontro user con el id' , [] , false );
+        // $userDB = $this->UserModel->get($id_us);
+        // if( empty($userDB) ) return $this->output_json(200 , 'no se encontro user con el id' , [] , false );
 
     
-        $certificadosDB = $this->CertificadosModel->get_certificado_us($id_co, $id_us);
+        $certificadosDB = $this->CertificadosModel->get_certificado_us($id);
 
         if(!$certificadosDB) return $this->output_json(200 , 'No existe este certificado',[],FALSE);
         return $this->output_json(200 , "certificado encontrado !",$certificadosDB);
@@ -490,7 +490,7 @@ class Contenidos extends MY_Controller {
         if( empty($userDB) ) return $this->output_json(200 , 'no se encontro user con el id' , [] , false );
 
     
-        $certificadosDB = $this->CertificadosModel->get_certificado_us($id_co, $id_us);
+        $certificadosDB = $this->CertificadosModel->comproved_certificate($id_co, $id_us);
 
         if( $certificadosDB ) return $this->output_json(200 , 'la ya se emitio certificado de este curso para este usuario'[],FALSE);
 
@@ -506,6 +506,7 @@ class Contenidos extends MY_Controller {
             'curse_name'     =>  $this->input->post('curse_name'),
             'curse_inicio'   => $this->input->post('curse_inicio'),
             'curse_duration' => $this->input->post('curse_duration'),
+            'capacitador'    => $this->input->post('capacitador'),
             'fecha_emited'   => date('Y-m-d'),
             
         ];

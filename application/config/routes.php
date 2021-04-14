@@ -92,7 +92,7 @@ $route['learn/(:any)/(:num)/delete']['GET'] = 'api/Contenidos/delete/$1/$2';
 $route['learn/(:any)/(:num)']['POST'] = 'api/Contenidos/update/$1/$2';
 
 
-$route['certificado/(:num)/(:num)']['GET'] = 'api/Contenidos/getByIdCer/$1/$2';
+$route['certificado/(:num)']['GET'] = 'api/Contenidos/getByIdCer/$1';
 $route['certificados/(:num)']['GET'] = 'api/Contenidos/get_certificates/$1';
 
 

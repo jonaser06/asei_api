@@ -4,8 +4,12 @@ class Certificados_model extends CI_Model {
 
     protected $table = 'certificados';
     
-    public function get_certificado_us (int $id_co , int $id_us ) {
-        $certificado = $this->db->get_where($this->table, [ 'ID_CO' => $id_co , 'ID_US' => $id_us] )->row_array();
+    public function get_certificado_us (int $id_cer ) {
+        $certificado = $this->db->get_where($this->table, [ 'ID_CER' => $id_cer] )->row_array();
+        return $certificado ? $certificado : FALSE;
+    }
+    public function comproved_certificate (int $id_co, $id_us ) {
+        $certificado = $this->db->get_where($this->table, [ 'ID_CO' => $id_co,'ID_US' => $id_us ] )->row_array();
         return $certificado ? $certificado : FALSE;
     }
     public function get_certificados_us ( int $id_us ) {
@@ -25,7 +29,7 @@ class Certificados_model extends CI_Model {
         
         $this->db->order_by('fecha_emited', 'DESC');
 
-        $countAll = $this->db->count_all_results('contenido', FALSE);
+        $countAll = $this->db->count_all_results('certificados', FALSE);
         $this->db->limit($limit, $offset);
         $contenidos = $this->db->get()->result_array();
 
