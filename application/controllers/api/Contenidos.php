@@ -501,12 +501,13 @@ class Contenidos extends MY_Controller {
         
         $data = [
             'ID_US'          => $id_us,
-            'ID_NO'          => $id_co,
+            'ID_CO'          => $id_co,
             'user'           => $this->input->post('user'),
             'curse_name'     =>  $this->input->post('curse_name'),
             'curse_inicio'   => $this->input->post('curse_inicio'),
             'curse_duration' => $this->input->post('curse_duration'),
             'fecha_emited'   => date('Y-m-d'),
+            
         ];
 
         $result = $this->CertificadosModel->insert($data);
