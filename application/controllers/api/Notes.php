@@ -346,13 +346,19 @@ class Notes extends MY_Controller {
     public function calendar()
     {
         $notes_quanty = 9;
-        $params     = $this->input->get(['page', 'limit', 'search'], TRUE);
+        $params     = $this->input->get(['page', 'limit', 'search','inicio','fin'], TRUE);
         $search   = ! $params['search'] ? [] : explode(' ', $params['search']) ;
         
         $for_page   = $params['limit'] ? (int) $params['limit'] : $notes_quanty;
         $offset     = $params['page']  ? $for_page * ($params['page'] - 1) : 0;
+        $start      = $params['inicio']  ? $params['inicio'] : 0;
+        $end        = $params['fin']  ? $params['fin'] : 0;
         
         $conditions = ['notas.calendario' => 1 ];
+        if( $start ) {
+            $conditions['FECHA_PUBLISHED >='] = $start;
+            $conditions['FECHA_PUBLISHED <='] = $end;
+        }
 
         $notes = $this->NotesModel->getAllCalendar( $for_page ,$offset ,$conditions ,false ,$search );
         if ( !$notes )  return $this->output_json(200 , "No se agregaron contenido de las secciones al calendario" ,[] ,false );
