@@ -81,6 +81,9 @@ class LoginUser extends MY_Controller {
             'ID_PE' =>(int)$perfil['ID_PE'],
             'ID_UB' => 1,
         ];
+        if( $this->input->post('admin_asociado')) {
+            $insert_data['admin_asociado'] = $this->input->post('admin_asociado',TRUE);
+        }   
          
         
         $this->UserModel->insert_user($insert_data);
@@ -145,7 +148,9 @@ class LoginUser extends MY_Controller {
                 'direccion' => $userDB['DIRECCION'],
                 'id_notification' => strtolower ($userDB['id_notify']),
                 'permisos' => $privileges,
+                 'admin_asociado' => $userDB['admin_asociado'],
                 'token' => $user_token,
+
             ];
             $user_imgs = $this->FileModel->getOne('ID_US','multimedia_usuarios',['ID_US' => $userDB['ID_US']]);
             if( !empty($user_imgs) ) $this->data['imagenes'] = $user_imgs;
