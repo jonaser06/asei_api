@@ -41,6 +41,11 @@ class Notes extends MY_Controller {
             $note_imgs = $this->FileModel->getOne('ID_NO','multimedia_notas',['ID_NO' => $notes['notes'][$i]['ID_NO']]);
             $notes['notes'][$i]['imagenes'] = $note_imgs ? $note_imgs : 'no images found';
             
+            
+            $calification = $this->CalificacionesModel->getPromedio($notes['notes'][$i]['ID_NO']);
+            if ( $calification ) :
+                $notes['notes'][$i]['promedio']  = floatval($calification['PROMEDIO_ESTRELLAS']);
+            endif;
         endfor;
 
         $page           = $params['page'] ? (int) $params['page'] : 1 ;
