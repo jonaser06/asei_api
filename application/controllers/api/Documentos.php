@@ -556,4 +556,91 @@ class Documentos extends MY_Controller {
         }
         return $result;
     }
+
+    public function get_personalfiles($id) 
+    {
+        $notes_quanty = 3;
+        $section = $this->FileModel->get_entidad('area', [ 'id_ar' => 55555555 ]);
+
+        $user = $this->FileModel->get_entidad('usuarios', [ 'ID_US' => $id ]);
+
+        if ( !$user ) return $this->output_json(200 , 'No existe este usuario' , [] , false );
+        
+        $params     = $this->input->get(['page', 'limit', 'last', 'search'], TRUE);
+        $search   = ! $params['search'] ? [] : explode(' ', $params['search']) ;
+        $for_page   = $params['limit'] ? (int) $params['limit'] : $notes_quanty;
+        $offset     = $params['page']  ? $for_page * ($params['page'] - 1) : 0;
+        $last       = $params['last'] == 'true' ? true :false;
+        $conditions = ['documentos.id_ar' => (int) $section['id_ar']];
+
+        $contenido = $this->FileModel->getAllPersonalFiles( $for_page ,$offset ,$conditions , $last , $search , $id);
+        if ( !$contenido )  return $this->output_json(200 , "No existen archivos para el usuario con id: $id" ,[] ,false );
+        $page           = $params['page'] ? (int) $params['page'] : 1 ;
+        $contenido['page']  = $page;
+        $pages          = ($contenido['countAll'] % $for_page ) ?   (int)($contenido['countAll'] / $for_page) + 1 : (int)$contenido['countAll'] / $for_page  ; 
+        $contenido['pages'] = $pages;
+
+        if($page > 1) {
+            $prev = $page - 1  ;
+            $contenido['prev'] = "/documentos_personales/$id/files?page=$prev&limit=$for_page";
+        } 
+        if( $page < $pages ) {
+            $next = $page + 1 ;
+            $contenido['next'] = "/documentos_personales/$id/files?page=$next&limit=$for_page";
+        }
+       
+        $this->output_json( 200 , "Se encontraron archivos para el usuario con id: $id" , $contenido );
+    }
+
+    public function get_docpersonal( $id_user , $id_doc):CI_Output 
+    {
+        $user = $this->FileModel->get_entidad('usuarios', [ 'ID_US' => $id_user ]);
+
+        if ( !$user ) return $this->output_json(200 , 'No existe este usuario' , [] , false );
+
+        $documento = $this->FileModel->get_entidad('documentos', [ 'ID_DOC' => $id_doc ,'id_ar'=> 55555555]);
+
+        if( !$documento ) return $this->output_json( 200 , "No existe archivo con el id: $id_doc ",[], FALSE );
+        
+        $documento['usuario'] = $user['NOMBRES'];
+        return $this->output_json(200 , 'archivo encontrado', $documento);
+    }
+
+    public function delete_personalDocument(int $id_usuario, int $id_doc)
+    {
+        $usuario = $this->FileModel->get_entidad('usuarios', [ 'ID_US' => $id_usuario ]);
+
+        if(!$usuario) return $this->output_json(200,"Este usuario no existe");
+        
+        $documentoDB = $this->FileModel->get_entidad('documentos', [ 'ID_DOC' => $id_doc ,'id_ar' => 55555555]);
+
+        if(!$documentoDB) return $this->output_json(200,"No existe el archivo");
+
+        $resp = $this->FileModel->deletePersonalFile($id_usuario,$id_doc);
+
+        if(!$resp) return $this->output_json(200,"Documento borrado");
+        if($resp) return $this->output_json(500,"Hubo un problema al borrar el archivo");
+    }
+
+    public function createpersonaldoc($id_usuario) :CI_Output
+    {
+        if( ! $this->input->post('nombre') ) return $this->output_json(400 , 'Debe enviar el nombre');
+        
+        $areaDB = $this->FileModel->get_entidad('area' ,[ 'ruta' => 'persdocs' ]);
+
+        if ( !$areaDB )  return $this->output_json( 200 , "La categoría de documentos no existe", [] ,false);
+
+        if ( empty($_FILES['documentos']['name']) ) return $this->output_json(400 ,'Debe subir un archivo');
+        
+        
+        if ( $_FILES['documentos']['size'][0] > 2000000 ) return $this->output_json(400 , 'El archivo debe ser menor a 2MB' );
+
+        $documentos_files['files'] = $_FILES['documentos'];
+
+        $areas = $this->areas_for_any_documents(55555555 ,$this->input->post('nombre'), $documentos_files);
+
+        $this->create_files('usuarios_documentos','ID_US',$id_usuario, $documentos_files ,TRUE , $areas );
+
+        return $this->output_json(200 , 'archivo insertado');
+    }
 }

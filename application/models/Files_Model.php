@@ -5,6 +5,7 @@ class Files_Model extends CI_Model
     protected $table = 'multimedia';
     protected $table2= 'documentos';
     protected $area= 'area';
+    protected $users= 'usuarios';
 
     /**
      * Upload subida de archivos
@@ -56,7 +57,6 @@ class Files_Model extends CI_Model
     public function get_entidad (string $table , array $conditions = []) {
         return $this->db->get_where($table, $conditions)->row_array();
     }
-
     public function getOne( 
         string $id_name,
         string $table,
@@ -152,5 +152,45 @@ class Files_Model extends CI_Model
         $result  = $this->db->delete($table,$condition);
         return $result ? true : false;
     }
- 
+
+    public function getAllPersonalFiles( int $limit = 1, int $offset = 0, array $conditions = [] , bool $lasted = FALSE , array $params  = [] , int $id_usuario = 1)
+    {
+        $this->db->select('documentos.ID_DOC,documentos.TIPO,documentos.nombre,documentos.RUTA,usuarios.ID_US as ID_US,usuarios.NOMBRES as Nombres');
+        $this->db->join('usuarios_documentos' , 'documentos.ID_DOC = usuarios_documentos.ID_DOC');
+        $this->db->join('usuarios' , 'usuarios.ID_US = usuarios_documentos.ID_US');
+        $this->db->where('usuarios.ID_US', $id_usuario);
+
+        $this->db->where( $conditions );
+        if( count ($params) != 0) {
+            array_map(function ($param) {
+                $this->db->group_start();
+                $this->db->or_like('nombre', $param, 'both');
+                $this->db->or_like('TIPO', $param, 'both');
+                $this->db->group_end();
+            }, $params);
+        }
+        if($lasted) {
+            $this->db->where( 'FECHA_CREATED >= (CURDATE() - INTERVAL 30 DAY)');
+        }
+        $this->db->order_by('FECHA_CREATED', 'DESC');
+
+        $countAll = $this->db->count_all_results('documentos', FALSE);
+        $this->db->limit($limit, $offset);
+        $documentos = $this->db->get()->result_array();
+
+        return $documentos ? [
+            'countAll'     => $countAll,
+            'archivos'         => $documentos
+        ] : FALSE;
+        
+    }
+
+    public function deletePersonalFile(int $id_usuario, int $id_documento)
+    {
+        $this->db->where('ID_DOC',$id_documento);
+        $this->db->delete('usuarios_documentos');
+        
+        $this->db->where('ID_DOC',$id_documento);
+        $this->db->delete('documentos');
+    }
 }

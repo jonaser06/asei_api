@@ -113,6 +113,17 @@ $route['tipo-documentos/(:num)']['GET'] = 'api/Documentos/get_categorie/$1';
 $route['tipo-documentos/(:num)/update']['POST'] = 'api/Documentos/update_categorie/$1';
 $route['tipo-documentos/(:num)/delete']['GET'] = 'api/Documentos/delete/$1';
 
+######## ALL PERSONAL DOCUMENTS ###########
+$route['documentos_personales/(:num)/files']['GET'] = 'api/Documentos/get_personalfiles/$1';
+
+######## ONE PERSONAL DOCUMENT ############
+$route['documento_personale/(:num)/file/(:num)']['GET'] = 'api/Documentos/get_docpersonal/$1/$2';
+
+######## DELETE PERSONAL DOCUMENT #########
+$route['documentos_personales/(:num)/file/(:num)/delete']['GET'] = 'api/Documentos/delete_personalDocument/$1/$2';
+
+######## CREATE PERSONAL DOCUMENT #########
+$route['documentos_personales/subir/(:num)/files']['POST'] = 'api/Documentos/createpersonaldoc/$1';
 
 #es
 $route['promedio']['GET'] = 'api/Calificaciones/getAllProm'; 
