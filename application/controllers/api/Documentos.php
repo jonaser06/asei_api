@@ -560,7 +560,7 @@ class Documentos extends MY_Controller {
     public function get_personalfiles($id) 
     {
         $notes_quanty = 3;
-        $section = $this->FileModel->get_entidad('area', [ 'id_ar' => 55555555 ]);
+        $section = $this->FileModel->get_entidad('area', [ 'id_ar' => 23964970 ]);
 
         $user = $this->FileModel->get_entidad('usuarios', [ 'ID_US' => $id ]);
 
@@ -598,7 +598,7 @@ class Documentos extends MY_Controller {
 
         if ( !$user ) return $this->output_json(200 , 'No existe este usuario' , [] , false );
 
-        $documento = $this->FileModel->get_entidad('documentos', [ 'ID_DOC' => $id_doc ,'id_ar'=> 55555555]);
+        $documento = $this->FileModel->get_entidad('documentos', [ 'ID_DOC' => $id_doc ,'id_ar'=> 23964970]);
 
         if( !$documento ) return $this->output_json( 200 , "No existe archivo con el id: $id_doc ",[], FALSE );
         
@@ -612,7 +612,7 @@ class Documentos extends MY_Controller {
 
         if(!$usuario) return $this->output_json(200,"Este usuario no existe");
         
-        $documentoDB = $this->FileModel->get_entidad('documentos', [ 'ID_DOC' => $id_doc ,'id_ar' => 55555555]);
+        $documentoDB = $this->FileModel->get_entidad('documentos', [ 'ID_DOC' => $id_doc ,'id_ar' => 23964970]);
 
         if(!$documentoDB) return $this->output_json(200,"No existe el archivo");
 
@@ -637,7 +637,7 @@ class Documentos extends MY_Controller {
 
         $documentos_files['files'] = $_FILES['documentos'];
 
-        $areas = $this->areas_for_any_documents(55555555 ,$this->input->post('nombre'), $documentos_files);
+        $areas = $this->areas_for_any_documents(23964970 ,$this->input->post('nombre'), $documentos_files);
 
         $this->create_files('usuarios_documentos','ID_US',$id_usuario, $documentos_files ,TRUE , $areas );
 
