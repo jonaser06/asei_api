@@ -193,4 +193,10 @@ class Files_Model extends CI_Model
         $this->db->where('ID_DOC',$id_documento);
         $this->db->delete('documentos');
     }
+
+    public function deleteallPersonalFiles(int $id_usuario)
+    {
+        $this->db->where('ID_US',$id_usuario);
+        $this->db->delete('usuarios_documentos');
+    }
 }

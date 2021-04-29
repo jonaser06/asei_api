@@ -85,10 +85,19 @@ class User extends MY_Controller {
     }
     
     public function delete( int $id )
-    {
+    {   
         $note = $this->UserModel->get((int) $id);
         if( !$note ) return $this->output_json( 200 , 'no existe usuario con ese id' , [] , false );
         $user_imgs = $this->FileModel->getOne('ID_US','multimedia_usuarios',['ID_US' => $id]);
+        $documentos = $this->FileModel->getOne('ID_US','usuarios_documentos',['ID_US' => $id],TRUE);
+
+        $this->FileModel->deleteallPersonalFiles($id);
+
+        if($documentos) :
+            for ( $i = 0; $i < count( $documentos ); $i++ ) { 
+                $this->deleteOneFile((int)$documentos[$i]['ID_DOC'],TRUE );  
+            }
+        endif;
 
         if($user_imgs) {
             for ( $i = 0; $i < count( $user_imgs ); $i++ ) { 
