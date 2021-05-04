@@ -9,6 +9,8 @@ class User extends MY_Controller {
 	    	parent::__construct();
 	      $this->load->model('User_Model', 'UserModel');
         $this->load->model('Perfil_Model', 'PerfilModel');
+        $this->load->model('calificaciones_model', 'CalificacionesModel');
+
     }
 	
 	/**
@@ -90,12 +92,20 @@ class User extends MY_Controller {
         if( !$note ) return $this->output_json( 200 , 'no existe usuario con ese id' , [] , false );
         $user_imgs = $this->FileModel->getOne('ID_US','multimedia_usuarios',['ID_US' => $id]);
         $documentos = $this->FileModel->getOne('ID_US','usuarios_documentos',['ID_US' => $id],TRUE);
-
+        $user_notas = $this->FileModel->getOne('ID_US','usuarios_notas',['ID_US' => $id]);
+        
         $this->FileModel->deleteallPersonalFiles($id);
+        
 
         if($documentos) :
             for ( $i = 0; $i < count( $documentos ); $i++ ) { 
                 $this->deleteOneFile((int)$documentos[$i]['ID_DOC'],TRUE );  
+            }
+        endif;
+
+        if($user_notas) :
+            for ( $i = 0; $i < count( $user_notas ); $i++ ) { 
+                $this->CalificacionesModel->delete($user_notas['ID_NO'], $id);
             }
         endif;
 

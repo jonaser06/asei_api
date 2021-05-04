@@ -73,6 +73,11 @@ class Calificaciones_model extends CI_Model {
         $result  = $this->db->delete($this->table, [ 'ID_NO' => $id_no , 'ID_US' => $id_us] );
         return $result ? true : false;
     } 
+    // public function deleteus( int $id_us ) 
+    // {
+    //     $result  = $this->db->delete($this->table, [ 'ID_US' => $id_us ] );
+    //     return $result ? true : false;
+    // }
 
     
 
