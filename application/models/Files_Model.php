@@ -57,6 +57,9 @@ class Files_Model extends CI_Model
     public function get_entidad (string $table , array $conditions = []) {
         return $this->db->get_where($table, $conditions)->row_array();
     }
+    public function get_entidadAll (string $table , array $conditions = []) {
+        return $this->db->get_where($table, $conditions)->result_array();
+    }
     public function getOne( 
         string $id_name,
         string $table,

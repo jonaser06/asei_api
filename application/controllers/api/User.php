@@ -92,28 +92,27 @@ class User extends MY_Controller {
         if( !$note ) return $this->output_json( 200 , 'no existe usuario con ese id' , [] , false );
         $user_imgs = $this->FileModel->getOne('ID_US','multimedia_usuarios',['ID_US' => $id]);
         $documentos = $this->FileModel->getOne('ID_US','usuarios_documentos',['ID_US' => $id],TRUE);
-        $user_notas = $this->FileModel->getOne('ID_US','usuarios_notas',['ID_US' => $id]);
-        
+        $user_notas = $this->FileModel->get_entidadAll('usuarios_notas',['ID_US' => $id]);
         $this->FileModel->deleteallPersonalFiles($id);
-        
+        if($user_notas) :
 
+            for ( $i = 0; $i < count( $user_notas ); $i++ ) { 
+                $this->CalificacionesModel->delete((int)$user_notas[$i]['ID_NO'],(int) $id);
+            }
+        endif;
         if($documentos) :
             for ( $i = 0; $i < count( $documentos ); $i++ ) { 
                 $this->deleteOneFile((int)$documentos[$i]['ID_DOC'],TRUE );  
             }
         endif;
 
-        if($user_notas) :
-            for ( $i = 0; $i < count( $user_notas ); $i++ ) { 
-                $this->CalificacionesModel->delete($user_notas['ID_NO'], $id);
-            }
-        endif;
-
+        
         if($user_imgs) {
             for ( $i = 0; $i < count( $user_imgs ); $i++ ) { 
                 $this->deleteFile('multimedia_usuarios',$user_imgs[$i]['ID_MULTI']);
             }
         }
+       
         $resp = $this->UserModel->delete( (int) $id);
 
         return $resp ? $this->output_json( 200 , 'usuario eliminado!')
