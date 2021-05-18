@@ -67,9 +67,9 @@ class Notification extends MY_Controller {
             $table = 'notificaciones';
             #an error occurred 
             if($match){
-                $this->data = $this->notification->searchdata($select, $table, ['ID_US' => $ID_US], $match, 'id_notificacion', $for_page, $offset);
+                $this->data = $this->notification->searchdata($select, $table, [], $match, 'id_notificacion', $for_page, $offset);
             }else{
-                $this->data = $this->notification->getdata($select, $table, ['ID_US' => $ID_US], 'id_notificacion', $for_page, $offset);
+                $this->data = $this->notification->getdata($select, $table, [], 'id_notificacion', $for_page, $offset);
             }
 
             $pages = ($this->data['countAll'] % $for_page ) ?   (int)($this->data['countAll'] / $for_page) + 1 : (int)$this->data['countAll'] / $for_page  ; 
