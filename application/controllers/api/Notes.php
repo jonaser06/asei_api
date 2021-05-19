@@ -136,8 +136,8 @@ class Notes extends MY_Controller {
             'ID_SEC'       => (int)$section['ID_SEC'],
            ];
            #esta en el calendar o no esta 
-           if( $this->input->post('calendario') && ($this->input->post('calendario') === 1 || $this->input->post('calendario') === 0 )):
-            $data['calendario'] = $this->input->post('calendario', TRUE);
+           if( $this->input->post('calendario') ):
+            $data['calendario'] = (int)$this->input->post('calendario', TRUE);
            endif;
            #fin
            if( $section['nombre'] == 'noticias') {
@@ -286,8 +286,8 @@ class Notes extends MY_Controller {
                $set['hora_fin']        = $inputs['hora_fin'];
                $set['FECHA_PUBLISHED'] = $inputs['fecha_publicacion'].' '.$inputs['hora_publicacion'];
         }
-        if( $this->input->post('calendario') && ($this->input->post('calendario') === 1 || $this->input->post('calendario') === 0) ) : 
-            $set['calendario'] = $this->input->post('calendario');
+        if( $this->input->post('calendario')  ) : 
+            $set['calendario'] = (int)$this->input->post('calendario');
         endif;
         #fecha publicacion es fecha calendario
 
