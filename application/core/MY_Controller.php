@@ -38,7 +38,7 @@ class MY_Controller extends CI_Controller
             "indicador" => 'stadistics',
             "boletin" => 'stadistics',
             "aniversarios" => 'infcenter/anniversary/info/',
-            "eventos" => 'infcenter/info/info/',
+            "eventos" => 'infcenter/eventos/info/',
             "fairs" => 'infcenter/fairs/info/',
             "news" => 'infcenter/news/info/',
             "cursos" => 'learning-center/cursos/info/',
