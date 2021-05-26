@@ -6,8 +6,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Contenidos extends MY_Controller {
 
+    protected $mpdf ;
+    private $path = 'pdf/';
+
 	public function __construct()
     {
+
         parent::__construct();
         date_default_timezone_set("America/Lima");        
         $this->load->model('certificados_model', 'CertificadosModel');
@@ -444,6 +448,24 @@ class Contenidos extends MY_Controller {
 
         if(!$certificadosDB) return $this->output_json(200 , 'No existe este certificado',[],FALSE);
         return $this->output_json(200 , "certificado encontrado !",$certificadosDB);
+    }
+    public function createcertificate(int $id , $show = true)
+    {
+    
+
+        
+        $certificadosDB = $this->CertificadosModel->get_certificado_us($id);
+        
+        if(!$certificadosDB) return $this->output_json(200 , 'No existe este certificado',[],FALSE);
+         $this->mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir().DIRECTORY_SEPARATOR.'mpdf','mode' => 'utf-8', 'format' => 'A4-L']);
+            $date = $certificadosDB['fecha_emited'];
+            $name = "cert-$date".'.pdf';
+            
+            $this->mpdf->SetDefaultBodyCSS('background', "url('https://i.pinimg.com/originals/c3/f2/fe/c3f2feb9bc21922656b0c7ff8c09c8ac.png')");
+            $this->mpdf->SetDefaultBodyCSS('background-image-resize', 6);
+            $html =$this->load->view( $this->path.'certificate', $certificadosDB , TRUE);
+            $this->mpdf->WriteHTML($html);
+            $show ? $this->mpdf->Output($name,"I") : $this->mpdf->Output($name,"D"); 
     }
     public function get_certificates( $id )
     {

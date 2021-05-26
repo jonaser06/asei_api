@@ -12,6 +12,10 @@ class ComposerStaticInit4397aa67242d2bdab228fffc76771f19
     );
 
     public static $prefixLengthsPsr4 = array (
+        's' => 
+        array (
+            'setasign\\Fpdi\\' => 14,
+        ),
         'p' => 
         array (
             'phpDocumentor\\Reflection\\' => 25,
@@ -27,7 +31,12 @@ class ComposerStaticInit4397aa67242d2bdab228fffc76771f19
         ),
         'P' => 
         array (
+            'Psr\\Log\\' => 8,
             'Prophecy\\' => 9,
+        ),
+        'M' => 
+        array (
+            'Mpdf\\' => 5,
         ),
         'D' => 
         array (
@@ -38,11 +47,15 @@ class ComposerStaticInit4397aa67242d2bdab228fffc76771f19
     );
 
     public static $prefixDirsPsr4 = array (
+        'setasign\\Fpdi\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/setasign/fpdi/src',
+        ),
         'phpDocumentor\\Reflection\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
         ),
         'Webmozart\\Assert\\' => 
         array (
@@ -56,9 +69,17 @@ class ComposerStaticInit4397aa67242d2bdab228fffc76771f19
         array (
             0 => __DIR__ . '/..' . '/symfony/yaml',
         ),
+        'Psr\\Log\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+        ),
         'Prophecy\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpspec/prophecy/src/Prophecy',
+        ),
+        'Mpdf\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mpdf/mpdf/src',
         ),
         'Dotenv\\' => 
         array (
