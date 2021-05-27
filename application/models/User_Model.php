@@ -53,11 +53,21 @@ class User_Model extends CI_Model
     {
         $this->db->select('ID_US, NOMBRES,APELLIDO_PATERNO,APELLIDO_MATERNO,EMAIL,CARGO,DIRECCION,EMPRESA,FECHA_INGRESO,admin_asociado,usuarios.estado,p.TIPO');
         $this->db->join('perfiles as p', 'p.ID_PE = usuarios.ID_PE');
+
         if( count ($params) != 0) {
             array_map(function ($param) {
-                $this->db->like('usuarios.NOMBRES', $param, 'both');
+                $this->db->group_start();
+                $this->db->or_like('usuarios.NOMBRES', $param, 'both');
+                $this->db->or_like('usuarios.APELLIDO_PATERNO', $param, 'both');
+                $this->db->or_like('usuarios.APELLIDO_MATERNO', $param, 'both');
+                $this->db->group_end();
             }, $params);
         }
+        // if( count ($params) != 0) {
+        //     array_map(function ($param) {
+        //         $this->db->like('usuarios.NOMBRES', $param, 'both');
+        //     }, $params);
+        // }
         $this->db->where( $conditions );
 
         $countAll = $this->db->count_all_results('usuarios', FALSE);
