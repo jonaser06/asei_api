@@ -168,8 +168,9 @@ class Statistics extends MY_Controller {
         if ( !$this->input->post('title') )        return $this->output_json(400,'The title is necessary');
         if ( !$this->input->post('month') )        return $this->output_json(400,'The month is necessary');
         if ( !$this->input->post('year') )         return $this->output_json(400,'The year is necessary');
-        if ( !isset($_FILES['file']) )             return $this->output_json(400,'The file is necessary');
-        if ( !$_FILES['file']['tmp_name'] )        return $this->output_json(400,'I dont select any file');
+        if ( !$this->input->post('link') )         return $this->output_json(400,'The link is necessary');
+        // if ( !isset($_FILES['file']) )             return $this->output_json(400,'The file is necessary');
+        // if ( !$_FILES['file']['tmp_name'] )        return $this->output_json(400,'I dont select any file');
 
         #notificacion
         if($this->input->post('notificacion')){
@@ -179,17 +180,18 @@ class Statistics extends MY_Controller {
         }
 
         #save file
-        $path = PDF;
-        $file = $_FILES['file']['tmp_name'];
-        $file_name = $this->clearName(explode('.',$_FILES['file']['name'])[0]).'.pdf';
-        $this->fileUpload($file, $file_name, $path);
-        $target_file = UPLOAD . PDF . $file_name;
+        // $path = PDF;
+        // $file = $_FILES['file']['tmp_name'];
+        // $file_name = $this->clearName(explode('.',$_FILES['file']['name'])[0]).'.pdf';
+        // $this->fileUpload($file, $file_name, $path);
+        // $target_file = UPLOAD . PDF . $file_name;
 
         $this->data[0] = [
             'title'       => $this->input->post('title'),
             'month'       => $this->input->post('month'),
             'year'        => $this->input->post('year'),
-            'file'        => $target_file,
+            'link'        => $this->input->post('link'),
+            // 'file'        => $target_file,
         ];
 
         #an error occurred 
@@ -203,6 +205,7 @@ class Statistics extends MY_Controller {
         if ( !$this->input->post('title') )        return $this->output_json(400,'The title is necessary');
         if ( !$this->input->post('month') )        return $this->output_json(400,'The month is necessary');
         if ( !$this->input->post('year') )         return $this->output_json(400,'The year is necessary');
+        if ( !$this->input->post('link') )         return $this->output_json(400,'The link is necessary');
         // if ( !isset($_FILES['file']) )             return $this->output_json(400,'The file is necessary');
         // if ( !$_FILES['file']['tmp_name'] )        return $this->output_json(400,'I dont select any file');
 
@@ -215,23 +218,24 @@ class Statistics extends MY_Controller {
 
         $where = ['id' => $this->input->post('id')];
 
-        if(isset($_FILES['file'])){
-            #save file
-            $path = PDF;
-            $file = $_FILES['file']['tmp_name'];
-            $file_name = $this->clearName(explode('.',$_FILES['file']['name'])[0]).'.pdf';
-            $this->fileUpload($file, $file_name, $path);
-            $target_file = UPLOAD . PDF . $file_name;
-        }else{
-            $file = $this->statistics->getdata('*','bulletin', $where );
-            $target_file = $file['content'][0]['file'];
-        }
+        // if(isset($_FILES['file'])){
+        //     #save file
+        //     $path = PDF;
+        //     $file = $_FILES['file']['tmp_name'];
+        //     $file_name = $this->clearName(explode('.',$_FILES['file']['name'])[0]).'.pdf';
+        //     $this->fileUpload($file, $file_name, $path);
+        //     $target_file = UPLOAD . PDF . $file_name;
+        // }else{
+        //     $file = $this->statistics->getdata('*','bulletin', $where );
+        //     $target_file = $file['content'][0]['file'];
+        // }
 
         $this->data[0] = [
             'title'       => $this->input->post('title'),
             'month'       => $this->input->post('month'),
             'year'        => $this->input->post('year'),
-            'file'        => $target_file,
+            'link'        => $this->input->post('link'),
+            // 'file'        => $target_file,
         ];
 
         #an error occurred 
