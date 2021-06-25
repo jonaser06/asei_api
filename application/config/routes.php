@@ -26,6 +26,7 @@ $route['test']  = 'api/Statistics/test';
 ##chart
 $route['newchart']      = 'api/Statistics/newchart';
 $route['editchart']     = 'api/Statistics/editchart';
+$route['editboletin'] ['POST']    = 'api/Statistics/editboletinlegal';
 $route['deletechart']   = 'api/Statistics/deletechart';
 $route['getchart']['GET'] = 'api/Statistics/getchart';
 

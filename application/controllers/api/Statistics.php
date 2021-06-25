@@ -131,6 +131,19 @@ class Statistics extends MY_Controller {
 
         return $this->output_json(200,'query successfully', $this->data);
     }
+    public function editboletinlegal(){
+        #validating input data
+        if ( !$this->input->post('id') )           return $this->output_json(400,'The id is necessary');
+        if ( !$this->input->post('title') )        return $this->output_json(400,'The title is necessary');
+        if ( !$this->input->post('link') )         return $this->output_json(400,'The link is necessary');
+        $where = ['id' => $this->input->post('id')];
+        $data= [
+            'title'       => $this->input->post('title'),
+            'link' => $this->input->post('link'),
+        ];
+        if( !$this->statistics->upddata( $data , $where, 'Boletin_legal') ) return $this->output_json(200,'an error occurred while updating the data');
+        return $this->output_json(200,'query successfully', $this->data);
+    }
 
     public function deletechart(){
         #validating input data
