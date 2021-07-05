@@ -181,7 +181,7 @@ class Activity extends MY_Controller
 				'ID_GRU' => $group[0]['ID_GRU'],
 				'puntaje' => $activities[$i]['puntaje'],
 				'puntaje_max' => $activities[$i]['puntajeMax'],
-				'actividades' => $activitiesCount
+				'actividades' => $activitiesCount['countAll']
 			];
 
 			array_push($activitiesInsert, $activity);
