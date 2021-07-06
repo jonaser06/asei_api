@@ -130,7 +130,7 @@ class Activity_Model extends CI_Model
 				where au.ID_GRU = ?
 				and fecha >= ?
 				and fecha <= ?
-				group by au.ID_US, au.fecha;";
+				group by au.ID_US, au.fecha, ta.nombre;";
 
 		$query = $this->db->query($sql, array($idGroup, $dStart, $dEnd));
 		foreach ($query->result_array() as $row) {
