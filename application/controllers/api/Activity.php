@@ -198,9 +198,9 @@ class Activity extends MY_Controller
 
 	public function report(): CI_Output
 	{
-		$params = $this->input->post(['dStart', 'dEnd', 'idGroup'], TRUE);
+		$params = $this->input->post(['dStart', 'dEnd'], TRUE);
 
-		$reports = $this->ActivityModel->report($params['idGroup'], $params['dStart'], $params['dEnd']);
+		$reports = $this->ActivityModel->report($params['dStart'], $params['dEnd']);
 		if (!$reports) {
 			return $this->output_json(200, 'not reports ', [], false);
 		}

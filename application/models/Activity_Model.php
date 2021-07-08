@@ -109,64 +109,73 @@ class Activity_Model extends CI_Model
 		] : FALSE;
 	}
 
-	public function report($idGroup, $dStart, $dEnd)
+	public function report($dStart, $dEnd)
 	{
-		$reports = [];
 		$reportsAux = [];
+		$reports = [];
 
-		$sql = "SELECT
-				    au.ID_US,
-					g.nombre grupo,
-       				ta.ID_TA,
-       				ta.nombre as 'tipo_actividad',
-					concat(u.NOMBRES, ' ',  u.APELLIDO_PATERNO, ' ', u.APELLIDO_MATERNO) usuario,
-					sum(au.puntaje) suma,
-       				(sum(au.puntaje) = au.actividades) as pFinal
+		$sql = "select au.ID_US
+       				 , g.nombre                                                            grupo
+     				 , ta.ID_TA
+					 , fecha
+					 , concat(u.NOMBRES, ' ', u.APELLIDO_PATERNO, ' ', u.APELLIDO_MATERNO) participante
+					 , au.puntaje_max
+					 , a.puntaje
+					 , sum(au.puntaje)                                                     puntaje_realizado
+					 , (sum(au.puntaje) >= (au.actividades * au.puntaje)) as               pFinal
+					 , au.actividades
 				from actividades_usuarios au
-				inner join grupos g on g.ID_GRU = au.ID_GRU
-				inner join usuarios u on au.ID_US = u.ID_US
-				inner join actividades a on au.ID_ACT = a.ID_ACT
-				inner join tipo_actividad ta on a.ID_TA = ta.ID_TA
-				where au.ID_GRU = ?
-				and fecha >= ?
-				and fecha <= ?
-				group by au.ID_US, au.fecha, ta.nombre;";
+						 inner join grupos g on g.ID_GRU = au.ID_GRU
+						 inner join usuarios u on au.ID_US = u.ID_US
+						 inner join actividades a on au.ID_ACT = a.ID_ACT
+						 inner join tipo_actividad ta on a.ID_TA = ta.ID_TA
+					and fecha >= ?
+					and fecha <= ?
+				group by au.ID_US, au.fecha, ta.ID_TA
+				order by puntaje_realizado desc;";
 
-		$query = $this->db->query($sql, array($idGroup, $dStart, $dEnd));
+		$query = $this->db->query($sql, array($dStart, $dEnd));
+
 		foreach ($query->result_array() as $row) {
 			if (!array_key_exists($row['ID_US'], $reportsAux)) {
 				$reportsAux[$row['ID_US']] = [
-					'actividad' => []
+					'puntaje_realizado' => 0,
+					'puntaje_reconocido' => 0
 				];
 			}
 
-			if (!array_key_exists($row['ID_TA'], $reportsAux[$row['ID_US']]['actividad'])) {
-				$reportsAux[$row['ID_US']]['actividad'][$row['ID_TA']] = [
-					'suma' => 0,
-					'suma_f' => 0
-				];
-			}
-
-			$reportsAux[$row['ID_US']]['actividad'][$row['ID_TA']]['suma'] += $row['suma'];
-			$reportsAux[$row['ID_US']]['actividad'][$row['ID_TA']]['suma_f'] += ($row['pFinal']) ? $row['suma'] : 0;
-			$reportsAux[$row['ID_US']]['actividad'][$row['ID_TA']]['tipo_actividad'] = $row['tipo_actividad'];
-			$reportsAux[$row['ID_US']]['actividad'][$row['ID_TA']]['grupo'] = $row['grupo'];
-			$reportsAux[$row['ID_US']]['actividad'][$row['ID_TA']]['usuario'] = $row['usuario'];
+			$reportsAux[$row['ID_US']]['puntaje_realizado'] += $row['puntaje_realizado'];
+			$reportsAux[$row['ID_US']]['puntaje_reconocido'] += ($row['pFinal']) ? $row['puntaje_realizado'] : 0;
+			$reportsAux[$row['ID_US']]['grupo'] = $row['grupo'];
+			$reportsAux[$row['ID_US']]['usuario'] = $row['participante'];
 		}
+
+		$groups = [];
+		foreach ($reportsAux as $report) {
+			if (!array_key_exists($report['grupo'], $groups)) {
+				$groups[$report['grupo']] = 0;
+			}
+
+			$groups[$report['grupo']] += $report['puntaje_reconocido'];
+		}
+
+		arsort($groups);
 
 		foreach ($reportsAux as $report) {
-			foreach ($report['actividad'] as $item) {
-				$result = [
-					'grupo' => $item['grupo'],
-					'tipoActividad' => $item['tipo_actividad'],
-					'nombre' => $item['usuario'],
-					'puntajeRealizado' => $item['suma'],
-					'puntajeReconocido' => $item['suma_f']
-				];
+			$result = [
+				'equipo' => $report['grupo'],
+				'participante' => $report['usuario'],
+				'puntajeEquipo' => $groups[$report['grupo']],
+				'puntajeIndividual' => $report['puntaje_reconocido'],
+				'ranking' => array_search($groups[$report['grupo']], array_values($groups)) + 1
+			];
 
-				array_push($reports, $result);
-			}
+			array_push($reports, $result);
 		}
+
+		$individual_score = array_column($reports, 'puntajeIndividual');
+
+		array_multisort($individual_score, SORT_DESC, $reports);
 
 		return $reports ?: FALSE;
 	}
