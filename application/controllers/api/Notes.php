@@ -353,7 +353,7 @@ class Notes extends MY_Controller
 
 
 	#CALENDARIO
-	public function calendar(): CI_Output
+	public function calendar()
 	{
 		$notes_quanty = 9;
 		$params = $this->input->get(['page', 'limit', 'search', 'inicio', 'fin'], TRUE);
@@ -399,6 +399,6 @@ class Notes extends MY_Controller
 			$notes['next'] = "/calendario?page=$next&limit=$for_page&search=$busqueda";
 		}
 
-		$this->output_json(200, 'contenido encontrado!', $notes);
+		return $this->output_json(200, 'contenido encontrado!', $notes);
 	}
 }
